@@ -16,6 +16,7 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.3.*",
-        "robmorgan/phinx": "*"
+        "robmorgan/phinx": "*",
+        "web-ir/cms-ir": "dev-master"
     }
 }
