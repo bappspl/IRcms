@@ -1,22 +1,7 @@
 {
     "name": "web-ir/cms-ir",
     "description": "Web-ir application",
-    "license": "BSD-3-Clause",
-    "keywords": [
-        "framework",
-        "zf2"
-    ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url":  "https://github.com/web-ir/IRcms.git"
-        }
-    ],
-    "homepage": "http://framework.zend.com/",
     "require": {
-        "php": ">=5.3.3",
-        "zendframework/zendframework": "2.3.*",
-        "robmorgan/phinx": "*",
-        "web-ir/cms-ir": "dev-master"
+        "php": ">=5.3.3"
     }
 }
