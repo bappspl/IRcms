@@ -1,8 +1,0 @@
-{
-    "name": "web-ir/cms-ir",
-    "description": "Web-ir application",
-    "license": "BSD-3-Clause",
-    "require": {
-        "php": ">=5.3.3"
-    }
-}
