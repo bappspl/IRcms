@@ -13,8 +13,8 @@
         "php": ">=5.3.0"
     },
     "autoload": {
-        "files": [
-            "cms-ir/asd.txt"
-        ]
+        "psr-0": {
+            "CmsIr": "src/"
+        }
     }
 }

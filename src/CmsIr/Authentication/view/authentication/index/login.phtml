@@ -1,0 +1,18 @@
+<?php echo $this->escapeHtml($this->messages); ?>
+    <?php
+        $form = $this->form;
+        $form->prepare();
+
+        echo $this->form()->openTag($form);
+    ?>
+
+    <?php echo $this->formLabel($form->get('login')); ?>
+    <?php echo $this->formInput($form->get('login')); ?>
+
+    <?php echo $this->formLabel($form->get('password')); ?>
+    <?php echo $this->formInput($form->get('password')); ?>
+
+    <?php echo $this->formLabel($form->get('rememberme')); ?>
+    <?php echo $this->formInput($form->get('rememberme')); ?>
+
+<?php echo $this->form()->closeTag(); ?>
