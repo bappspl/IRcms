@@ -32,26 +32,28 @@ class IndexController extends AbstractActionController
 
 		$request = $this->getRequest();
         if ($request->isPost()) {
-            //die;
+
 			$authFormFilters = new Authentication();
             $fromData = $request->getPost()->toArray();
             $data = array_merge(
                 $fromData
             );
 			$form->setData($data);
-            //var_dump($form);die;
-			 //if ($form->isValid()) {
 
-				$data = $form->getData();
+			 if ($form->isValid()) {
+
+//				$data = $form->getData();
 
                 $sm = $this->getServiceLocator();
 
                 $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
 				$config = $sm->get('Config');
 
-				$staticSalt = $config['static_salt'];
+//				$staticSalt = $config['static_salt'];
 
-				$authAdapter = new AuthAdapter($dbAdapter, 'cms_users', 'email', 'password', "MD5(CONCAT('$staticSalt', ?, password_salt)) AND active = 1" );
+//				$authAdapter = new AuthAdapter($dbAdapter, 'cms_users', 'email', 'password', "MD5(CONCAT('$staticSalt', ?, password_salt)) AND active = 1" );
+				$authAdapter = new AuthAdapter($dbAdapter, 'cms_users', 'email', 'password', "active = 1" );
+
 				$authAdapter
 					->setIdentity($data['email'])
 					->setCredential($data['password']);
@@ -75,10 +77,11 @@ class IndexController extends AbstractActionController
 
 						$time = 1209600;
 
-                        if ($data['rememberme']) {
-							$sessionManager = new \Zend\Session\SessionManager();
-							$sessionManager->rememberMe($time);
-						}
+//                        if ($data['rememberme']) {
+//							$sessionManager = new \Zend\Session\SessionManager();
+//							$sessionManager->rememberMe($time);
+//						}
+                        return $this->redirect()->toRoute('home');
 					break;
 
 					default:
@@ -88,9 +91,7 @@ class IndexController extends AbstractActionController
 				foreach ($result->getMessages() as $message) {
 					$messages .= "$message\n"; 
 				}			
-			 //} else {
-             //    var_dump($form->isValid());
-             //}
+			 }
 		}
 		return new ViewModel(array('form' => $form, 'messages' => $messages));
 	}

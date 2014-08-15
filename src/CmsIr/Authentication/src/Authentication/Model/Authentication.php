@@ -9,7 +9,9 @@ use Zend\InputFilter\InputFilterInterface;
 class Authentication implements InputFilterAwareInterface
 {
     public $id;
-    public $login;
+//    public $login;
+    public $name;
+    public $surname;
     public $password;
 
     public $email;	
@@ -20,9 +22,9 @@ class Authentication implements InputFilterAwareInterface
     //public $usr_question;	
     //public $usr_answer;	
     //public $usr_picture;	
-    public $password_salt;
-    public $registration_date;
-    public $registration_token;	
+//    public $password_salt;
+//    public $registration_date;
+//    public $registration_token;
     public $email_confirmed;	
 
 	// Hydration
@@ -30,7 +32,9 @@ class Authentication implements InputFilterAwareInterface
     public function exchangeArray($data) 
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
-        $this->login = (!empty($data['login'])) ? $data['login'] : null;
+//        $this->login = (!empty($data['login'])) ? $data['login'] : null;
+        $this->name = (!empty($data['name'])) ? $data['name'] : null;
+        $this->surname = (!empty($data['surname'])) ? $data['surname'] : null;
         $this->password = (!empty($data['password'])) ? $data['password'] : null;
         
         $this->email = (!empty($data['email'])) ? $data['email'] : null;
@@ -40,9 +44,9 @@ class Authentication implements InputFilterAwareInterface
         //$this->usr_question = (!empty($data['usr_question'])) ? $data['usr_question'] : null;
        // $this->usr_answer = (!empty($data['usr_answer'])) ? $data['usr_answer'] : null;
        // $this->usr_picture = (!empty($data['usr_picture'])) ? $data['usr_picture'] : null;
-        $this->password_salt = (!empty($data['password_salt'])) ? $data['password_salt'] : null;
-        $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
-        $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
+//        $this->password_salt = (!empty($data['password_salt'])) ? $data['password_salt'] : null;
+//        $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
+//        $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
         $this->email_confirmed = (isset($data['email_confirmed'])) ? $data['email_confirmed'] : null;
     }	
 
@@ -68,7 +72,7 @@ class Authentication implements InputFilterAwareInterface
             $factory     = new InputFactory();
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'login',
+                'name'     => 'email',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
