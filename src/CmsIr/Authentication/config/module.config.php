@@ -10,11 +10,10 @@ return array(
 			'auth' => array(
 				'type'    => 'Literal',
 				'options' => array(
-					'route'    => '/admin',
+					'route'    => '/login',
 					'defaults' => array(
-						'__NAMESPACE__' => 'CmsIr\Authentication\Controller',
-						'controller'    => 'Index',
-						'action'        => 'index',
+                        'controller' => 'Authentication\Controller\Index',
+                        'action'     => 'login',
 					),
 				),
 				'may_terminate' => true,

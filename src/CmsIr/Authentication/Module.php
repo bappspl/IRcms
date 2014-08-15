@@ -1,16 +1,11 @@
 <?php
-namespace Auth; 
+namespace CmsIr\Authentication;
 
 // Add this for Table Date Gateway
-use Auth\Model\Auth;
-use Auth\Model\UsersTable;
+use CmsIr\Authentication\Model\Authentication;
+use CmsIr\Authentication\Model\UsersTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
-
-// Add this for SMTP transport
-use Zend\ServiceManager\ServiceManager;
-use Zend\Mail\Transport\Smtp;
-use Zend\Mail\Transport\SmtpOptions;
 
 class Module
 {
@@ -25,7 +20,7 @@ class Module
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                    __NAMESPACE__ => __DIR__ . '/src',
                 ),
             ),
         );
@@ -44,16 +39,9 @@ class Module
                 'UsersTableGateway' => function ($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Auth()); // Notice what is set here
+                    $resultSetPrototype->setArrayObjectPrototype(new Authentication()); // Notice what is set here
                     return new TableGateway('pms_user', $dbAdapter, null, $resultSetPrototype);
                 },
-				// Add this for SMTP transport
-				'mail.transport' => function (ServiceManager $serviceManager) {
-					$config = $serviceManager->get('Config'); 
-					$transport = new Smtp();                
-					$transport->setOptions(new SmtpOptions($config['mail']['transport']['options']));
-					return $transport;
-				},
             ),
         );
     }		
