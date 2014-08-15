@@ -8,11 +8,12 @@ return array(
     'router' => array(
         'routes' => array(
 			'auth' => array(
-				'type'    => 'Literal',
+				'type'    => 'Segment',
 				'options' => array(
 					'route'    => '/login',
 					'defaults' => array(
-                        'controller' => 'Authentication\Controller\Index',
+                        'module' => 'CmsIr\Authentication',
+                        'controller' => 'CmsIr\Authentication\Controller\Index',
                         'action'     => 'login',
 					),
 				),
@@ -39,11 +40,11 @@ return array(
         'template_path_stack' => array(
             'authentication' => __DIR__ . '/../view'
         ),
-		
+
 		'display_exceptions' => true,
     ),
 	'service_manager' => array(
-		'aliases' => array( 
+		'aliases' => array(
 			'Zend\Authentication\AuthenticationService' => 'my_auth_service',
 		),
 		'invokables' => array(

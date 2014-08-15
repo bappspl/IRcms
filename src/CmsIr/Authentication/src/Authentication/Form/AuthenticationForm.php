@@ -41,12 +41,12 @@ class AuthenticationForm extends Form
             'options' => array(
                 'label' => 'Zapamiętaj mnie',
             ),
-        ));			
+        ));
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
                 'type'  => 'submit',
-                'value' => 'Login',
+                'value' => 'Go',
                 'id' => 'submitbutton',
             ),
         ));

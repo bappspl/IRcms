@@ -20,7 +20,7 @@ class Module
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src',
+                    __NAMESPACE__ => __DIR__ . '/src/Authentication',
                 ),
             ),
         );
@@ -31,7 +31,7 @@ class Module
         return array(
             'factories' => array(
 				// For Yable data Gateway
-                'Auth\Model\UsersTable' =>  function($sm) {
+                'Authentication\Model\UsersTable' =>  function($sm) {
                     $tableGateway = $sm->get('UsersTableGateway');
                     $table = new UsersTable($tableGateway);
                     return $table;
