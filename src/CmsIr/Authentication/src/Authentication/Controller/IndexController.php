@@ -32,9 +32,16 @@ class IndexController extends AbstractActionController
 
 		$request = $this->getRequest();
         if ($request->isPost()) {
+            //die;
 			$authFormFilters = new Authentication();
-			$form->setData($request->getPost());
-			 if ($form->isValid()) {
+            $fromData = $request->getPost()->toArray();
+            $data = array_merge(
+                $fromData
+            );
+			$form->setData($data);
+            //var_dump($form);die;
+			 //if ($form->isValid()) {
+
 				$data = $form->getData();
 
                 $sm = $this->getServiceLocator();
@@ -81,7 +88,9 @@ class IndexController extends AbstractActionController
 				foreach ($result->getMessages() as $message) {
 					$messages .= "$message\n"; 
 				}			
-			 }
+			 //} else {
+             //    var_dump($form->isValid());
+             //}
 		}
 		return new ViewModel(array('form' => $form, 'messages' => $messages));
 	}

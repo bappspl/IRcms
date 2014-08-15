@@ -6,13 +6,15 @@
         echo $this->form()->openTag($form);
     ?>
 
-    <?php echo $this->formLabel($form->get('login')); ?>
-    <?php echo $this->formInput($form->get('login')); ?>
+    <?php echo $this->formLabel($form->get('email')); ?>
+    <?php echo $this->formInput($form->get('email')); ?>
 
     <?php echo $this->formLabel($form->get('password')); ?>
     <?php echo $this->formInput($form->get('password')); ?>
 
     <?php echo $this->formLabel($form->get('rememberme')); ?>
     <?php echo $this->formInput($form->get('rememberme')); ?>
+
+    <?php echo $this->formInput($form->get('submit')); ?>
 
 <?php echo $this->form()->closeTag(); ?>

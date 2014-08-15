@@ -7,16 +7,16 @@ class AuthenticationForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('easy');
+        parent::__construct('Authentication');
         $this->setAttribute('method', 'post');
 
         $this->add(array(
-            'name' => 'login',
+            'name' => 'email',
             'attributes' => array(
                 'type'  => 'text',
                 'class' => 'text',
                 'id' => 'login-log', 
-                'placeholder' => 'Wprowadź login'
+                'placeholder' => 'Wprowadź email'
             ),
             'options' => array(
                 'label' => 'Login',
