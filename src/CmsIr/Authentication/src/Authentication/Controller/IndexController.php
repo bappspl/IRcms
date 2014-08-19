@@ -26,6 +26,7 @@ class IndexController extends AbstractActionController
 	
     public function loginAction()
 	{
+        $this->layout('layout/authentication');
 		$user = $this->identity();
 		$form = new AuthenticationForm();
 		$messages = null;
@@ -39,9 +40,7 @@ class IndexController extends AbstractActionController
                 $fromData
             );
 			$form->setData($data);
-
-			 if ($form->isValid()) {
-
+			 //if ($form->isValid()) {
 //				$data = $form->getData();
 
                 $sm = $this->getServiceLocator();
@@ -91,7 +90,7 @@ class IndexController extends AbstractActionController
 				foreach ($result->getMessages() as $message) {
 					$messages .= "$message\n"; 
 				}			
-			 }
+			// }
 		}
 		return new ViewModel(array('form' => $form, 'messages' => $messages));
 	}

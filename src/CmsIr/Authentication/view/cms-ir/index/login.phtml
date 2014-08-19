@@ -2,19 +2,32 @@
     <?php
         $form = $this->form;
         $form->prepare();
-
-        echo $this->form()->openTag($form);
     ?>
+    <div class="alert alert-warning alert-bold-border fade in alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Uwaga!</strong> Błędny login lub hasło</a>.
+    </div>
+    <?php echo $this->form()->openTag($form); ?>
+        <div class="form-group has-feedback lg left-feedback no-label">
+            <?php echo $this->formInput($form->get('email')); ?>
+            <span class="fa fa-user form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback lg left-feedback no-label">
+            <?php echo $this->formInput($form->get('password')); ?>
+            <span class="fa fa-unlock-alt form-control-feedback"></span>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <?php echo $this->formInput($form->get('rememberme')); ?> Zapamiętaj mnie
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formInput($form->get('submit')); ?>
+        </div>
+    <?php echo $this->form()->closeTag(); ?>
+    <p class="text-center"><strong><a href="forgot-password.html">Zapomniałeś hasło</a></strong></p>
+    <p class="text-center">lub</p>
+    <p class="text-center"><strong><a href="register.html">Utwórz konto</a></strong></p>
 
-    <?php echo $this->formLabel($form->get('email')); ?>
-    <?php echo $this->formInput($form->get('email')); ?>
-
-    <?php echo $this->formLabel($form->get('password')); ?>
-    <?php echo $this->formInput($form->get('password')); ?>
-
-    <?php echo $this->formLabel($form->get('rememberme')); ?>
-    <?php echo $this->formInput($form->get('rememberme')); ?>
-
-    <?php echo $this->formInput($form->get('submit')); ?>
-
-<?php echo $this->form()->closeTag(); ?>

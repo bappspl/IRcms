@@ -14,7 +14,7 @@ class AuthenticationForm extends Form
             'name' => 'email',
             'attributes' => array(
                 'type'  => 'text',
-                'class' => 'text',
+                'class' => 'form-control no-border input-lg rounded',
                 'id' => 'login-log', 
                 'placeholder' => 'Wprowadź email'
             ),
@@ -26,7 +26,7 @@ class AuthenticationForm extends Form
             'name' => 'password',
             'attributes' => array(
                 'type'  => 'password',
-                'class' => 'text', 
+                'class' => 'form-control no-border input-lg rounded',
                 'id' => 'password-log', 
                 'placeholder' => 'Wprowadź hasło' 
             ),
@@ -41,13 +41,17 @@ class AuthenticationForm extends Form
             'options' => array(
                 'label' => 'Zapamiętaj mnie',
             ),
+            'attributes' => array(
+                'class' => 'i-yellow-flat'
+            )
         ));
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
                 'type'  => 'submit',
-                'value' => 'Go',
+                'value' => 'Zaloguj',
                 'id' => 'submitbutton',
+                'class' => 'btn btn-warning btn-lg btn-perspective btn-block'
             ),
         ));
     }

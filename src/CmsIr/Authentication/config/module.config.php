@@ -51,4 +51,11 @@ return array(
 			'my_auth_service' => 'Zend\Authentication\AuthenticationService',
 		),
 	),
+    'asset_manager' => array(
+        'resolver_configs' => array(
+            'paths' => array(
+                __DIR__ . '/../public',
+            ),
+        ),
+    ),
 );
