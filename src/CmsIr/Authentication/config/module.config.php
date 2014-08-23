@@ -33,9 +33,20 @@ return array(
 						),
 					),
 				),
-			),			
-		),
-	),
+			),
+            'logout' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/logout',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Authentication',
+                        'controller' => 'CmsIr\Authentication\Controller\Index',
+                        'action'     => 'logout',
+                    ),
+                ),
+            ),
+        ),
+    ),
     'view_manager' => array(
         'template_path_stack' => array(
             'authentication' => __DIR__ . '/../view'
