@@ -65,7 +65,7 @@ class UsersTable
     public function saveUser(Authentication $auth)
     {
         $data = array(
-            'login' 				=> $auth->login,
+//            'login' 				=> $auth->login,
             'password'  		    => $auth->password,
             'email'  			    => $auth->email,
             'active'  		    	=> $auth->active,

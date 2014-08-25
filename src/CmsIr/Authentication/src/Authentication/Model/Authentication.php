@@ -22,7 +22,7 @@ class Authentication implements InputFilterAwareInterface
     //public $usr_question;	
     //public $usr_answer;	
     //public $usr_picture;	
-//    public $password_salt;
+    public $password_salt;
 //    public $registration_date;
 //    public $registration_token;
     public $email_confirmed;	
@@ -44,7 +44,7 @@ class Authentication implements InputFilterAwareInterface
         //$this->usr_question = (!empty($data['usr_question'])) ? $data['usr_question'] : null;
        // $this->usr_answer = (!empty($data['usr_answer'])) ? $data['usr_answer'] : null;
        // $this->usr_picture = (!empty($data['usr_picture'])) ? $data['usr_picture'] : null;
-//        $this->password_salt = (!empty($data['password_salt'])) ? $data['password_salt'] : null;
+        $this->password_salt = (!empty($data['password_salt'])) ? $data['password_salt'] : null;
 //        $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
 //        $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
         $this->email_confirmed = (isset($data['email_confirmed'])) ? $data['email_confirmed'] : null;

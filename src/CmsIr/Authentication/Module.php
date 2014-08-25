@@ -7,6 +7,11 @@ use CmsIr\Authentication\Model\UsersTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
+// Add this for SMTP transport
+use Zend\ServiceManager\ServiceManager;
+use Zend\Mail\Transport\Smtp;
+use Zend\Mail\Transport\SmtpOptions;
+
 class Module
 {
 
@@ -30,8 +35,7 @@ class Module
     {
         return array(
             'factories' => array(
-				// For Yable data Gateway
-                'Authentication\Model\UsersTable' =>  function($sm) {
+                'CmsIr\Authentication\Model\UsersTable' =>  function($sm) {
                     $tableGateway = $sm->get('UsersTableGateway');
                     $table = new UsersTable($tableGateway);
                     return $table;
@@ -39,8 +43,14 @@ class Module
                 'UsersTableGateway' => function ($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Authentication()); // Notice what is set here
-                    return new TableGateway('pms_user', $dbAdapter, null, $resultSetPrototype);
+                    $resultSetPrototype->setArrayObjectPrototype(new Authentication());
+                    return new TableGateway('cms_users', $dbAdapter, null, $resultSetPrototype);
+                },
+                'mail.transport' => function (ServiceManager $serviceManager) {
+                    $config = $serviceManager->get('Config');
+                    $transport = new Smtp();
+                    $transport->setOptions(new SmtpOptions($config['mail']['transport']['options']));
+                    return $transport;
                 },
             ),
         );

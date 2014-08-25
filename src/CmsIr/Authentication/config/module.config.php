@@ -32,6 +32,17 @@ return array(
 							),
 						),
 					),
+                    'forgotten-password' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/forgotten-password',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Authentication',
+                                'controller' => 'CmsIr\Authentication\Controller\Index',
+                                'action'     => 'forgottenPassword',
+                            ),
+                        ),
+                    ),
 				),
 			),
             'logout' => array(
