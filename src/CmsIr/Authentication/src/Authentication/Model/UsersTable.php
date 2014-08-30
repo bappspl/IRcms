@@ -65,12 +65,16 @@ class UsersTable
     public function saveUser(Authentication $auth)
     {
         $data = array(
-//            'login' 				=> $auth->login,
+            'name' 				    => $auth->name,
+            'surname' 				=> $auth->surname,
             'password'  		    => $auth->password,
             'email'  			    => $auth->email,
             'active'  		    	=> $auth->active,
             'password_salt' 	    => $auth->password_salt,
 			'email_confirmed'	    => $auth->email_confirmed,
+            'registration_date'     => $auth->registration_date,
+            'registration_token'    => $auth->registration_token,
+            'role'                  => 2
         );
 
         $id = (int)$auth->id;

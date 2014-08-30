@@ -47,6 +47,7 @@
     <div class="wrapper">
         <div class="page-content">
             <div class="container-fluid">
+                <?php echo $this->navigation('navigation')->breadcrumbs()->setMinDepth(0); // <-- Add this!! ?>
                 <?php echo $this->content; ?>
             </div>
 

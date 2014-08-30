@@ -1,0 +1,69 @@
+<?php
+    $form = $this->form;
+    $form->prepare();
+?>
+    <?php if($this->escapeHtml($this->messages)) : ?>
+        <div class="alert alert-warning alert-bold-border fade in alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <?php echo $this->escapeHtml($this->messages); ?>.
+        </div>
+    <?php endif; ?>
+
+    <?php echo $this->form()->openTag($form); ?>
+
+    <div class="form-group has-feedback lg left-feedback no-label">
+        <?php echo $this->forminput($form->get('name')); ?>
+        <span class="fa fa-male form-control-feedback"></span>
+        <?php echo $this->formElementErrors()
+            ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageCloseString('</small>')
+            ->render($form->get('name'))
+        ?>
+    </div>
+
+
+    <div class="form-group has-feedback lg left-feedback no-label">
+        <?php echo $this->formInput($form->get('surname')); ?>
+        <span class="fa fa-user form-control-feedback"></span>
+        <?php echo $this->formElementErrors()
+            ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageCloseString('</small>')
+            ->render($form->get('surname'))
+        ?>
+    </div>
+    <div class="form-group has-feedback lg left-feedback no-label">
+        <?php echo $this->formInput($form->get('email')); ?>
+        <span class="fa fa-envelope form-control-feedback"></span>
+        <?php echo $this->formElementErrors()
+            ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageSeparatorString('</small><small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageCloseString('</small>')
+            ->render($form->get('email'))
+        ?>
+    </div>
+    <div class="form-group has-feedback lg left-feedback no-label">
+        <?php echo $this->formInput($form->get('password')); ?>
+        <span class="fa fa-lock form-control-feedback"></span>
+        <?php echo $this->formElementErrors()
+            ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageSeparatorString('</small><small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageCloseString('</small>')
+            ->render($form->get('password'))
+        ?>
+    </div>
+    <div class="form-group has-feedback lg left-feedback no-label">
+        <?php echo $this->formInput($form->get('password_confirm')); ?>
+        <span class="fa fa-unlock form-control-feedback"></span>
+        <?php echo $this->formElementErrors()
+            ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageSeparatorString('</small><small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+            ->setMessageCloseString('</small>')
+            ->render($form->get('password_confirm'))
+        ?>
+    </div>
+    <div class="form-group">
+        <?php echo $this->formSubmit($form->get('submit')); ?>
+    </div>
+
+    <?php echo $this->form()->closeTag(); ?>
+    <p class="text-center"><strong><a href="<?php echo $this->url('login') ?>">Powrót do logowania</a></strong></p>

@@ -6,7 +6,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 // the object will be hydrated by Zend\Db\TableGateway\TableGateway
-class Authentication implements InputFilterAwareInterface
+class Authentication
 {
     public $id;
 //    public $login;
@@ -23,8 +23,8 @@ class Authentication implements InputFilterAwareInterface
     //public $usr_answer;	
     //public $usr_picture;	
     public $password_salt;
-//    public $registration_date;
-//    public $registration_token;
+    public $registration_date;
+    public $registration_token;
     public $email_confirmed;	
 
 	// Hydration
@@ -45,8 +45,8 @@ class Authentication implements InputFilterAwareInterface
        // $this->usr_answer = (!empty($data['usr_answer'])) ? $data['usr_answer'] : null;
        // $this->usr_picture = (!empty($data['usr_picture'])) ? $data['usr_picture'] : null;
         $this->password_salt = (!empty($data['password_salt'])) ? $data['password_salt'] : null;
-//        $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
-//        $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
+        $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
+        $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
         $this->email_confirmed = (isset($data['email_confirmed'])) ? $data['email_confirmed'] : null;
     }	
 
@@ -56,15 +56,15 @@ class Authentication implements InputFilterAwareInterface
     {
         return get_object_vars($this);
     }
-	
-	
+
+
 	protected $inputFilter;
 
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         throw new \Exception("Not used");
     }
-	
+
     public function getInputFilter()
     {
         if (!$this->inputFilter) {
@@ -113,5 +113,5 @@ class Authentication implements InputFilterAwareInterface
         }
 
         return $this->inputFilter;
-    }	
+    }
 }

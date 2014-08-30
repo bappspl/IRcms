@@ -14,8 +14,12 @@ use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter as AuthAdapte
 
 use CmsIr\Authentication\Model\Authentication;
 use CmsIr\Authentication\Form\AuthenticationForm;
+use CmsIr\Authentication\Form\AuthenticationFormFilter;
 use CmsIr\Authentication\Form\ForgottenPasswordForm;
 use CmsIr\Authentication\Form\ForgottenPasswordFilter;
+use CmsIr\Authentication\Form\RegistrationForm;
+use CmsIr\Authentication\Form\RegistrationFilter;
+
 
 use Zend\Mail\Message;
 
@@ -37,9 +41,12 @@ class IndexController extends AbstractActionController
 
 		$request = $this->getRequest();
         if ($request->isPost()) {
-            $data = $request->getPost();
+            $form->setInputFilter(new AuthenticationFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
 
-            if(!empty($data['email']) && !empty($data['password'])) {
+//            if(!empty($data['email']) && !empty($data['password'])) {
+            if ($form->isValid()) {
+                $data = $form->getData();
                 $sm = $this->getServiceLocator();
                 $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
 
@@ -106,25 +113,89 @@ class IndexController extends AbstractActionController
     {
         $this->layout('layout/authentication');
         $form = new ForgottenPasswordForm();
+        $messages = null;
         $form->get('submit')->setValue('Wyślij');
         $request = $this->getRequest();
+
         if ($request->isPost()) {
             $form->setInputFilter(new ForgottenPasswordFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $email = $data['email'];
-                $usersTable = $this->getUsersTable();
-                $auth = $usersTable->getUserByEmail($email);
-                $password = $this->generatePassword();
-                $auth->password = $this->encriptPassword($this->getStaticSalt(), $password, $auth->password_salt);
-                $usersTable->saveUser($auth);
-                $this->sendPasswordByEmail($email, $password);
-                $this->flashMessenger()->addMessage($email);
-                return $this->redirect()->toRoute('auth');
+
+                $valid = new \Zend\Validator\Db\RecordExists(array('table' => 'cms_users', 'field' => 'email'));
+                $valid->setAdapter($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+
+                if ($valid->isValid($data['email'])){
+                    $email = $data['email'];
+                    $usersTable = $this->getUsersTable();
+                    $auth = $usersTable->getUserByEmail($email);
+                    $password = $this->generatePassword();
+                    $auth->password = $this->encriptPassword($this->getStaticSalt(), $password, $auth->password_salt);
+                    $usersTable->saveUser($auth);
+                    $this->sendPasswordByEmail($email, $password);
+                    $messages = 'Nowe hasło zostało wysłane na emaila';
+                } else {
+                    $messages = 'Błędny login lub hasło';
+                }
+            } else {
+                $messages = 'Uzupełnij wszystkie pola';
             }
         }
-        return new ViewModel(array('form' => $form));
+        return new ViewModel(array('form' => $form, 'messages' => $messages));
+    }
+
+    public function registrationAction()
+    {
+        $this->layout('layout/authentication');
+        $form = new RegistrationForm();
+        $messages = null;
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter(new RegistrationFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $data = $this->prepareData($data);
+                $auth = new Authentication();
+                $auth->exchangeArray($data);
+                $this->getUsersTable()->saveUser($auth);
+                $this->sendConfirmationEmail($auth);
+                $messages = 'Wysłano maila z linkiem potwierdzającym';
+            }
+        }
+        return new ViewModel(array('form' => $form, 'messages' => $messages));
+    }
+
+    public function confirmEmailAction()
+    {
+        $this->layout('layout/authentication');
+        $token = $this->params()->fromRoute('id');
+        $viewModel = new ViewModel(array('token' => $token));
+        try {
+            $user = $this->getUsersTable()->getUserByToken($token);
+            $id = $user->id;
+            $this->getUsersTable()->activateUser($id);
+        }
+        catch(\Exception $e) {
+            $viewModel->setTemplate('cmsir/index/confirm-email-error.phtml');
+        }
+        return $viewModel;
+    }
+
+    public function sendConfirmationEmail($auth)
+    {
+        $transport = $this->getServiceLocator()->get('mail.transport');
+        $message = new Message();
+        $this->getRequest()->getServer();
+        $message->addTo($auth->email)
+            ->addFrom('mailer@web-ir.pl')
+            ->setSubject('Prosimy o potwierdzenie rejestracji!')
+            ->setBody("W celu potwierdzenia rejestracji kliknij w link => " .
+                $this->getRequest()->getServer('HTTP_ORIGIN') .
+                $this->url()->fromRoute('confirm-email', array('id' => $auth->registration_token)));
+        $transport->send($message);
     }
 
     public function sendPasswordByEmail($usr_email, $password)
@@ -142,18 +213,6 @@ class IndexController extends AbstractActionController
             );
         $message->setEncoding('UTF-8');
         $transport->send($message);
-    }
-
-    public function passwordChangeSuccessAction()
-    {
-        $email = null;
-        $flashMessenger = $this->flashMessenger();
-        if ($flashMessenger->hasMessages()) {
-            foreach($flashMessenger->getMessages() as $key => $value) {
-                $email .=  $value;
-            }
-        }
-        return new ViewModel(array('email' => $email));
     }
 
     public function generatePassword($l = 8, $c = 0, $n = 0, $s = 0) {
@@ -240,6 +299,32 @@ class IndexController extends AbstractActionController
         $config = $this->getServiceLocator()->get('Config');
         $staticSalt = $config['static_salt'];
         return $staticSalt;
+    }
+
+    public function prepareData($data)
+    {
+        $data['active'] = 0;
+        $data['password_salt'] = $this->generateDynamicSalt();
+        $data['password'] = $this->encriptPassword(
+            $this->getStaticSalt(),
+            $data['password'],
+            $data['password_salt']
+        );
+        $data['registration_date'] = date('Y-m-d H:i:s');
+        $date = new \DateTime();
+        $data['registration_date'] = $date->format('Y-m-d H:i:s');
+        $data['registration_token'] = md5(uniqid(mt_rand(), true));
+        $data['email_confirmed'] = 0;
+        return $data;
+    }
+
+    public function generateDynamicSalt()
+    {
+        $dynamicSalt = '';
+        for ($i = 0; $i < 50; $i++) {
+            $dynamicSalt .= chr(rand(33, 126));
+        }
+        return $dynamicSalt;
     }
 
     public function getUsersTable()

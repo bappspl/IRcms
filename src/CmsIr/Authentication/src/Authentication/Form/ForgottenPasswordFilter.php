@@ -15,14 +15,6 @@ class ForgottenPasswordFilter extends InputFilter
                 array(
                     'name' => 'EmailAddress'
                 ),
-				array(
-					'name'		=> 'Zend\Validator\Db\RecordExists',
-					'options' => array(
-						'table'   => 'cms_users',
-						'field'   => 'email',
-						'adapter' => $sm->get('Zend\Db\Adapter\Adapter'),
-					),
-				),
             ),
         ));
 	}
