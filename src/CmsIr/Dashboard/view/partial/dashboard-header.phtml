@@ -1,0 +1,6 @@
+<?php foreach($this->pages as $page): ?>
+    <?php if($page->isActive()): ?>
+        <h1 class="page-heading"><?php echo $page->getLabel() ?></h1>
+    <?php endif; ?>
+<?php endforeach; ?>
+<!-- End page heading -->

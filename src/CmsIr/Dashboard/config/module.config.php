@@ -25,6 +25,8 @@ return array(
             'layout/layout'  => __DIR__ . '/../view/layout/dashboard.phtml',
             'partial/top-nav'  => __DIR__ . '/../view/partial/dashboard-top-nav.phtml',
             'partial/sidebar-nav'  => __DIR__ . '/../view/partial/dashboard-sidebar-nav.phtml',
+            'partial/header'  => __DIR__ . '/../view/partial/dashboard-header.phtml',
+            'partial/breadcrumps'  => __DIR__ . '/../view/partial/dashboard-breadcrumps.phtml',
             'partial/footer'  => __DIR__ . '/../view/partial/dashboard-footer.phtml',
         ),
         'template_path_stack' => array(
