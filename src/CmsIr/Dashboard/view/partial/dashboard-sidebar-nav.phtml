@@ -1,39 +1,77 @@
 <!-- BEGIN SIDEBAR LEFT -->
 <div class="sidebar-left sidebar-nicescroller">
+    <?php
+        $layoutViewModel = $this->viewModel()->getRoot();
+        $userRole = $layoutViewModel->loggedUser->role;
+    ?>
+    <!-- Some HTML -->
     <ul class="sidebar-menu">
         <?php foreach ($this->container as $page): ?>
-            <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
-            <?php // when using partials we need to manually check for ACL conditions ?>
-            <?php if( ! $page->isVisible() || !$this->navigation()->accept($page)) continue; ?>
-            <?php $hasChildren = $page->hasPages() ?>
-            <?php if( ! $hasChildren): ?>
-                <li <?php if($page->isActive()) echo 'class="selected"'?>>
-                    <a class="nav-header" href="<?php echo $page->getHref() ?>">
-                        <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
-                        <?php echo $this->translate($page->getLabel()) ?>
-                    </a>
-                </li>
-            <?php else: ?>
-                <li>
-                    <a href="#">
-                        <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
-                        <i class="fa fa-angle-right chevron-icon-sidebar"></i>
-                        <span><?php echo $this->translate($page->getLabel()) ?></span>
-                    </a>
+            <?php if($userRole >= $page->getId()): ?>
+                <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
+                <?php $hasChildren = $page->hasPages() ?>
+                <?php if( ! $hasChildren): ?>
+                    <li <?php if($page->isActive()) echo 'class="selected"'?> id="<?php echo $page->getId(); ?>">
+                        <a class="nav-header" href="<?php echo $page->getHref() ?>">
+                            <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
+                            <?php echo $this->translate($page->getLabel()) ?>
+                        </a>
+                    </li>
+                <?php else: ?>
 
-                    <ul class="submenu">
-                        <?php foreach($page->getPages() as $child): ?>
-                            <?php // when using partials we need to manually check for ACL conditions ?>
-                            <?php if( ! $child->isVisible() || !$this->navigation()->accept($child)) continue; ?>
-                            <li>
-                                <a href="<?php echo $child->getHref() ?>">
-                                    <?php echo $this->translate($child->getLabel()) ?>
-                                </a>
-                            </li>
-                        <?php endforeach ?>
-                    </ul>
-                </li>
-            <?php endif ?>
+                    <?php $flag = 0; ?>
+
+                    <?php foreach($page->getPages() as $child): ?>
+                        <?php if($child->isActive()) $flag = 1; ?>
+                    <?php endforeach; ?>
+
+                    <?php if($flag == 1): ?>
+
+                        <li class="active" id="<?php echo $page->getId(); ?>">
+
+                            <a href="#">
+                                <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
+                                <i class="fa fa-angle-right chevron-icon-sidebar"></i>
+                                <span><?php echo $this->translate($page->getLabel()) ?></span>
+                            </a>
+
+                            <ul class="submenu" style="display: block;">
+                                <?php foreach($page->getPages() as $realActiveChild): ?>
+                                    <li <?php if($realActiveChild->isActive()) echo 'class="selected"'?>>
+                                        <a href="<?php echo $realActiveChild->getHref() ?>">
+                                             <?php echo $this->translate($realActiveChild->getLabel()) ?>
+                                        </a>
+                                    </li>
+                                 <?php endforeach; ?>
+                            </ul>
+                        </li>
+
+                    <?php else: ?>
+
+                        <li>
+
+                            <a href="#">
+                                <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
+                                <i class="fa fa-angle-right chevron-icon-sidebar"></i>
+                                <span><?php echo $this->translate($page->getLabel()) ?></span>
+                            </a>
+
+                            <ul class="submenu">
+                                <?php foreach($page->getPages() as $realChild): ?>
+                                    <?php if( ! $realChild->isVisible() || !$this->navigation()->accept($realChild)) continue; ?>
+                                    <li <?php if($realChild->isActive()) echo 'class="selected"'?>>
+                                        <a href="<?php echo $realChild->getHref() ?>">
+                                            <?php echo $this->translate($realChild->getLabel()) ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+
+                    <?php endif; ?>
+
+                <?php endif ?>
+            <?php endif; ?>
         <?php endforeach ?>
     </ul>
 </div><!-- /.sidebar-left -->
