@@ -16,6 +16,25 @@ class IndexController extends AbstractActionController
             $loggedUser = $auth->getIdentity();
             $this->layout()->loggedUser = $loggedUser;
         }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $output = array(
+                "sEcho" => 1,
+                "iTotalRecords" => 4,
+                "iTotalDisplayRecords" => 4,
+                "aaData" => array(
+                    array('aaa','aaa','aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
+                )
+            );
+
+            echo json_encode( $output );
+            return $this->response;
+        }
 		return new ViewModel();
 	}
 

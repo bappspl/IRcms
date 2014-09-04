@@ -19,6 +19,9 @@ return array(
             'Zend\Form\FormAbstractServiceFactory',
         ),
 	),
+    'strategies' => array(
+        'ViewJsonStrategy',
+    ),
     'asset_manager' => array(
         'resolver_configs' => array(
             'paths' => array(

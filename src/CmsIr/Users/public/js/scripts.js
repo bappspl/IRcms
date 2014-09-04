@@ -25,7 +25,11 @@ $(function () {
                     "sSortAscending":  ": aktywuj by posortować kolumnę rosnąco",
                     "sSortDescending": ": aktywuj by posortować kolumnę malejąco"
                 }
-            }
+            },
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "/cms-ir/users",
+            "sServerMethod": "POST"
         });
     }
 });
