@@ -4,6 +4,7 @@ namespace CmsIr\Users\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
+use Zend\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {
@@ -32,8 +33,11 @@ class IndexController extends AbstractActionController
                 )
             );
 
-            echo json_encode( $output );
-            return $this->response;
+            $result = new JsonModel(array(
+                'some_parameter' => 'some value',
+                'success'=>true,
+            ));
+            return $result;
         }
 		return new ViewModel();
 	}
