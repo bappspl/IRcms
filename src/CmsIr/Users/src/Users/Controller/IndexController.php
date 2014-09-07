@@ -20,11 +20,23 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
 
+            $displayStart = $this->getRequest()->getPost('iDisplayStart');
+            $displayLength = $this->getRequest()->getPost('iDisplayLength');
+            if(isset($displayStart) && $displayLength != '-1') {
+                $limit = $displayLength;
+                $offset = $displayStart;
+            }
             $output = array(
-                "sEcho" => 1,
-                "iTotalRecords" => 4,
-                "iTotalDisplayRecords" => 4,
+                "sEcho" => $this->getRequest()->getPost('sEcho'),
+                "iTotalRecords" => 15,
+                "iTotalDisplayRecords" => 10,
                 "aaData" => array(
+                    array($limit,$offset,'aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
+                    array('aaa','aaa','aaa','aaa'),
                     array('aaa','aaa','aaa','aaa'),
                     array('aaa','aaa','aaa','aaa'),
                     array('aaa','aaa','aaa','aaa'),
