@@ -322,7 +322,7 @@ class IndexController extends AbstractActionController
     {
         $dynamicSalt = '';
         for ($i = 0; $i < 50; $i++) {
-            $dynamicSalt .= chr(rand(33, 126));
+            $dynamicSalt .= chr(rand(35, 126));
         }
         return $dynamicSalt;
     }

@@ -4,7 +4,7 @@ namespace CmsIr\Users\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
-use Zend\View\Model\JsonModel;
+use Zend\Json\Json;
 
 class IndexController extends AbstractActionController
 {
@@ -27,29 +27,19 @@ class IndexController extends AbstractActionController
                 $limit = $displayLength;
                 $offset = $displayStart;
             }
+
+            $listData = $this->getUsersTable()->findBy($limit,$offset);
+
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
-                "iTotalRecords" => 15,
-                "iTotalDisplayRecords" => 10,
-                "aaData" => array(
-                    array($limit,$offset,'aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                    array('aaa','aaa','aaa','aaa'),
-                )
+                "iTotalRecords" => $listData['iTotalRecords'],
+                "iTotalDisplayRecords" => $listData['iTotalRecords'],
+                "aaData" => $listData['aaData']
             );
 
-            $result = new JsonModel(array(
-                'some_parameter' => 'some value',
-                'success'=>true,
-            ));
-            return $result;
+            $jsonObject = Json::encode($output, true);
+            echo $jsonObject;
+            return $this->response;
         }
 		return new ViewModel();
 	}
@@ -63,9 +53,11 @@ class IndexController extends AbstractActionController
         }
         return new ViewModel();
     }
-	
 
 
+    /**
+     * @return \CmsIr\Users\Model\UsersTable
+     */
     public function getUsersTable()
     {
         if (!$this->usersTable) {

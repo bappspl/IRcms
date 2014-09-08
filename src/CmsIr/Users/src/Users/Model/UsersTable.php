@@ -2,6 +2,7 @@
 namespace CmsIr\Users\Model;
 
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Select;
 
 class UsersTable
 {
@@ -29,90 +30,27 @@ class UsersTable
         return $row;
     }
 
-	public function getUserByToken($token)
+    public function findBy($limit, $offset)
     {
-        $rowset = $this->tableGateway->select(array('registration_token' => $token));
-        $row = $rowset->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $token");
-        }
-        return $row;
-    }
-	
-    public function activateUser($id)
-    {
-		$data['active'] = 1;
-		$data['email_confirmed'] = 1;
-		$this->tableGateway->update($data, array('id' => (int)$id));
-    }	
+        $allRows = $this->fetchAll();
+        $countAllRows = $allRows->count();
 
-    public function getUserByEmail($email)
-    {
-        $rowset = $this->tableGateway->select(array('email' => $email));
-        $row = $rowset->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $email");
-        }
-        return $row;
-    }
+        $trueLimit = (int) $limit;
+        $trueOffset = (int) $offset;
+        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset){
+            $select
+                ->limit($trueLimit)
+                ->offset($trueOffset);
+        });
 
-    public function changePassword($id, $password)
-    {
-		$data['password'] = $password;
-		$this->tableGateway->update($data, array('id' => (int)$id));
-    }
-	
-    public function saveUser(Authentication $auth)
-    {
-        $data = array(
-            'name' 				    => $auth->name,
-            'surname' 				=> $auth->surname,
-            'password'  		    => $auth->password,
-            'email'  			    => $auth->email,
-            'active'  		    	=> $auth->active,
-            'password_salt' 	    => $auth->password_salt,
-			'email_confirmed'	    => $auth->email_confirmed,
-            'registration_date'     => $auth->registration_date,
-            'registration_token'    => $auth->registration_token,
-            'role'                  => 2
-        );
-
-        $id = (int)$auth->id;
-        if ($id == 0) {
-            $this->tableGateway->insert($data);
-        } else {
-            if ($this->getUser($id)) {
-                $this->tableGateway->update($data, array('id' => $id));
-            } else {
-                throw new \Exception('Form $id does not exist');
-            }
+        $dataArray = array();
+        foreach($filteredRows as $data) {
+            $tmp = array($data->name, $data->surname, $data->email, $data->active);
+            array_push($dataArray, $tmp);
         }
-    }
-	
-    public function deleteUser($id)
-    {
-        $this->tableGateway->delete(array('id' => $id));
-    }
 
-    public function findLogin($login)
-    {
-        $rowset = $this->tableGateway->select(array('login' => $login));
-        $row = $rowset->current();
-        if (!$row) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        $countFilteredRows = $filteredRows->count();
 
-    public function findEmail($email)
-    {
-        $rowset = $this->tableGateway->select(array('email' => $email));
-        $row = $rowset->current();
-        if (!$row) {
-            return true;
-        } else {
-            return false;
-        }
+        return array('iTotalRecords' => $countAllRows, 'iTotalDisplayRecords' => $countFilteredRows, 'aaData' => $dataArray);
     }
 }

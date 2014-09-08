@@ -29,7 +29,8 @@ $(function () {
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": "/cms-ir/users",
-            "sServerMethod": "POST"
+            "sServerMethod": "POST",
+            "bPaginate":true
         });
     }
 });
