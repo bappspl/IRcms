@@ -21,14 +21,22 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost()) {
 
-            $displayStart = $this->getRequest()->getPost('iDisplayStart');
-            $displayLength = $this->getRequest()->getPost('iDisplayLength');
-            if(isset($displayStart) && $displayLength != '-1') {
-                $limit = $displayLength;
-                $offset = $displayStart;
+            $offset = $this->getRequest()->getPost('iDisplayStart');
+            $limit = $this->getRequest()->getPost('iDisplayLength');
+
+            $sorting = $this->getRequest()->getPost('iSortingCols');
+            $columns = array( 'name', 'surname', 'email', 'active');
+
+            for ($i=0 ; $i<intval($sorting); $i++)
+            {
+                if ($this->getRequest()->getPost('bSortable_'.intval($this->getRequest()->getPost('iSortCol_'.$i))) == "true" )
+                {
+                    $sortingColumn = $columns[$this->getRequest()->getPost('iSortCol_'.$i)];
+                    $sortingDir = $this->getRequest()->getPost('sSortDir_'.$i);
+                }
             }
 
-            $listData = $this->getUsersTable()->findBy($limit,$offset);
+            $listData = $this->getUsersTable()->findBy($limit,$offset,$sortingColumn,$sortingDir);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),

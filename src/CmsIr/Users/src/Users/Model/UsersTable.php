@@ -30,17 +30,18 @@ class UsersTable
         return $row;
     }
 
-    public function findBy($limit, $offset)
+    public function findBy($limit, $offset, $sortingColumn,$sortingDir)
     {
         $allRows = $this->fetchAll();
         $countAllRows = $allRows->count();
 
         $trueLimit = (int) $limit;
         $trueOffset = (int) $offset;
-        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset){
+        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sortingColumn, $sortingDir){
             $select
                 ->limit($trueLimit)
-                ->offset($trueOffset);
+                ->offset($trueOffset)
+                ->order($sortingColumn . ' ' . $sortingDir);
         });
 
         $dataArray = array();

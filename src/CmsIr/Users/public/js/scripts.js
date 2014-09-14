@@ -30,7 +30,8 @@ $(function () {
             "bServerSide": true,
             "sAjaxSource": "/cms-ir/users",
             "sServerMethod": "POST",
-            "bPaginate":true
+            "bPaginate":true,
+            "bSortable": true
         });
     }
 });
