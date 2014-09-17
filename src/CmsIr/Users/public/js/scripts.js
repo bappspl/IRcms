@@ -31,7 +31,8 @@ $(function () {
             "sAjaxSource": "/cms-ir/users",
             "sServerMethod": "POST",
             "bPaginate":true,
-            "bSortable": true
+            "bSortable": true,
+            "bSearchable": true
         });
     }
 });

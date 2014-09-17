@@ -3,6 +3,7 @@ namespace CmsIr\Users\Model;
 
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Predicate;
 
 class UsersTable
 {
@@ -30,28 +31,88 @@ class UsersTable
         return $row;
     }
 
-    public function findBy($limit, $offset, $sortingColumn,$sortingDir)
+    public function findBy($columns, $data)
     {
+        $displayFlag = false;
+
         $allRows = $this->fetchAll();
         $countAllRows = $allRows->count();
 
-        $trueLimit = (int) $limit;
-        $trueOffset = (int) $offset;
-        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sortingColumn, $sortingDir){
+        $trueOffset = (int) $data->iDisplayStart;
+        $trueLimit = (int) $data->iDisplayLength;
+
+        $sorting = array('id', 'asc');
+        if(isset($data->iSortCol_0)) {
+            $sorting = $this->getSortingColumnDir($columns, $data);
+        }
+
+        $where = array();
+        if ($data->sSearch != '') {
+            $where = array(
+                new Predicate\PredicateSet(
+                        $this->getFilterPredicate($columns, $data),
+                    Predicate\PredicateSet::COMBINED_BY_OR
+                )
+            );
+            $displayFlag = true;
+        }
+
+        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
             $select
+                ->where($where)
+                ->order($sorting[0] . ' ' . $sorting[1])
                 ->limit($trueLimit)
-                ->offset($trueOffset)
-                ->order($sortingColumn . ' ' . $sortingDir);
+                ->offset($trueOffset);
         });
 
+        $dataArray = $this->getDataToDisplay($filteredRows, $columns);
+
+        if($displayFlag == true) {
+            $countFilteredRows = $filteredRows->count();
+        } else {
+            $countFilteredRows = $countAllRows;
+        }
+
+        return array('iTotalRecords' => $countAllRows, 'iTotalDisplayRecords' => $countFilteredRows, 'aaData' => $dataArray);
+    }
+
+    public function getSortingColumnDir ($columns, $data)
+    {
+        for ($i=0 ; $i<intval($data->iSortingCols); $i++)
+        {
+            if ($data['bSortable_'.intval($data['iSortCol_'.$i])] == 'true')
+            {
+                $sortingColumn = $columns[$data['iSortCol_'.$i]];
+                $sortingDir = $data['sSortDir_'.$i];
+                return array($sortingColumn, $sortingDir);
+            }
+        }
+        return array();
+    }
+
+    public function getFilterPredicate ($columns, $data)
+    {
+        $where = array();
+        for ( $i=0 ; $i<count($columns) ; $i++ )
+        {
+            $where[] = new Predicate\Like($columns[$i], '%'.$data->sSearch.'%');
+        }
+        return $where;
+    }
+
+    public function getDataToDisplay ($filteredRows, $columns)
+    {
         $dataArray = array();
-        foreach($filteredRows as $data) {
-            $tmp = array($data->name, $data->surname, $data->email, $data->active);
+        foreach($filteredRows as $row) {
+
+            $tmp = array();
+
+            foreach($columns as $column){
+                $tmp[] = $row->$column;
+            }
             array_push($dataArray, $tmp);
         }
 
-        $countFilteredRows = $filteredRows->count();
-
-        return array('iTotalRecords' => $countAllRows, 'iTotalDisplayRecords' => $countFilteredRows, 'aaData' => $dataArray);
+        return $dataArray;
     }
 }
