@@ -32,7 +32,13 @@ $(function () {
             "sServerMethod": "POST",
             "bPaginate":true,
             "bSortable": true,
-            "bSearchable": true
+            "bSearchable": true,
+            "aoColumnDefs": [
+                {
+                    "bSortable": false,
+                    "aTargets": [ -1 ]
+                },
+            ]
         });
     }
 });

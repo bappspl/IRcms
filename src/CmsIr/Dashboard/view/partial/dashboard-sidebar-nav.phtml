@@ -37,11 +37,13 @@
 
                             <ul class="submenu" style="display: block;">
                                 <?php foreach($page->getPages() as $realActiveChild): ?>
+                                    <?php if($realActiveChild->visibleInPrimary == true): ?>
                                     <li <?php if($realActiveChild->isActive()) echo 'class="selected"'?>>
                                         <a href="<?php echo $realActiveChild->getHref() ?>">
                                              <?php echo $this->translate($realActiveChild->getLabel()) ?>
                                         </a>
                                     </li>
+                                    <?php endif; ?>
                                  <?php endforeach; ?>
                             </ul>
                         </li>

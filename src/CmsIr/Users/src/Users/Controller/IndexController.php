@@ -24,7 +24,7 @@ class IndexController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array( 'name', 'surname', 'email', 'active');
+            $columns = array( 'name', 'surname', 'email');
 
             $listData = $this->getUsersTable()->findBy($columns,$data);
             $output = array(
@@ -41,6 +41,16 @@ class IndexController extends AbstractActionController
 		return new ViewModel();
 	}
 
+    public function previewAction()
+    {
+        $auth = new AuthenticationService();
+        if ($auth->hasIdentity()) {
+            $loggedUser = $auth->getIdentity();
+            $this->layout()->loggedUser = $loggedUser;
+        }
+        return new ViewModel();
+    }
+
     public function createAction()
     {
         $auth = new AuthenticationService();
@@ -51,6 +61,25 @@ class IndexController extends AbstractActionController
         return new ViewModel();
     }
 
+    public function editAction()
+    {
+        $auth = new AuthenticationService();
+        if ($auth->hasIdentity()) {
+            $loggedUser = $auth->getIdentity();
+            $this->layout()->loggedUser = $loggedUser;
+        }
+        return new ViewModel();
+    }
+
+    public function deleteAction()
+    {
+        $auth = new AuthenticationService();
+        if ($auth->hasIdentity()) {
+            $loggedUser = $auth->getIdentity();
+            $this->layout()->loggedUser = $loggedUser;
+        }
+        return new ViewModel();
+    }
 
     /**
      * @return \CmsIr\Users\Model\UsersTable

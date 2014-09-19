@@ -110,9 +110,11 @@ class UsersTable
             foreach($columns as $column){
                 $tmp[] = $row->$column;
             }
+            $tmp[] = '<a href="users/preview/'.$row->id.'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
+                     '<a href="users/edit/'.$row->id.'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                     '<a href="users/delete/'.$row->id.'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
-
         return $dataArray;
     }
 }
