@@ -31,6 +31,12 @@ class UsersTable
         return $row;
     }
 
+    public function deleteUser($id)
+    {
+        $id  = (int) $id;
+        $this->tableGateway->delete(array('id' => $id));
+    }
+
     public function findBy($columns, $data)
     {
         $displayFlag = false;

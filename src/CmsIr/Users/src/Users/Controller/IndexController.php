@@ -78,7 +78,29 @@ class IndexController extends AbstractActionController
             $loggedUser = $auth->getIdentity();
             $this->layout()->loggedUser = $loggedUser;
         }
-        return new ViewModel();
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('users-list');
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Tak') {
+                $id = (int) $request->getPost('id');
+                $this->getUsersTable()->deleteUser($id);
+                $this->flashMessenger()->addMessage('Użytkownik został usunięty poprawnie.');
+            }
+
+            return $this->redirect()->toRoute('users-list');
+        }
+
+        return array(
+            'id'    => $id,
+            'user' => $this->getUsersTable()->getUser($id)
+        );
     }
 
     /**

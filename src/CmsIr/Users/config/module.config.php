@@ -9,6 +9,9 @@ return array(
         'routes' =>  include __DIR__ . '/routing.config.php',
     ),
     'view_manager' => array(
+        'template_map' => array(
+            'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
+        ),
         'template_path_stack' => array(
             'users' => __DIR__ . '/../view'
         ),
