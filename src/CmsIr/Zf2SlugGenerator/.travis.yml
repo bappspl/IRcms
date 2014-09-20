@@ -1,0 +1,14 @@
+language: php
+php:
+  - 5.5
+  - 5.4
+  - 5.3
+
+env:
+ - ZF2_PATH=./zf2/library
+
+before_install:
+ - cd tests; git clone --depth=1 https://github.com/zendframework/zf2.git
+
+script:
+ - phpunit -c phpunit.xml
