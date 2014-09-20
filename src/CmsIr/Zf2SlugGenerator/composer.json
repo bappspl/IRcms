@@ -1,0 +1,25 @@
+{
+    "name": "olliebrennan/zf2-slug-generator",
+    "description": "A ZF2 Slug Generation Library. Allows basic slug generation or integration with your DB",
+    "keywords": ["slug", "zend-framework", "zf2"],
+    "homepage": "https://github.com/olliebrennan/Zf2SlugGenerator",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Ollie Brennan",
+            "email": "github@epicarena.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zf-commons/zfc-base": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "zf2-slug-generator": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
