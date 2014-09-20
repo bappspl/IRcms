@@ -4,6 +4,7 @@
         $layoutViewModel = $this->viewModel()->getRoot();
         $userRole = $layoutViewModel->loggedUser->role;
     ?>
+
     <!-- Some HTML -->
     <ul class="sidebar-menu">
         <?php foreach ($this->container as $page): ?>
@@ -61,11 +62,17 @@
                             <ul class="submenu">
                                 <?php foreach($page->getPages() as $realChild): ?>
                                     <?php if( ! $realChild->isVisible() || !$this->navigation()->accept($realChild)) continue; ?>
+                                    <?php if($realChild->visibleInPrimary == true): ?>
                                     <li <?php if($realChild->isActive()) echo 'class="selected"'?>>
+
                                         <a href="<?php echo $realChild->getHref() ?>">
+
                                             <?php echo $this->translate($realChild->getLabel()) ?>
+
                                         </a>
+
                                     </li>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </ul>
                         </li>

@@ -25,9 +25,7 @@ class IndexController extends AbstractActionController
             $this->layout()->loggedUser = $loggedUser;
         }
 
-        $viewParams = array();
         $viewModel = new ViewModel();
-        $viewModel->setVariables($viewParams);
         return $viewModel;
     }
 }
