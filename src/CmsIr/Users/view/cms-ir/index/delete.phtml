@@ -1,6 +1,6 @@
 <div class="jumbotron white-bg jumbotron-sm">
 
-    <p class="text-center">Czy na pewno chcesz usunąć użytkownika: <b><?php echo $user->name . ' ' . $user->surname; ?></b>?</p>
+    <p class="text-center">Czy na pewno chcesz usunąć użytkownika: <b><?php echo $user->getName() . ' ' . $user->surname; ?></b>?</p>
 
     <form action="" method="post">
         <input type="hidden" name="id" value="<?php echo (int) $user->id; ?>" />

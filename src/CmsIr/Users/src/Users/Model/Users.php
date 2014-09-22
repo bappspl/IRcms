@@ -54,4 +54,182 @@ class Users
     {
 
     }
+
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email_confirmed
+     */
+    public function setEmailConfirmed($email_confirmed)
+    {
+        $this->email_confirmed = $email_confirmed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmailConfirmed()
+    {
+        return $this->email_confirmed;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param mixed $password_salt
+     */
+    public function setPasswordSalt($password_salt)
+    {
+        $this->password_salt = $password_salt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPasswordSalt()
+    {
+        return $this->password_salt;
+    }
+
+    /**
+     * @param mixed $registration_date
+     */
+    public function setRegistrationDate($registration_date)
+    {
+        $this->registration_date = $registration_date;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrationDate()
+    {
+        return $this->registration_date;
+    }
+
+    /**
+     * @param mixed $registration_token
+     */
+    public function setRegistrationToken($registration_token)
+    {
+        $this->registration_token = $registration_token;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrationToken()
+    {
+        return $this->registration_token;
+    }
+
+    /**
+     * @param mixed $role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param mixed $surname
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+
+
 }

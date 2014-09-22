@@ -114,7 +114,6 @@ class IndexController extends AbstractActionController
         $this->layout('layout/authentication');
         $form = new ForgottenPasswordForm();
         $messages = null;
-        $form->get('submit')->setValue('Wyślij');
         $request = $this->getRequest();
 
         if ($request->isPost()) {

@@ -61,7 +61,7 @@ class RegistrationForm extends Form
                 'type'  => 'submit',
                 'value' => 'Zarejestruj',
                 'id' => 'submitbutton',
-                'class' => 'btn btn-warning btn-lg btn-perspective btn-block'
+                'class' => 'btn btn-warning btn-lg btn-block'
             ),
         )); 
     }

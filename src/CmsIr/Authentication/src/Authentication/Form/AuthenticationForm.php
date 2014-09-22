@@ -51,7 +51,7 @@ class AuthenticationForm extends Form
                 'type'  => 'submit',
                 'value' => 'Zaloguj',
                 'id' => 'submitbutton',
-                'class' => 'btn btn-warning btn-lg btn-perspective btn-block'
+                'class' => 'btn btn-warning btn-lg btn-block'
             ),
         ));
     }
