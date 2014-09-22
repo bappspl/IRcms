@@ -14,7 +14,7 @@ return array(
             'route'    => '/cms-ir/users',
             'defaults' => array(
                 'module' => 'CmsIr\Users',
-                'controller' => 'CmsIr\Users\Controller\Index',
+                'controller' => 'CmsIr\Users\Controller\Users',
                 'action'     => 'usersList',
             ),
         ),
@@ -25,7 +25,7 @@ return array(
             'route'    => '/cms-ir/users/create',
             'defaults' => array(
                 'module' => 'CmsIr\Users',
-                'controller' => 'CmsIr\Users\Controller\Index',
+                'controller' => 'CmsIr\Users\Controller\Users',
                 'action'     => 'create',
             ),
         ),
@@ -36,7 +36,7 @@ return array(
             'route'    => '/cms-ir/users/edit/:id',
             'defaults' => array(
                 'module' => 'CmsIr\Users',
-                'controller' => 'CmsIr\Users\Controller\Index',
+                'controller' => 'CmsIr\Users\Controller\Users',
                 'action'     => 'edit',
             ),
             'constraints' => array(
@@ -50,7 +50,7 @@ return array(
             'route'    => '/cms-ir/users/preview/:id',
             'defaults' => array(
                 'module' => 'CmsIr\Users',
-                'controller' => 'CmsIr\Users\Controller\Index',
+                'controller' => 'CmsIr\Users\Controller\Users',
                 'action'     => 'preview',
             ),
             'constraints' => array(
@@ -64,7 +64,7 @@ return array(
             'route'    => '/cms-ir/users/delete/:id',
             'defaults' => array(
                 'module' => 'CmsIr\Users',
-                'controller' => 'CmsIr\Users\Controller\Index',
+                'controller' => 'CmsIr\Users\Controller\Users',
                 'action'     => 'delete',
             ),
             'constraints' => array(

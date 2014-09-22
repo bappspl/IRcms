@@ -1,6 +1,5 @@
 
 <?php echo $this->partial('partial/flashmessages'); ?>
-
 <!-- BEGIN DATA TABLE -->
 <div class="the-box">
     <div class="table-responsive">
@@ -14,12 +13,21 @@
             </tr>
         </thead>
     </table>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <a class="btn btn-facebook pull-right" href="<?php echo $this->url('user-create'); ?>">Dodaj nowy</a>
+        </div>
+    </div>
+
     </div><!-- /.table-responsive -->
 </div><!-- /.the-box .default -->
 <!-- END DATA TABLE -->
+<?php echo $this->partial('partial/delete-modal'); ?>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/users.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datatable.js'); ?>
