@@ -8,7 +8,7 @@ use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
 
 
-class IndexController extends AbstractActionController
+class UsersController extends AbstractActionController
 {
     protected $usersTable;
 
@@ -78,13 +78,12 @@ class IndexController extends AbstractActionController
             $loggedUser = $auth->getIdentity();
             $this->layout()->loggedUser = $loggedUser;
         }
-
+        $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
             return $this->redirect()->toRoute('users-list');
         }
 
-        $request = $this->getRequest();
         if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
@@ -92,6 +91,12 @@ class IndexController extends AbstractActionController
                 $id = (int) $request->getPost('id');
                 $this->getUsersTable()->deleteUser($id);
                 $this->flashMessenger()->addMessage('Użytkownik został usunięty poprawnie.');
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = $id, true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
             }
 
             return $this->redirect()->toRoute('users-list');
@@ -113,5 +118,13 @@ class IndexController extends AbstractActionController
             $this->usersTable = $sm->get('CmsIr\Users\Model\UsersTable');
         }
         return $this->usersTable;
+    }
+
+    /**
+     * @return \Zend\View\Renderer\RendererInterface
+     */
+    public function getViewRenderer()
+    {
+        return $this->getServiceLocator()->get('viewmanager')->getRenderer();
     }
 }

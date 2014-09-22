@@ -2,7 +2,7 @@
 return array(
 	'controllers' => array(
         'invokables' => array(
-            'CmsIr\Users\Controller\Index' => 'CmsIr\Users\Controller\IndexController'
+            'CmsIr\Users\Controller\Users' => 'CmsIr\Users\Controller\UsersController'
         ),
 	),
     'router' => array(
@@ -11,6 +11,7 @@ return array(
     'view_manager' => array(
         'template_map' => array(
             'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
+            'partial/delete-modal'  => __DIR__ . '/../view/partial/delete-modal.phtml',
         ),
         'template_path_stack' => array(
             'users' => __DIR__ . '/../view'

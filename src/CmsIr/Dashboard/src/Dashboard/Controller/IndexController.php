@@ -25,11 +25,7 @@ class IndexController extends AbstractActionController
             $this->layout()->loggedUser = $loggedUser;
         }
 
-        $service = $this->getServiceLocator()->get('Zf2SlugGenerator\SlugService');
-        $slug = $service->create('My String To Slug', false);
-
         $viewParams = array();
-        $viewParams['slug'] = $slug;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
