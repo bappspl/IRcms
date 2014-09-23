@@ -41,16 +41,16 @@ return array(
             ),
             'delete' => array(
                 'may_terminate' => true,
-                'type' => 'Literal',
+                'type' => 'Segment',
                 'options' => array(
-                    'route' => '/delete/:',
+                    'route' => '/delete/:slider_id',
                     'defaults' => array(
                         'module' => 'CmsIr\Slider',
                         'controller' => 'CmsIr\Slider\Controller\Slider',
                         'action' => 'delete',
                     ),
                     'constraints' => array(
-                        'product_id' => '[0-9]+'
+                        'slider_id' => '[0-9]+'
                     ),
                 ),
             ),

@@ -8,6 +8,8 @@ use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
 use CmsIr\Users\Form\UserForm;
 use CmsIr\Users\Form\UserFormFilter;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
 
 use Zend\Mail\Message;
 
@@ -251,12 +253,21 @@ class UsersController extends AbstractActionController
     public function sendConfirmationEmail(Users $user, $password)
     {
         $transport = $this->getServiceLocator()->get('mail.transport');
+
+        $content = "Utworzono konto dla ciebie w serwisie " . $this->appName . "<br> Twoje hasło to: " .  $password;
+
+        $html = new MimePart($content);
+        $html->type = "text/html";
+        $body = new MimeMessage();
+        $body->setParts(array($html,));
+
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($user->getEmail())
             ->addFrom('mailer@web-ir.pl')
             ->setSubject('Rejestracja w serwisie: ' . $this->appName)
-            ->setBody("Utworzono konto dla ciebie w serwisie " . $this->appName . "<br> Twoje hasło to: " .  $password);
+            ->setBody($body);
+        $message->setEncoding('utf-8');
         $transport->send($message);
     }
 

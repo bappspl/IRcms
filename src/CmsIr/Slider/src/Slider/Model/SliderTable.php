@@ -26,18 +26,18 @@ class SliderTable
         return $result;
     }
 
-    public function getUser($id)
+    public function getSlider($id)
     {
         $id  = (int) $id;
         $rowset = $this->tableGateway->select(array('id' => $id));
-        $row = $rowset->current();
-        if (!$row) {
+        $result = $this->getResultSetAsArrayObject($rowset);
+        if (!$result) {
             throw new \Exception("Could not find row $id");
         }
-        return $row;
+        return $result;
     }
 
-    public function deleteUser($id)
+    public function deleteSlider($id)
     {
         $id  = (int) $id;
         $this->tableGateway->delete(array('id' => $id));
@@ -48,7 +48,7 @@ class SliderTable
         $displayFlag = false;
 
         $allRows = $this->fetchAll();
-        $countAllRows = $allRows->count();
+        $countAllRows = count($allRows);
 
         $trueOffset = (int) $data->iDisplayStart;
         $trueLimit = (int) $data->iDisplayLength;
@@ -122,9 +122,8 @@ class SliderTable
             foreach($columns as $column){
                 $tmp[] = $row->$column;
             }
-            $tmp[] = '<a href="users/preview/'.$row->id.'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                     '<a href="users/edit/'.$row->id.'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                     '<a href="users/delete/'.$row->id.'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+            $tmp[] = '<a href="slider/edit/'.$row->id.'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                     '<a href="slider/delete/'.$row->id.'" id="'.$row->id.'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
