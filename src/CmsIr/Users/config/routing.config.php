@@ -72,4 +72,18 @@ return array(
             ),
         ),
     ),
+
+    'upload' => array(
+        'type'    => 'Segment',
+        'options' => array(
+            'route'    => '/cms-ir/users/upload',
+            'defaults' => array(
+                'module' => 'CmsIr\Users',
+                'controller' => 'CmsIr\Users\Controller\Users',
+                'action'     => 'upload',
+            ),
+            'constraints' => array(
+            ),
+        ),
+    ),
 );

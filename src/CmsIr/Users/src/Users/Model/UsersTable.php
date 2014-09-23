@@ -17,7 +17,9 @@ class UsersTable
     public function fetchAll()
     {
         $resultSet = $this->tableGateway->select();
-        return $resultSet;
+        $result = $this->getResultSetAsArrayObject($resultSet);
+
+        return $result;
     }
 
     public function getUser($id)
@@ -37,12 +39,33 @@ class UsersTable
         $this->tableGateway->delete(array('id' => $id));
     }
 
+    public function saveUser(Users $user)
+    {
+        $data = array(
+            'name' => $user->getName(),
+            'surname'  => $user->getSurname(),
+            'email'  => $user->getEmail(),
+            'filename'  => $user->getFilename(),
+        );
+
+        $id = (int) $user->id;
+        if ($id == 0) {
+            $this->tableGateway->insert($data);
+        } else {
+            if ($this->getUser($id)) {
+                $this->tableGateway->update($data, array('id' => $id));
+            } else {
+                throw new \Exception('User id does not exist');
+            }
+        }
+    }
+
     public function findBy($columns, $data)
     {
         $displayFlag = false;
 
         $allRows = $this->fetchAll();
-        $countAllRows = $allRows->count();
+        $countAllRows = count($allRows);
 
         $trueOffset = (int) $data->iDisplayStart;
         $trueLimit = (int) $data->iDisplayLength;
@@ -122,5 +145,16 @@ class UsersTable
             array_push($dataArray, $tmp);
         }
         return $dataArray;
+    }
+
+    public function getResultSetAsArrayObject($resultSet)
+    {
+        $objectArray = array();
+
+        foreach($resultSet as $result){
+            array_push($objectArray, $result);
+        }
+
+        return count($objectArray) == 1 ? reset($objectArray) : $objectArray;
     }
 }

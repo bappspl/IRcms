@@ -6,10 +6,26 @@ use CmsIr\Users\Model\Users;
 use CmsIr\Users\Model\UsersTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
-use CmsIr\Authentication\Model\Authentication;
+use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\MvcEvent;
+use Zend\Authentication\AuthenticationService;
 
 class Module
 {
+    public function onBootstrap(MvcEvent $e)
+    {
+        $eventManager        = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+
+        $viewModel = $e->getViewModel();
+
+        $auth = new AuthenticationService();
+        if ($auth->hasIdentity()) {
+            $loggedUser = $auth->getIdentity();
+            $viewModel->loggedUser = $loggedUser;
+        }
+    }
 
     public function getConfig()
     {

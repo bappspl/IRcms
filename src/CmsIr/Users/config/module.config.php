@@ -12,6 +12,9 @@ return array(
         'template_map' => array(
             'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
             'partial/delete-modal'  => __DIR__ . '/../view/partial/delete-modal.phtml',
+            'partial/form/basic-data'  => __DIR__ . '/../view/partial/form/basic-data.phtml',
+            'partial/form/files'  => __DIR__ . '/../view/partial/form/files.phtml',
+            'partial/form/actions'  => __DIR__ . '/../view/partial/form/actions.phtml',
         ),
         'template_path_stack' => array(
             'users' => __DIR__ . '/../view'

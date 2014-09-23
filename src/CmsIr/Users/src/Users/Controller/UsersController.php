@@ -1,25 +1,21 @@
 <?php
 namespace CmsIr\Users\Controller;
 
+use CmsIr\Users\Model\Users;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Authentication\AuthenticationService;
 use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
+use CmsIr\Users\Form\UserForm;
+use CmsIr\Users\Form\UserFormFilter;
 
 
 class UsersController extends AbstractActionController
 {
     protected $usersTable;
-
+    protected $uploadDir = 'public/files/users/';
     public function usersListAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
-        }
-
         $request = $this->getRequest();
         if ($request->isPost()) {
 
@@ -43,41 +39,40 @@ class UsersController extends AbstractActionController
 
     public function previewAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
-        }
+
         return new ViewModel();
     }
 
     public function createAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
+        $form = new UserForm();
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $form->setInputFilter(new UserFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $request->getPost();
+
+                var_dump($data);die;
+            }
         }
-        return new ViewModel();
+
+        $viewParams = array();
+        $viewParams['form'] = $form;
+        return new ViewModel($viewParams);
     }
 
     public function editAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
-        }
         return new ViewModel();
     }
 
     public function deleteAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
-        }
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
@@ -108,6 +103,28 @@ class UsersController extends AbstractActionController
         );
     }
 
+    public function uploadAction ()
+    {
+        if (!empty($_FILES)) {
+            $tempFile   = $_FILES['Filedata']['tmp_name'];
+            $targetFile = $_FILES['Filedata']['name'];
+
+            $file = explode('.', $targetFile);
+            $fileName = $file[0];
+            $fileExt = $file[1];
+
+            $uniqidFilename = $fileName.'-'.uniqid();
+            $targetFile = $uniqidFilename.'.'.$fileExt;
+
+            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
+                echo $targetFile;
+            } else {
+                echo 0;
+            }
+
+        }
+        return $this->response;
+    }
     /**
      * @return \CmsIr\Users\Model\UsersTable
      */
@@ -118,13 +135,5 @@ class UsersController extends AbstractActionController
             $this->usersTable = $sm->get('CmsIr\Users\Model\UsersTable');
         }
         return $this->usersTable;
-    }
-
-    /**
-     * @return \Zend\View\Renderer\RendererInterface
-     */
-    public function getViewRenderer()
-    {
-        return $this->getServiceLocator()->get('viewmanager')->getRenderer();
     }
 }
