@@ -68,6 +68,9 @@ class UsersController extends AbstractActionController
 
                 $this->getUsersTable()->saveUser($user);
                 $this->sendConfirmationEmail($user, $data[1]);
+                $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
+
+                return $this->redirect()->toRoute('users-list');
             }
         }
 
