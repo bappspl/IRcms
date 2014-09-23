@@ -19,11 +19,6 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
-        }
 
         $viewParams = array();
         $viewModel = new ViewModel();

@@ -4,9 +4,26 @@ namespace CmsIr\Dashboard;
 // Add this for Table Date Gateway
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\MvcEvent;
+use Zend\Authentication\AuthenticationService;
 
 class Module
 {
+    public function onBootstrap(MvcEvent $e)
+    {
+        $eventManager        = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+
+        $viewModel = $e->getViewModel();
+
+        $auth = new AuthenticationService();
+        if ($auth->hasIdentity()) {
+            $loggedUser = $auth->getIdentity();
+            $viewModel->loggedUser = $loggedUser;
+        }
+    }
 
     public function getConfig()
     {

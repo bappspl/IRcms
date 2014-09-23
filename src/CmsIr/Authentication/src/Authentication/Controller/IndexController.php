@@ -44,7 +44,6 @@ class IndexController extends AbstractActionController
             $form->setInputFilter(new AuthenticationFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-//            if(!empty($data['email']) && !empty($data['password'])) {
             if ($form->isValid()) {
                 $data = $form->getData();
                 $sm = $this->getServiceLocator();
