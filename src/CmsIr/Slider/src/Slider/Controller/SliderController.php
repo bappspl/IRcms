@@ -1,10 +1,10 @@
 <?php
 namespace CmsIr\Slider\Controller;
 
+use CmsIr\Slider\Form\SliderForm;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\Adapter\DbTable as AuthAdapter;
+use Zend\Json\Json;
 
 
 class SliderController extends AbstractActionController
@@ -13,19 +13,31 @@ class SliderController extends AbstractActionController
 
     public function listAction()
     {
-        $viewParams = array();
-        $viewModel = new ViewModel();
-        $viewModel->setVariables($viewParams);
-        return $viewModel;
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $data = $this->getRequest()->getPost();
+            $columns = array( 'name', 'slug');
+
+            $listData = $this->getSliderTable()->findBy($columns,$data);
+            $output = array(
+                "sEcho" => $this->getRequest()->getPost('sEcho'),
+                "iTotalRecords" => $listData['iTotalRecords'],
+                "iTotalDisplayRecords" => $listData['iTotalDisplayRecords'],
+                "aaData" => $listData['aaData']
+            );
+
+            $jsonObject = Json::encode($output, true);
+            echo $jsonObject;
+            return $this->response;
+        }
+
+        return new ViewModel();
     }
 
     public function createAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
-        }
+        $form = new SliderForm();
 
         $viewParams = array();
         $viewModel = new ViewModel();
@@ -35,12 +47,6 @@ class SliderController extends AbstractActionController
 
     public function editAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
-        }
-
         $viewParams = array();
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
@@ -49,20 +55,38 @@ class SliderController extends AbstractActionController
 
     public function deleteAction()
     {
-        $auth = new AuthenticationService();
-        if ($auth->hasIdentity()) {
-            $loggedUser = $auth->getIdentity();
-            $this->layout()->loggedUser = $loggedUser;
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('slider_id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('slider');
         }
 
-        $viewParams = array();
-        $viewModel = new ViewModel();
-        $viewModel->setVariables($viewParams);
-        return $viewModel;
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Tak') {
+                $id = (int) $request->getPost('id');
+                $this->getSliderTable()->deleteSlider($id);
+                $this->flashMessenger()->addMessage('Slider został usunięty poprawnie.');
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = $id, true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('slider');
+        }
+
+        return array(
+            'id'    => $id,
+            'slider' => $this->getSliderTable()->getSlider($id)
+        );
     }
 
     /**
-     * @return \CmsIr\Users\Model\UsersTable
+     * @return \CmsIr\Slider\Model\SliderTable
      */
     public function getSliderTable()
     {
