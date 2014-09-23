@@ -44,7 +44,12 @@ class UsersTable
         $data = array(
             'name' => $user->getName(),
             'surname'  => $user->getSurname(),
+            'password'  => $user->getPassword(),
+            'password_salt'  => $user->getPasswordSalt(),
             'email'  => $user->getEmail(),
+            'email_confirmed'  => 1,
+            'role'  => 4,
+            'active'  => 1,
             'filename'  => $user->getFilename(),
         );
 
