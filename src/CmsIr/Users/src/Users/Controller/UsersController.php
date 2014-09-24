@@ -8,6 +8,7 @@ use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
 use CmsIr\Users\Form\UserForm;
 use CmsIr\Users\Form\UserFormFilter;
+use CmsIr\Users\Form\UsereditFormFilter;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
 
@@ -44,13 +45,64 @@ class UsersController extends AbstractActionController
 
     public function previewAction()
     {
+        $id = $this->params()->fromRoute('id');
 
-        return new ViewModel();
+        $user = $this->getUsersTable()->getUser($id);
+
+        if(!$user) {
+            return $this->redirect()->toRoute('users-list');
+        }
+
+        $form = new UserForm();
+
+        $config = $this->getServiceLocator()->get('Config');
+        $aclRoles = $config['acl']['roles'];
+
+        $tmpArrayRoles = array();
+        $i = 1;
+
+        foreach ($aclRoles as $keyRole => $role) {
+            if($user->getRole() == $i) {
+                $tmp = array(
+                    'value' => $i,
+                    'label' => ucfirst($keyRole),
+                    'selected' => true
+                );
+            } else {
+                $tmp = array(
+                    'value' => $i,
+                    'label' => ucfirst($keyRole),
+                );
+            }
+            array_push($tmpArrayRoles, $tmp);
+            $i++;
+        }
+        $form->get('role')->setValueOptions($tmpArrayRoles);
+        $form->bind($user);
+
+        $viewParams = array();
+        $viewParams['form'] = $form;
+        return new ViewModel($viewParams);
     }
 
     public function createAction()
     {
         $form = new UserForm();
+
+        $config = $this->getServiceLocator()->get('Config');
+        $aclRoles = $config['acl']['roles'];
+
+        $tmpArrayRoles = array();
+        $i = 1;
+        foreach ($aclRoles as $keyRole => $role) {
+            $tmp = array(
+                'value' => $i,
+                'label' => ucfirst($keyRole)
+            );
+            array_push($tmpArrayRoles, $tmp);
+            $i++;
+        }
+        $form->get('role')->setValueOptions($tmpArrayRoles);
 
         $request = $this->getRequest();
 
@@ -65,7 +117,6 @@ class UsersController extends AbstractActionController
 
                 $user = new Users();
                 $user->exchangeArray($data[0]);
-
                 $this->getUsersTable()->saveUser($user);
                 $this->sendConfirmationEmail($user, $data[1]);
                 $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
@@ -81,7 +132,65 @@ class UsersController extends AbstractActionController
 
     public function editAction()
     {
-        return new ViewModel();
+        $id = $this->params()->fromRoute('id');
+
+        $user = $this->getUsersTable()->getUser($id);
+
+        if(!$user) {
+            return $this->redirect()->toRoute('users-list');
+        }
+
+        $form = new UserForm();
+
+        $config = $this->getServiceLocator()->get('Config');
+        $aclRoles = $config['acl']['roles'];
+
+        $tmpArrayRoles = array();
+        $i = 1;
+
+        foreach ($aclRoles as $keyRole => $role) {
+            if($user->getRole() == $i) {
+                $tmp = array(
+                    'value' => $i,
+                    'label' => ucfirst($keyRole),
+                    'selected' => true
+                );
+            } else {
+                $tmp = array(
+                    'value' => $i,
+                    'label' => ucfirst($keyRole),
+                );
+            }
+            array_push($tmpArrayRoles, $tmp);
+            $i++;
+        }
+        $form->get('role')->setValueOptions($tmpArrayRoles);
+        $form->bind($user);
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $form->setInputFilter(new UsereditFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                $user->setName($data->name);
+                $user->setSurname($data->surname);
+                $user->setEmail($data->email);
+                $user->setRole($data->role);
+                $user->setFilename($data->filename);
+                $this->getUsersTable()->saveUser($user);
+
+                $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');
+                return $this->redirect()->toRoute('users-list');
+            }
+        }
+        $viewParams = array();
+        $viewParams['form'] = $form;
+        return new ViewModel($viewParams);
     }
 
     public function deleteAction()
@@ -216,7 +325,7 @@ class UsersController extends AbstractActionController
     public function prepareData($data)
     {
         $randomPassword = uniqid();
-        $data['active'] = 0;
+        $data['active'] = 1;
         $data['password_salt'] = $this->generateDynamicSalt();
         $data['password'] = $this->encriptPassword(
             $this->getStaticSalt(),
@@ -227,7 +336,7 @@ class UsersController extends AbstractActionController
         $date = new \DateTime();
         $data['registration_date'] = $date->format('Y-m-d H:i:s');
         $data['registration_token'] = md5(uniqid(mt_rand(), true));
-        $data['email_confirmed'] = 0;
+        $data['email_confirmed'] = 1;
         return array($data, $randomPassword);
     }
 
