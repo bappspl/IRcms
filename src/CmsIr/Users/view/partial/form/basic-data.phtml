@@ -1,41 +1,7 @@
 <?php echo $this->formInput($form->get('id')); ?>
 <?php echo $this->formInput($form->get('filename')); ?>
-<div class="form-group">
-    <label><?php echo $this->formLabel($form->get('name')); ?></label>
-    <?php echo $this->formInput($form->get('name')); ?>
-    <?php echo $this->formElementErrors()
-        ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
-        ->setMessageCloseString('</small>')
-        ->render($form->get('name'))
-    ?>
-</div>
 
-<div class="form-group">
-    <label><?php echo $this->formLabel($form->get('surname')); ?></label>
-    <?php echo $this->formInput($form->get('surname')); ?>
-    <?php echo $this->formElementErrors()
-        ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
-        ->setMessageCloseString('</small>')
-        ->render($form->get('surname'))
-    ?>
-</div>
-
-<div class="form-group">
-    <label><?php echo $this->formLabel($form->get('email')); ?></label>
-    <?php echo $this->formInput($form->get('email')); ?>
-    <?php echo $this->formElementErrors()
-        ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
-        ->setMessageCloseString('</small>')
-        ->render($form->get('email'))
-    ?>
-</div>
-
-<div class="form-group">
-    <label><?php echo $this->formLabel($form->get('role')); ?></label>
-    <?php echo $this->formSelect($form->get('role')); ?>
-    <?php echo $this->formElementErrors()
-        ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
-        ->setMessageCloseString('</small>')
-        ->render($form->get('role'))
-    ?>
-</div>
+<?php echo $this->formInput($form->get('name')); ?>
+<?php echo $this->formInput($form->get('surname')); ?>
+<?php echo $this->formInput($form->get('email')); ?>
+<?php echo $this->formSelect($form->get('role')); ?>
