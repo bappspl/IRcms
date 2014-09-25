@@ -11,11 +11,18 @@ class UserForm extends Form
         $this->setAttribute('method', 'post');
 
         $this->add(array(
+            'name' => 'id',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'id'
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'filename',
             'attributes' => array(
                 'type'  => 'hidden',
-                'id' => 'filename',
-                'class' => 'form-control'
+                'id' => 'filename'
             ),
         ));
 
@@ -52,6 +59,18 @@ class UserForm extends Form
             'options' => array(
                 'label' => 'E-mail',
             ),
+        ));
+
+        $this->add(array(
+            'type' => 'select',
+            'name' => 'role',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'role',
+            ),
+            'options' => array(
+                'label' => 'Rola',
+            )
         ));
 
         $this->add(array(

@@ -1,1 +1,40 @@
-content - edit
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="row">
+    <div class="col-sm-6">
+
+        <div class="the-box">
+            <h4 class="small-title">Dane podstawowe</h4>
+            <?php echo $this->partial('partial/form/basic-data'); ?>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+
+        <div class="the-box">
+            <h4 class="small-title">Pliki</h4>
+            <?php echo $this->partial('partial/form/files'); ?>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <?php echo $this->partial('partial/form/actions'); ?>
+        </div>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/users.css'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/users-form.js'); ?>

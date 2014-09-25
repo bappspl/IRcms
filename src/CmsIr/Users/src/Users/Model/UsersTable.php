@@ -48,7 +48,7 @@ class UsersTable
             'password_salt'  => $user->getPasswordSalt(),
             'email'  => $user->getEmail(),
             'email_confirmed'  => 1,
-            'role'  => 4,
+            'role'  => $user->getRole(),
             'active'  => 1,
             'filename'  => $user->getFilename(),
         );
