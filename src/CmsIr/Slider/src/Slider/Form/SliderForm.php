@@ -13,8 +13,9 @@ class SliderForm extends Form
         $this->add(array(
             'name' => 'name',
             'attributes' => array(
+                'id' => 'name',
                 'type'  => 'text',
-                'class' => 'form-control',
+//                'class' => 'form-control',
                 'placeholder' => 'Wprowadź nazwę'
             ),
             'options' => array(
@@ -26,8 +27,8 @@ class SliderForm extends Form
             'attributes' => array(
                 'type'  => 'submit',
                 'value' => 'Zapisz',
-                'id' => 'submitbutton',
-                'class' => 'btn btn-success'
+                'id' => 'submit',
+                'class' => 'btn btn-primary pull-right'
             ),
         ));
     }

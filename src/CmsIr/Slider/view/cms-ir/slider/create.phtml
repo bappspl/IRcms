@@ -1,1 +1,29 @@
-create
+<?php
+    $form = $this->form;
+    $form->prepare();
+    echo $this->form()->openTag($form);
+?>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="the-box">
+
+            <h4 class="small-title">Dane podstawowe</h4>
+<!--            --><?php //echo $this->partial('partial/slider/form/basic-data'); ?>
+            <?php echo $this->formInput($form->get('name')) ?>
+<!--            --><?php //echo $this->formElementErrors()
+//                ->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+//                ->setMessageCloseString('</small>')
+//                ->render($form->get('name'))
+//            ?>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <?php echo $this->partial('partial/form/actions'); ?>
+        </div>
+    </div>
+</div>
+

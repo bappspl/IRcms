@@ -1,10 +1,11 @@
 <?php
-namespace CmsIr\Authentication\Form;
+namespace CmsIr\Slider\Form;
 
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\NotEmpty;
 
-class AuthenticationFormFilter extends InputFilter
+class SliderFormFilter extends InputFilter
 {
 	public function __construct($sm)
 	{
@@ -17,12 +18,12 @@ class AuthenticationFormFilter extends InputFilter
             ),
             'validators' => array(
                 array(
-                    'name'    => 'StringLength',
+                    'name' => 'NotEmpty',
                     'options' => array(
-                        'encoding' => 'UTF-8',
-                        'min'      => 1,
-                        'max'      => 100,
-                    ),
+                        'messages' => array(
+                            NotEmpty::IS_EMPTY => 'Uzupełnij pole!'
+                        )
+                    )
                 ),
                 array(
                     'name'		=> 'Zend\Validator\Db\NoRecordExists',

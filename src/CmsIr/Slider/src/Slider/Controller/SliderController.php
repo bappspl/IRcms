@@ -2,6 +2,7 @@
 namespace CmsIr\Slider\Controller;
 
 use CmsIr\Slider\Form\SliderForm;
+use CmsIr\Slider\Form\SliderFormFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -39,7 +40,25 @@ class SliderController extends AbstractActionController
     {
         $form = new SliderForm();
 
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $form->setInputFilter(new SliderFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                die('ok');
+                $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
+
+                return $this->redirect()->toRoute('users-list');
+            }
+        }
+
         $viewParams = array();
+        $viewParams['form'] = $form;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
