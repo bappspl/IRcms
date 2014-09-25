@@ -9,19 +9,13 @@ echo $this->form()->openTag($form);
         <div class="the-box">
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->formInput($form->get('filename')); ?>
-
             <div class="form-group">
-                <label><?php echo $this->formLabel($form->get('name')); ?></label>
                 <?php echo $this->formInput($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
-
             <div class="form-group">
-                <label><?php echo $this->formLabel($form->get('surname')); ?></label>
                 <?php echo $this->formInput($form->get('surname')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
-
             <div class="form-group">
-                <label><?php echo $this->formLabel($form->get('email')); ?></label>
                 <?php echo $this->formInput($form->get('email')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
 
