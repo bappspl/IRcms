@@ -8,19 +8,19 @@ use Zend\InputFilter\InputFilterInterface;
 // the object will be hydrated by Zend\Db\TableGateway\TableGateway
 class Users
 {
-    public $id;
-    public $name;
-    public $surname;
-    public $password;
-    public $filename;
+    protected $id;
+    protected $name;
+    protected $surname;
+    protected $password;
+    protected $filename;
 
-    public $email;	
-    public $role;
-    public $active;
-    public $password_salt;
-    public $registration_date;
-    public $registration_token;
-    public $email_confirmed;	
+    protected $email;
+    protected $role;
+    protected $active;
+    protected $password_salt;
+    protected $registration_date;
+    protected $registration_token;
+    protected $email_confirmed;
 
     public function exchangeArray($data) 
     {

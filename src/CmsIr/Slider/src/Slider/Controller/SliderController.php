@@ -17,9 +17,9 @@ class SliderController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array( 'name', 'slug', 'status');
+            $columns = array('name', 'slug');
 
-            $listData = $this->getSliderTable()->findBy($columns,$data);
+            $listData = $this->getSliderTable()->getDatatables($columns,$data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),

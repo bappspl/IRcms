@@ -165,4 +165,76 @@ class ModelTable
 
 //        return count($objectArray) == 1 ? reset($objectArray) : $objectArray;
     }
+
+    // datatables
+
+    public function getDatatables($columns, $data)
+    {
+        $displayFlag = false;
+
+        $allRows = $this->getAll();
+        $countAllRows = count($allRows);
+
+        $trueOffset = (int) $data->iDisplayStart;
+        $trueLimit = (int) $data->iDisplayLength;
+
+        $sorting = array('id', 'asc');
+        if(isset($data->iSortCol_0)) {
+            $sorting = $this->getSortingColumnDir($columns, $data);
+        }
+
+        $where = array();
+        if ($data->sSearch != '') {
+            $where = array(
+                new Predicate\PredicateSet(
+                    $this->getFilterPredicate($columns, $data),
+                    Predicate\PredicateSet::COMBINED_BY_OR
+                )
+            );
+            $displayFlag = true;
+        }
+
+        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
+            $select
+                ->where($where)
+                ->order($sorting[0] . ' ' . $sorting[1])
+                ->limit($trueLimit)
+                ->offset($trueOffset);
+        });
+
+        $dataArray = $this->getDataToDisplay($filteredRows, $columns);
+
+        if($displayFlag == true) {
+            $countFilteredRows = $filteredRows->count();
+        } else {
+            $countFilteredRows = $countAllRows;
+        }
+
+        return array('iTotalRecords' => $countAllRows, 'iTotalDisplayRecords' => $countFilteredRows, 'aaData' => $dataArray);
+    }
+
+    public function getSortingColumnDir ($columns, $data)
+    {
+        for ($i=0 ; $i<intval($data->iSortingCols); $i++)
+        {
+            if ($data['bSortable_'.intval($data['iSortCol_'.$i])] == 'true')
+            {
+                $sortingColumn = $columns[$data['iSortCol_'.$i]];
+                $sortingDir = $data['sSortDir_'.$i];
+                return array($sortingColumn, $sortingDir);
+            }
+        }
+        return array();
+    }
+
+    public function getFilterPredicate ($columns, $data)
+    {
+        $where = array();
+        for ( $i=0 ; $i<count($columns) ; $i++ )
+        {
+            $where[] = new Predicate\Like($columns[$i], '%'.$data->sSearch.'%');
+        }
+        return $where;
+    }
+
 }

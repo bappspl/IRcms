@@ -28,7 +28,7 @@ class UsersController extends AbstractActionController
             $data = $this->getRequest()->getPost();
             $columns = array( 'name', 'surname', 'email');
 
-            $listData = $this->getUsersTable()->findBy($columns,$data);
+            $listData = $this->getUsersTable()->getDatatables($columns,$data);
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
                 "iTotalRecords" => $listData['iTotalRecords'],

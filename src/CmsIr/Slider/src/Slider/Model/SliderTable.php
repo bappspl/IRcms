@@ -39,81 +39,6 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway->delete(array('id' => $id));
     }
 
-    public function findBy($columns, $data)
-    {
-        $displayFlag = false;
-
-        $allRows = $this->getSliderService()->findAll();
-
-
-        $countAllRows = count($allRows);
-
-        $trueOffset = (int) $data->iDisplayStart;
-        $trueLimit = (int) $data->iDisplayLength;
-
-        $sorting = array('id', 'asc');
-        if(isset($data->iSortCol_0)) {
-            $sorting = $this->getSortingColumnDir($columns, $data);
-        }
-
-        $where = array();
-        if ($data->sSearch != '') {
-            $where = array(
-                new Predicate\PredicateSet(
-                        $this->getFilterPredicate($columns, $data),
-                    Predicate\PredicateSet::COMBINED_BY_OR
-                )
-            );
-            $displayFlag = true;
-        }
-
-        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
-            $select
-                ->where($where)
-                ->order($sorting[0] . ' ' . $sorting[1])
-                ->limit($trueLimit)
-                ->offset($trueOffset);
-        });
-
-
-
-        $dataArray = $this->getDataToDisplay($filteredRows, $columns);
-
-
-
-        if($displayFlag == true) {
-            $countFilteredRows = $filteredRows->count();
-        } else {
-            $countFilteredRows = $countAllRows;
-        }
-
-        return array('iTotalRecords' => $countAllRows, 'iTotalDisplayRecords' => $countFilteredRows, 'aaData' => $dataArray);
-    }
-
-    public function getSortingColumnDir ($columns, $data)
-    {
-        for ($i=0 ; $i<intval($data->iSortingCols); $i++)
-        {
-            if ($data['bSortable_'.intval($data['iSortCol_'.$i])] == 'true')
-            {
-                $sortingColumn = $columns[$data['iSortCol_'.$i]];
-                $sortingDir = $data['sSortDir_'.$i];
-                return array($sortingColumn, $sortingDir);
-            }
-        }
-        return array();
-    }
-
-    public function getFilterPredicate ($columns, $data)
-    {
-        $where = array();
-        for ( $i=0 ; $i<count($columns) ; $i++ )
-        {
-            $where[] = new Predicate\Like($columns[$i], '%'.$data->sSearch.'%');
-        }
-        return $where;
-    }
-
     public function getDataToDisplay ($filteredRows, $columns)
     {
         $dataArray = array();
@@ -122,30 +47,34 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
             $tmp = array();
 
             foreach($columns as $column){
-
-                // sie jebie
-
-                switch ($column) {
-                    case 'name':
-                        $tmp[] = $row->getName();
-                        break;
-                    case 'slug':
-                        $tmp[] = $row->getSlug();
-                        break;
-                    case 'status':
-                        $tmp[] = $row->getStatus();
-                        break;
-                }
-
+                $column = 'get'.ucfirst($column);
+                $tmp[] = $row->$column();
             }
-
-
+            // dodanie switchera
+            $tmp[] = $this->getSwitcherToDisplay($row->getStatusId());
 
             $tmp[] = '<a href="slider/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
                      '<a href="slider/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
+    }
+
+    public function getSwitcherToDisplay ($switchValue)
+    {
+        $status = $this->getSliderService()->getStatusTable()->getBy(array('id' => $switchValue));
+        $currentStatus = reset($status);
+        $currentStatus->getName() == 'Active' ? $checked = 'checked' : $checked = '';
+        $template = '<div class="switch">
+                        <div class="onoffswitch blank">
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" '.$checked.' id="autoupdate">
+                            <label class="onoffswitch-label" for="autoupdate">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </div>';
+        return $template;
     }
 
     /**
