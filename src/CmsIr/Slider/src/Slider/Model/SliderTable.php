@@ -1,13 +1,18 @@
 <?php
 namespace CmsIr\Slider\Model;
 
+use CmsIr\System\Model\ModelTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Predicate;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class SliderTable
+class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
 {
+    protected $serviceLocator;
+
     protected $tableGateway;
 
     protected $originalResultSetPrototype;
@@ -15,15 +20,6 @@ class SliderTable
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
-    }
-	
-    public function fetchAll()
-    {
-        $resultSet = $this->tableGateway->select();
-
-        $result = $this->getResultSetAsArrayObject($resultSet);
-
-        return $result;
     }
 
     public function getSlider($id)
@@ -47,7 +43,9 @@ class SliderTable
     {
         $displayFlag = false;
 
-        $allRows = $this->fetchAll();
+        $allRows = $this->getSliderService()->findAll();
+
+
         $countAllRows = count($allRows);
 
         $trueOffset = (int) $data->iDisplayStart;
@@ -77,7 +75,11 @@ class SliderTable
                 ->offset($trueOffset);
         });
 
+
+
         $dataArray = $this->getDataToDisplay($filteredRows, $columns);
+
+
 
         if($displayFlag == true) {
             $countFilteredRows = $filteredRows->count();
@@ -120,23 +122,53 @@ class SliderTable
             $tmp = array();
 
             foreach($columns as $column){
-                $tmp[] = $row->$column;
+
+                // sie jebie
+
+                switch ($column) {
+                    case 'name':
+                        $tmp[] = $row->getName();
+                        break;
+                    case 'slug':
+                        $tmp[] = $row->getSlug();
+                        break;
+                    case 'status':
+                        $tmp[] = $row->getStatus();
+                        break;
+                }
+
             }
-            $tmp[] = '<a href="slider/edit/'.$row->id.'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                     '<a href="slider/delete/'.$row->id.'" id="'.$row->id.'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+
+
+
+            $tmp[] = '<a href="slider/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                     '<a href="slider/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
     }
 
-    public function getResultSetAsArrayObject($resultSet)
+    /**
+     * @return \CmsIr\Slider\Service\SliderService
+     */
+    public function getSliderService()
     {
-        $objectArray = array();
+        return $this->getServiceLocator()->get('CmsIr\Slider\Service\SliderService');
+    }
 
-        foreach($resultSet as $result){
-            array_push($objectArray, $result);
-        }
+    /**
+     * @return mixed
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
 
-        return count($objectArray) == 1 ? reset($objectArray) : $objectArray;
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
     }
 }

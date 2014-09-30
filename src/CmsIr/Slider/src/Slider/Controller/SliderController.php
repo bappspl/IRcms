@@ -3,6 +3,7 @@ namespace CmsIr\Slider\Controller;
 
 use CmsIr\Slider\Form\SliderForm;
 use CmsIr\Slider\Form\SliderFormFilter;
+use CmsIr\Slider\Model\Slider;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -10,17 +11,16 @@ use Zend\Json\Json;
 
 class SliderController extends AbstractActionController
 {
-    protected $sliderTable;
-
     public function listAction()
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array( 'name', 'slug');
+            $columns = array( 'name', 'slug', 'status');
 
             $listData = $this->getSliderTable()->findBy($columns,$data);
+
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
                 "iTotalRecords" => $listData['iTotalRecords'],
@@ -38,6 +38,8 @@ class SliderController extends AbstractActionController
 
     public function createAction()
     {
+        $test = new Slider();
+
         $form = new SliderForm();
 
         $request = $this->getRequest();
@@ -50,7 +52,7 @@ class SliderController extends AbstractActionController
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                die('ok');
+
                 $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
 
                 return $this->redirect()->toRoute('users-list');
@@ -109,10 +111,14 @@ class SliderController extends AbstractActionController
      */
     public function getSliderTable()
     {
-        if (!$this->sliderTable) {
-            $sm = $this->getServiceLocator();
-            $this->sliderTable = $sm->get('CmsIr\Slider\Model\SliderTable');
-        }
-        return $this->sliderTable;
+        return $this->getServiceLocator()->get('CmsIr\Slider\Model\SliderTable');
+    }
+
+    /**
+     * @return \CmsIr\Slider\Service\SliderService
+     */
+    public function getSliderService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Slider\Service\SliderService');
     }
 }

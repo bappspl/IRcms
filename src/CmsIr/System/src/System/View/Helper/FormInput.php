@@ -1,6 +1,6 @@
 <?php
 
-namespace CmsIr\Slider\View;
+namespace CmsIr\System\View\Helper;
 
 use Zend\Form\View\Helper\FormInput as ZendFormInput;
 
