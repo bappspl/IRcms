@@ -51,38 +51,53 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
                 $tmp[] = $row->$column();
             }
             // dodanie switchera
-            $tmp[] = $this->getSwitcherToDisplay($row->getStatusId());
+            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
 
-            $tmp[] = '<a href="slider/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+            $tmp[] = '<a href="slider/items/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Lista"><i class="fa fa-list"></i></a> ' .
+                     '<a href="slider/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
                      '<a href="slider/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
     }
 
-    public function getSwitcherToDisplay ($switchValue)
+    public function getLabelToDisplay ($labelValue)
     {
-        $status = $this->getSliderService()->getStatusTable()->getBy(array('id' => $switchValue));
+        $status = $this->getStatusTable()->getBy(array('id' => $labelValue));
         $currentStatus = reset($status);
-        $currentStatus->getName() == 'Active' ? $checked = 'checked' : $checked = '';
-        $template = '<div class="switch">
-                        <div class="onoffswitch blank">
-                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" '.$checked.' id="autoupdate">
-                            <label class="onoffswitch-label" for="autoupdate">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
-                        </div>
-                    </div>';
+        $currentStatus->getName() == 'Active' ? $checked = 'label-primary' : $checked = 'label-default';
+        $currentStatus->getName() == 'Active' ? $name = 'Aktywny' : $name= 'Nieaktywny';
+
+        $template = '<span class="label ' . $checked . '">' .$name . '</span>';
         return $template;
     }
 
-    /**
-     * @return \CmsIr\Slider\Service\SliderService
-     */
-    public function getSliderService()
+    public function save(Slider $slider)
     {
-        return $this->getServiceLocator()->get('CmsIr\Slider\Service\SliderService');
+        $data = array(
+            'name' => $slider->getName(),
+            'slug'  => $slider->getSlug(),
+            'status_id'  => $slider->getStatusId(),
+        );
+
+        $id = (int) $slider->getId();
+        if ($id == 0) {
+            $this->tableGateway->insert($data);
+        } else {
+            if ($this->getOneBy(array('id' => $id))) {
+                $this->tableGateway->update($data, array('id' => $id));
+            } else {
+                throw new \Exception('Slider id does not exist');
+            }
+        }
+    }
+
+    /**
+     * @return \CmsIr\System\Model\StatusTable
+     */
+    public function getStatusTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\StatusTable');
     }
 
     /**

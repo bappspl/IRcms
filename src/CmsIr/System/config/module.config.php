@@ -20,6 +20,9 @@ return array(
         'abstract_factories' => array(
             'Zend\Form\FormAbstractServiceFactory',
         ),
+        'factories' => array(
+            'CmsIr\System\Service\StatusService' => 'CmsIr\System\Service\Factory\StatusService',
+        ),
     ),
     'strategies' => array(
         'ViewJsonStrategy',
@@ -33,7 +36,7 @@ return array(
     ),
     'view_helpers' => array(
         'invokables'=> array(
-            'formInput' => 'CmsIr\System\View\Helper\FormInput',
+            'customFormHelper' => 'CmsIr\System\View\Helper\FormInput',
         ),
     ),
 );

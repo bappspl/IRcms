@@ -25,15 +25,15 @@ class SliderFormFilter extends InputFilter
                         )
                     )
                 ),
-                array(
-                    'name'		=> 'Zend\Validator\Db\NoRecordExists',
-                    'options' => array(
-                        'table'   => 'cms_slider',
-                        'field'   => 'name',
-                        'adapter' => $sm->get('Zend\Db\Adapter\Adapter'),
-                        'message' =>  'Slider o podanej nazwie już istnieje!'
-                    ),
-                ),
+//                array(
+//                    'name'		=> 'Zend\Validator\Db\NoRecordExists',
+//                    'options' => array(
+//                        'table'   => 'cms_slider',
+//                        'field'   => 'name',
+//                        'adapter' => $sm->get('Zend\Db\Adapter\Adapter'),
+//                        'message' =>  'Slider o podanej nazwie już istnieje!',
+//                    ),
+//                ),
             ),
         ));
 	}

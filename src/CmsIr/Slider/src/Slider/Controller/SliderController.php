@@ -38,8 +38,6 @@ class SliderController extends AbstractActionController
 
     public function createAction()
     {
-        $test = new Slider();
-
         $form = new SliderForm();
 
         $request = $this->getRequest();
@@ -50,12 +48,14 @@ class SliderController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $data = $form->getData();
+                $slider = new Slider();
 
+                $slider->exchangeArray($form->getData());
+                $this->getSliderTable()->save($slider);
 
-                $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
+                $this->flashMessenger()->addMessage('Slider został dodany poprawnie.');
 
-                return $this->redirect()->toRoute('users-list');
+                return $this->redirect()->toRoute('slider');
             }
         }
 
@@ -68,7 +68,35 @@ class SliderController extends AbstractActionController
 
     public function editAction()
     {
+        $id = $this->params()->fromRoute('slider_id');
+
+        $slider = $this->getSliderTable()->getOneBy(array('id' => $id));
+
+        if(!$slider) {
+            return $this->redirect()->toRoute('slider');
+        }
+
+        $form = new SliderForm();
+        $form->bind($slider);
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            //$form->setInputFilter(new SliderFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $this->getSliderTable()->save($slider);
+
+                $this->flashMessenger()->addMessage('Slider został edytowany poprawnie.');
+
+                return $this->redirect()->toRoute('slider');
+            }
+        }
+
         $viewParams = array();
+        $viewParams['form'] = $form;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -106,6 +134,16 @@ class SliderController extends AbstractActionController
         );
     }
 
+    public function itemsAction()
+    {
+        $sliderId = $this->params()->fromRoute('slider_id');
+
+
+        $viewParams = array();
+        $viewParams['sliderId'] = $sliderId;
+        return new ViewModel();
+    }
+
     /**
      * @return \CmsIr\Slider\Model\SliderTable
      */
@@ -120,5 +158,13 @@ class SliderController extends AbstractActionController
     public function getSliderService()
     {
         return $this->getServiceLocator()->get('CmsIr\Slider\Service\SliderService');
+    }
+
+    /**
+     * @return \CmsIr\Slider\Model\SliderItemTable
+     */
+    public function getSliderItemTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Slider\Model\SliderItemTable');
     }
 }

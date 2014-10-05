@@ -26,6 +26,7 @@ class FormInput extends ZendFormInput
         $attributes['type']  = $this->getType($element);
         $attributes['value'] = $element->getValue();
 
+
         switch ($this->getType($element)) {
             case 'hidden' :
                 return sprintf(
@@ -44,6 +45,14 @@ class FormInput extends ZendFormInput
                 );
             break;
             case 'submit' :
+                return sprintf(
+                    '<input %s class="form-control" %s  ',
+                    $this->createAttributesString($attributes),
+                    $this->getInlineClosingBracket()
+
+                );
+            break;
+            case 'checkbox' :
                 return sprintf(
                     '<input %s class="form-control" %s  ',
                     $this->createAttributesString($attributes),

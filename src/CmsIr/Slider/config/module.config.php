@@ -12,8 +12,6 @@ return array(
         'template_map' => array(
             'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
             'partial/delete-modal'  => __DIR__ . '/../view/partial/delete-modal.phtml',
-            'partial/slider/form/basic-data'  => __DIR__ . '/../view/partial/form/basic-data.phtml',
-            'partial/slider/form/actions'  => __DIR__ . '/../view/partial/form/actions.phtml',
         ),
         'template_path_stack' => array(
             'slider' => __DIR__ . '/../view'

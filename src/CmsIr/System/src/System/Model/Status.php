@@ -4,14 +4,31 @@ namespace CmsIr\System\Model;
 
 class Status extends Model
 {
+    protected  $id;
     protected  $name;
     protected  $slug;
 
     public function exchangeArray($data)
     {
-//        $this->id   = (!empty($data['id'])) ? $data['id'] : null;
+        $this->id   = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
