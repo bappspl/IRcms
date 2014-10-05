@@ -176,12 +176,12 @@ class UsersController extends AbstractActionController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-
-                $user->setName($data->name);
-                $user->setSurname($data->surname);
-                $user->setEmail($data->email);
-                $user->setRole($data->role);
-                $user->setFilename($data->filename);
+                //var_dump($data);die;
+                $user->setName($data->getName());
+                $user->setSurname($data->getSurname());
+                $user->setEmail($data->getEmail());
+                $user->setRole($data->getRole());
+                $user->setFilename($data->getFilename());
                 $this->getUsersTable()->saveUser($user);
 
                 $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');
