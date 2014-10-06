@@ -14,6 +14,7 @@ class Slider extends Model
     //virtual
 
     protected $status;
+    protected $items;
 
     public function exchangeArray($data) 
     {
@@ -103,5 +104,19 @@ class Slider extends Model
         $this->status = $status;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
 
+    /**
+     * @param mixed $items
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
+    }
 }

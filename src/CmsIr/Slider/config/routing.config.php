@@ -54,6 +54,30 @@ return array(
                     ),
                 ),
             ),
+            'upload' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Slider',
+                        'controller' => 'CmsIr\Slider\Controller\Slider',
+                        'action'     => 'upload',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
+            'order' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/order',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Slider',
+                        'controller' => 'CmsIr\Slider\Controller\Slider',
+                        'action'     => 'order',
+                    ),
+                ),
+            ),
             'items' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',

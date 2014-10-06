@@ -48,4 +48,22 @@ class SliderItemTable extends ModelTable
             }
         }
     }
+
+    public function saveItems($data)
+    {
+        $i = 0;
+        foreach($data as $sliderItem)
+        {
+            $id = $sliderItem['id'];
+            if ($id) {
+
+                $dataItem = array('position' => $i);
+                $this->tableGateway->update($dataItem, array('id' => $id));
+            } else {
+                throw new \Exception('Item id does not exist');
+            }
+
+            $i++;
+        }
+    }
 }

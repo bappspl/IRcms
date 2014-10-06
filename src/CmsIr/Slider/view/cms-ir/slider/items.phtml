@@ -1,1 +1,46 @@
-lista
+<?php echo $this->partial('partial/flashmessages'); ?>
+<div class="row">
+    <div class="col-sm-12">
+        <input type="hidden" id="treeId" value="<?php echo $sliderId; ?>"/>
+        <div class="the-box">
+            <h4 class="small-title">Lista elementów</h4>
+            <div class="input-group col-sm-12">
+                <?php if(!empty($items)) : ?>
+                    <div class="dd" id="nestable3">
+                        <ol class="dd-list">
+
+                            <?php /* @var $item \CmsIr\Slider\Model\SliderItem */ ?>
+                            <?php foreach($items as $item): ?>
+                                <li class="dd-item dd3-item" data-id="<?php echo $item->getId(); ?>">
+
+                                    <div class="dd-handle dd3-handle">Drag</div>
+                                    <div class="dd3-content">
+                                        <span class="label"><?php echo $item->getName(); ?></span>
+                                        <div class="pull-right">
+                                            <a href="<?php echo $this->url('slider/items/edit', array('slider_id' => $sliderId, 'item_id' => $item->getId())) ?>" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a>
+                                            <a href="<?php echo $this->url('slider/items/delete', array('slider_id' => $sliderId, 'item_id' => $item->getId())) ?>" id="<?php echo $item->getid() ?>" class="btn btn-danger" data-toggle="tooltip" title="" data-original-title="Usuwanie"><i class="fa fa-trash-o"></i></a>
+                                            <input type="hidden" id="<?php echo $sliderId ?>" name="slider-id"/>
+                                        </div>
+                                    </div>
+
+                                </li>
+                            <?php endforeach; ?>
+
+                        </ol>
+                    </div>
+                <?php endif; ?>
+
+                <a class="btn btn-facebook pull-right" href="<?php echo $this->url('slider/items/create', array('slider_id' => $sliderId)) ?>">Dodaj nowy element</a> <span class="space"></span>
+                <a class="btn btn-default pull-right" href="<?php echo $this->url('slider'); ?>">Anuluj</a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<?php echo $this->partial('partial/delete-item-modal'); ?>
+
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/items.css'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/jquery.nestable.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/item-node.js'); ?>

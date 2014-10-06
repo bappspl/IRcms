@@ -27,12 +27,32 @@ class SliderService implements ServiceLocatorAwareInterface
         return $sliders;
     }
 
+    public function findOneBySlug($slug)
+    {
+        /* @var $slider Slider */
+        $slider = $this->getSliderTable()->getOneBy(array('slug' => $slug));
+
+        $items = $this->getSliderItemTable()->getBy(array('slider_id' => $slider->getId()));
+
+        $slider->setItems($items);
+
+        return $slider;
+    }
+
     /**
      * @return \CmsIr\Slider\Model\SliderTable
      */
     public function getSliderTable()
     {
         return $this->getServiceLocator()->get('CmsIr\Slider\Model\SliderTable');
+    }
+
+    /**
+     * @return \CmsIr\Slider\Model\SliderItemTable
+     */
+    public function getSliderItemTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Slider\Model\SliderItemTable');
     }
 
     /**
