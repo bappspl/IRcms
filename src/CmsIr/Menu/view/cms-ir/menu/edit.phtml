@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <input type="hidden" id="treeId" value="<?php echo $treeId; ?>"/>
         <div class="the-box">
-            <h4 class="small-title">Menu główne</h4>
+            <h4 class="small-title"><?php echo $menuTree->getName(); ?></h4>
             <div class="input-group col-sm-12">
             <?php if(!empty($menu)) : ?>
                 <div class="dd" id="nestable3">
