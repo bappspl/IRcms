@@ -31,5 +31,13 @@ class SliderItemFormFilter extends InputFilter
             'name'       => 'upload',
             'required'   => false,
         ));
+        $this->add(array(
+            'name'       => 'title',
+            'required'   => false,
+        ));
+        $this->add(array(
+            'name'       => 'description',
+            'required'   => false,
+        ));
 	}
 }

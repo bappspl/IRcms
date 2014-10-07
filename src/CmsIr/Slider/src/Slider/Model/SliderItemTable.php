@@ -35,6 +35,8 @@ class SliderItemTable extends ModelTable
             'status_id'  => $slider->getStatusId(),
             'filename'  => $slider->getFilename(),
             'position'  => $slider->getPosition(),
+            'title'  => $slider->getTitle(),
+            'description'  => $slider->getDescription(),
         );
 
         $id = (int) $slider->getId();

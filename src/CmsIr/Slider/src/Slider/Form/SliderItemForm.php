@@ -56,6 +56,30 @@ class SliderItemForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'title',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'title',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Tytuł',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'description',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'description',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Opis',
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'upload',
             'attributes' => array(
                 'type'  => 'file',
