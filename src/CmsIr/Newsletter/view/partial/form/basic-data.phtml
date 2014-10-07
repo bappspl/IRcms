@@ -1,0 +1,15 @@
+<?php echo $this->formInput($form->get('id')); ?>
+<?php echo $this->formInput($form->get('filename')); ?>
+<div class="form-group">
+    <?php echo $this->formInput($form->get('name')); ?>
+</div>
+<div class="form-group">
+    <?php echo $this->formInput($form->get('surname')); ?>
+</div>
+<div class="form-group">
+    <?php echo $this->formInput($form->get('email')); ?>
+</div>
+<div class="form-group">
+    <label><?php echo $this->formLabel($form->get('role')); ?></label>
+    <?php echo $this->formSelect($form->get('role')); ?>
+</div>
