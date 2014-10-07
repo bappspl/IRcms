@@ -39,10 +39,12 @@ class MenuController extends AbstractActionController
     public function editAction()
     {
         $treeId = $this->params()->fromRoute('id');
+        $menuTree = $this->getMenuService()->getMenuTable()->getOneBy(array('id' => $treeId));
         $menu = $this->getMenuService()->getMenuByTreeId($treeId);
 
         $viewParams = array();
         $viewParams['menu'] = $menu;
+        $viewParams['menuTree'] = $menuTree;
         $viewParams['treeId'] = $treeId;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
