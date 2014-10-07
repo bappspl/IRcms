@@ -32,7 +32,8 @@ class SliderService implements ServiceLocatorAwareInterface
         /* @var $slider Slider */
         $slider = $this->getSliderTable()->getOneBy(array('slug' => $slug));
 
-        $items = $this->getSliderItemTable()->getBy(array('slider_id' => $slider->getId()));
+        $items = $this->getSliderItemTable()->getBy(array('slider_id' => $slider->getId(), 'status_id' => 1), 'position ASC');
+
 
         $slider->setItems($items);
 

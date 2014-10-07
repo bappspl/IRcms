@@ -9,6 +9,8 @@ class SliderItem extends Model
     protected $id;
     protected $slider_id;
     protected $name;
+    protected $title;
+    protected $description;
     protected $filename;
     protected $status_id;
     protected $position;
@@ -22,6 +24,8 @@ class SliderItem extends Model
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->slider_id = (!empty($data['slider_id'])) ? $data['slider_id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
+        $this->title = (!empty($data['title'])) ? $data['title'] : null;
+        $this->description = (!empty($data['description'])) ? $data['description'] : null;
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
@@ -139,4 +143,35 @@ class SliderItem extends Model
         $this->status_id = $status_id;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
 }
