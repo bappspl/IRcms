@@ -2,6 +2,8 @@
 namespace CmsIr\Slider;
 
 use CmsIr\Slider\Model\Slider;
+use CmsIr\Slider\Model\SliderItem;
+use CmsIr\Slider\Model\SliderItemTable;
 use CmsIr\Slider\Model\SliderTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
@@ -57,7 +59,18 @@ class Module
                         $resultSetPrototype = new ResultSet();
                         $resultSetPrototype->setArrayObjectPrototype(new Slider());
                         return new TableGateway('cms_slider', $dbAdapter, null, $resultSetPrototype);
-                    },
+                },
+                'CmsIr\Slider\Model\SliderItemTable' =>  function($sm) {
+                    $tableGateway = $sm->get('SliderItemTableGateway');
+                    $table = new SliderItemTable($tableGateway);
+                    return $table;
+                },
+                'SliderItemTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new SliderItem());
+                    return new TableGateway('cms_slider_item', $dbAdapter, null, $resultSetPrototype);
+                },
             ),
         );
     }

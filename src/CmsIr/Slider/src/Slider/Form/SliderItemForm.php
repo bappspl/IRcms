@@ -4,11 +4,11 @@ namespace CmsIr\Slider\Form;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
-class SliderForm extends Form
+class SliderItemForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('Slider');
+        parent::__construct('Slider item');
         $this->setAttribute('method', 'post');
         $this->setHydrator(new ClassMethods());
 
@@ -21,6 +21,14 @@ class SliderForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'filename',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'filename'
+            ),
+        ));
+
+        $this->add(array(
             'type' => 'select',
             'attributes' => array(
                 'class' => 'form-control',
@@ -29,8 +37,8 @@ class SliderForm extends Form
             'options' => array(
                 'label' => 'Status',
                 'value_options' => array(
-                     '1' => 'Aktywny',
-                     '2' => 'Nieaktywny'
+                    '1' => 'Aktywny',
+                    '2' => 'Nieaktywny'
                 ),
             )
         ));
@@ -38,15 +46,27 @@ class SliderForm extends Form
         $this->add(array(
             'name' => 'name',
             'attributes' => array(
-                'id' => 'name',
                 'type'  => 'text',
-//                'class' => 'form-control',
-                'placeholder' => 'Wprowadź nazwę'
+                'id' => 'name',
+                'class' => 'form-control'
             ),
             'options' => array(
                 'label' => 'Nazwa',
             ),
         ));
+
+        $this->add(array(
+            'name' => 'upload',
+            'attributes' => array(
+                'type'  => 'file',
+                'id' => 'upload',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'E-mail',
+            ),
+        ));
+
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(

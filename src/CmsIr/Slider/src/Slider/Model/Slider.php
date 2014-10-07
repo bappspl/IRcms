@@ -2,10 +2,11 @@
 namespace CmsIr\Slider\Model;
 
 use CmsIr\System\Model\Model;
+use CmsIr\System\Util\Inflector;
 
 class Slider extends Model
 {
-//    protected $id;
+    protected $id;
     protected $name;
     protected $slug;
     protected $status_id;
@@ -13,30 +14,31 @@ class Slider extends Model
     //virtual
 
     protected $status;
+    protected $items;
 
     public function exchangeArray($data) 
     {
-//        $this->id     = (!empty($data['id'])) ? $data['id'] : null;
+        $this->id     = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
+        $this->slug = Inflector::slugify($this->name);
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
     }
 
-//    /**
-//     * @param mixed $id
-//     */
-//    public function setId($id)
-//    {
-//        $this->id = $id;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @param mixed $name
@@ -102,5 +104,19 @@ class Slider extends Model
         $this->status = $status;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
 
+    /**
+     * @param mixed $items
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
+    }
 }

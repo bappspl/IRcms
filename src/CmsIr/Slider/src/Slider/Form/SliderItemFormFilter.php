@@ -1,16 +1,15 @@
 <?php
 namespace CmsIr\Slider\Form;
 
-use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\NotEmpty;
 
-class SliderFormFilter extends InputFilter
+class SliderItemFormFilter extends InputFilter
 {
 	public function __construct($sm)
 	{
         $this->add(array(
-            'name'       => 'name',
+            'name'     => 'name',
             'required' => true,
             'filters'  => array(
                 array('name' => 'StripTags'),
@@ -24,17 +23,13 @@ class SliderFormFilter extends InputFilter
                             NotEmpty::IS_EMPTY => 'Uzupełnij pole!'
                         )
                     )
-                ),
-//                array(
-//                    'name'		=> 'Zend\Validator\Db\NoRecordExists',
-//                    'options' => array(
-//                        'table'   => 'cms_slider',
-//                        'field'   => 'name',
-//                        'adapter' => $sm->get('Zend\Db\Adapter\Adapter'),
-//                        'message' =>  'Slider o podanej nazwie już istnieje!',
-//                    ),
-//                ),
+                )
             ),
+        ));
+
+        $this->add(array(
+            'name'       => 'upload',
+            'required'   => false,
         ));
 	}
 }
