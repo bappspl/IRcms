@@ -23,11 +23,11 @@ class FormInput extends ZendFormInput
 
         $attributes          = $element->getAttributes();
         $attributes['name']  = $name;
-        $attributes['type']  = $this->getType($element);
+//        $attributes['type']  = $this->getType($element);
         $attributes['value'] = $element->getValue();
 
 
-        switch ($this->getType($element)) {
+        switch ($attributes['type']) {
             case 'hidden' :
                 return sprintf(
                     '<input %s class="form-control" %s  ',
@@ -57,6 +57,24 @@ class FormInput extends ZendFormInput
                     '<input %s class="form-control" %s  ',
                     $this->createAttributesString($attributes),
                     $this->getInlineClosingBracket()
+
+                );
+            break;
+            case 'textarea' :
+                $options = $element->getOptions();
+                $options = reset($options);
+
+                $error = new FormElementErrors();
+
+                $errorMessage =  $error->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+                    ->setMessageCloseString('</small>')
+                    ->render($element);
+
+                return sprintf(
+                    '<label> %s </label><textarea %s class="form-control"></textarea>  %s',
+                    $options,
+                    $this->createAttributesString($attributes),
+                    $errorMessage
 
                 );
             break;

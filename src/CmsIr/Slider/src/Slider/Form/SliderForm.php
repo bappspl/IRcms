@@ -47,6 +47,7 @@ class SliderForm extends Form
                 'label' => 'Nazwa',
             ),
         ));
+
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
