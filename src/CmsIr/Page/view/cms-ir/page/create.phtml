@@ -40,7 +40,10 @@
 <script>
     $(document).ready(function() {
         $('.summernote').summernote({
-            height: 200
+            height: 200,
+            onImageUpload: function(files, editor, $editable) {
+                console.log('image upload:', files, editor, $editable);
+            }
         });
     });
 </script>

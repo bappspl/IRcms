@@ -23,6 +23,7 @@ return array(
             'Zend\Form\FormAbstractServiceFactory',
         ),
         'factories' => array(
+            'CmsIr\Page\Service\PageService' => 'CmsIr\Page\Service\Factory\PageService',
         ),
     ),
     'strategies' => array(
