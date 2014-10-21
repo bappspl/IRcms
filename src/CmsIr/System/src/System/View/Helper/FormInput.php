@@ -64,6 +64,8 @@ class FormInput extends ZendFormInput
                 $options = $element->getOptions();
                 $options = reset($options);
 
+                $value = $attributes['value'];
+
                 $error = new FormElementErrors();
 
                 $errorMessage =  $error->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
@@ -71,11 +73,11 @@ class FormInput extends ZendFormInput
                     ->render($element);
 
                 return sprintf(
-                    '<label> %s </label><textarea %s class="form-control"></textarea>  %s',
+                    '<div class="form group"><label> %s </label><textarea %s class="form-control">%s</textarea></div> %s',
                     $options,
                     $this->createAttributesString($attributes),
+                    $value,
                     $errorMessage
-
                 );
             break;
             default:
@@ -89,9 +91,9 @@ class FormInput extends ZendFormInput
                 $options = reset($options);
 
                 return sprintf(
-                    '<div class="form group ' . (count($element->getMessages()) > 0 ? 'has-error' : '') . ' has-feedback">
+                    '<div class="form-group ' . (count($element->getMessages()) > 0 ? 'has-error' : '') . ' has-feedback">
                     <label> %s </label><input %s class="form-control" %s
-                    ' . (count($element->getMessages()) > 0 ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '') . '</div> %s',
+                    ' . (count($element->getMessages()) > 0 ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '') . '%s</div>',
                     $options,
                     $this->createAttributesString($attributes),
                     $this->getInlineClosingBracket(),
