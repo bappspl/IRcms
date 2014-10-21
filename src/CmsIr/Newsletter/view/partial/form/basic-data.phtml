@@ -1,15 +1,7 @@
-<?php echo $this->formInput($form->get('id')); ?>
-<?php echo $this->formInput($form->get('filename')); ?>
+<?php echo $this->customFormHelper($form->get('id')) ?>
 <div class="form-group">
-    <?php echo $this->formInput($form->get('name')); ?>
+    <?php echo $this->customFormHelper($form->get('name')) ?>
 </div>
 <div class="form-group">
-    <?php echo $this->formInput($form->get('surname')); ?>
-</div>
-<div class="form-group">
-    <?php echo $this->formInput($form->get('email')); ?>
-</div>
-<div class="form-group">
-    <label><?php echo $this->formLabel($form->get('role')); ?></label>
-    <?php echo $this->formSelect($form->get('role')); ?>
+    <?php echo $this->customFormHelper($form->get('slug')) ?>
 </div>

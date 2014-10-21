@@ -18,6 +18,33 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway = $tableGateway;
     }
 
+    public function deleteNewsletter($id)
+    {
+        $id  = (int) $id;
+        $this->tableGateway->delete(array('id' => $id));
+    }
+
+    public function save(Newsletter $newsletter)
+    {
+        $data = array(
+            'subject' => $newsletter->getSubject(),
+            'status_id'  => $newsletter->getStatusId(),
+            'groups'  => serialize($newsletter->getGroups()),
+            'text'  => $newsletter->getText(),
+        );
+
+        $id = (int) $newsletter->getId();
+        if ($id == 0) {
+            $this->tableGateway->insert($data);
+        } else {
+            if ($this->getOneBy(array('id' => $id))) {
+                $this->tableGateway->update($data, array('id' => $id));
+            } else {
+                throw new \Exception('Newsletter id does not exist');
+            }
+        }
+    }
+
     public function getDataToDisplay ($filteredRows, $columns)
     {
         $dataArray = array();
@@ -33,8 +60,8 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
             $tmp[] = $this->getLabelToDisplay($row->getStatusId());
 
             $tmp[] = '<a href="users/preview/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="users/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="users/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+                '<a href="newsletter/edit-newsletter/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                '<a href="newsletter/delete-newsletter/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -56,8 +83,9 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
         $subscriberGroups = unserialize($groups);
 
         $template = '';
-        foreach($subscriberGroups as $group) {
-            $template .= '<span class="label label-info">' .$group . '</span> ';
+        foreach($subscriberGroups as $groupId) {
+            $gruopName = $this->getSubscriberGroupTable()->getOneBy(array('id' => $groupId));
+            $template .= '<span class="label label-info">' . $gruopName->getName() . '</span> ';
         }
 
         return $template;
@@ -69,6 +97,14 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
     public function getStatusTable()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Model\StatusTable');
+    }
+
+    /**
+     * @return \CmsIr\Newsletter\Model\SubscriberGroupTable
+     */
+    public function getSubscriberGroupTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Newsletter\Model\SubscriberGroupTable');
     }
 
     /**

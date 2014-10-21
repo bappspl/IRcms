@@ -1,0 +1,39 @@
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="row">
+    <div class="col-sm-6">
+
+        <div class="the-box">
+            <h4 class="small-title">Dane podstawowe</h4>
+            <?php echo $this->partial('partial/form/basic-newsletter-data'); ?>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+        <div class="the-box">
+            <h4 class="small-title">Opis</h4>
+            <?php echo $this->formTextarea($form->get('text')); ?>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <?php echo $this->partial('partial/form/newsletter-actions'); ?>
+        </div>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/chosen.css'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/chosen.jquery.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/newsletter.js'); ?>

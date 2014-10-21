@@ -4,6 +4,8 @@ namespace CmsIr\Newsletter;
 // Add this for Table Date Gateway
 use CmsIr\Newsletter\Model\Newsletter;
 use CmsIr\Newsletter\Model\NewsletterTable;
+use CmsIr\Newsletter\Model\SubscriberGroup;
+use CmsIr\Newsletter\Model\SubscriberGroupTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\ModuleRouteListener;
@@ -58,6 +60,17 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new Newsletter());
                     return new TableGateway('cms_newsletter', $dbAdapter, null, $resultSetPrototype);
                 },
+                'CmsIr\Newsletter\Model\SubscriberGroupTable' =>  function($sm) {
+                        $tableGateway = $sm->get('SubscriberGroupTableGateway');
+                        $table = new SubscriberGroupTable($tableGateway);
+                        return $table;
+                    },
+                'SubscriberGroupTableGateway' => function ($sm) {
+                        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                        $resultSetPrototype = new ResultSet();
+                        $resultSetPrototype->setArrayObjectPrototype(new SubscriberGroup());
+                        return new TableGateway('cms_subscriber_group', $dbAdapter, null, $resultSetPrototype);
+                    },
             ),
         );
     }		
