@@ -1,0 +1,49 @@
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="row">
+    <div class="col-sm-6">
+
+        <div class="the-box">
+            <h4 class="small-title">Dane podstawowe</h4>
+            <div class="form-group">
+                <?php echo $this->customFormHelper($form->get('email')->setAttributes(array('disabled' => 'disabled'))) ?>
+            </div>
+            <div class="form-group">
+                <?php echo $this->customFormHelper($form->get('first_name')->setAttributes(array('disabled' => 'disabled'))) ?>
+            </div>
+            <div class="form-group">
+                <label><?php echo $this->formLabel($form->get('confirmation_code')); ?></label>
+                <?php echo $this->formInput($form->get('confirmation_code')->setAttributes(array('disabled' => 'disabled'))) ?>
+            </div>
+            <div class="form-group">
+                <label><?php echo $this->formLabel($form->get('groups')); ?></label>
+                <?php echo $this->formSelect($form->get('groups')->setAttributes(array('disabled' => 'disabled'))) ?>
+            </div>
+            <div class="form-group">
+                <label><?php echo $this->formLabel($form->get('status_id')); ?></label>
+                <?php echo $this->formSelect($form->get('status_id')->setAttributes(array('disabled' => 'disabled'))) ?>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <div class="input-group col-sm-12 text-right">
+                <a class="btn btn-primary" href="<?php echo $this->url('subscriber-list'); ?>">Powrót</a> &nbsp
+            </div>
+        </div>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/chosen.css'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/chosen.jquery.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/subscriber.js'); ?>

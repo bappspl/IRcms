@@ -4,11 +4,11 @@ namespace CmsIr\Newsletter\Form;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
-class NewsletterForm extends Form
+class SubscriberForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('Newsletter');
+        parent::__construct('Subscriber');
         $this->setAttribute('method', 'post');
         $this->setHydrator(new ClassMethods());
 
@@ -21,14 +21,38 @@ class NewsletterForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'subject',
+            'name' => 'email',
             'attributes' => array(
                 'class' => 'form-control',
-                'id' => 'subject',
+                'id' => 'email',
                 'type'  => 'text',
             ),
             'options' => array(
-                'label' => 'Temat',
+                'label' => 'Email',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'first_name',
+            'attributes' => array(
+                'class' => 'form-control',
+                'id' => 'first_name',
+                'type'  => 'text',
+            ),
+            'options' => array(
+                'label' => 'Imię',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'confirmation_code',
+            'attributes' => array(
+                'class' => 'form-control',
+                'id' => 'confirmation_code',
+                'type'  => 'text',
+            ),
+            'options' => array(
+                'label' => 'Kod potwierdzający',
             ),
         ));
 
@@ -41,8 +65,8 @@ class NewsletterForm extends Form
             'options' => array(
                 'label' => 'Status',
                 'value_options' => array(
-                    '4' => 'Szkic',
-                    '3' => 'Wysłany'
+                    '6' => 'Niepotwierdzony',
+                    '5' => 'Potwierdzony'
                 ),
             )
         ));
@@ -58,18 +82,6 @@ class NewsletterForm extends Form
             'options' => array(
                 'label' => 'Grupy',
             )
-        ));
-
-        $this->add(array(
-            'name' => 'text',
-            'attributes' => array(
-                'id' => 'text',
-                'class' => 'summernote-lg',
-                'type'  => 'textarea',
-            ),
-            'options' => array(
-                'label' => 'Treść',
-            ),
         ));
 
         $this->add(array(

@@ -8,7 +8,7 @@ use Zend\Db\Sql\Predicate;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
+class SubscriberTable extends ModelTable implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
     protected $tableGateway;
@@ -18,29 +18,49 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway = $tableGateway;
     }
 
-    public function deleteNewsletter($id)
+    public function deleteSubscriber($id)
     {
         $id  = (int) $id;
         $this->tableGateway->delete(array('id' => $id));
     }
 
-    public function save(Newsletter $newsletter)
+    public function getBySubscriberGroupId($id)
+    {
+        $allSubscribers = $this->getAll();
+
+        $subscribers = array();
+        foreach($allSubscribers as $subscriber)
+        {
+            $subscriberGroups = $subscriber->getGroups();
+            $subscriberGroupsArray = unserialize($subscriberGroups);
+
+            if(in_array($id, $subscriberGroupsArray))
+            {
+                $subscribers[] = $subscriber;
+            }
+        }
+
+        return $subscribers;
+    }
+
+    public function save(Subscriber $subscriber)
     {
         $data = array(
-            'subject' => $newsletter->getSubject(),
-            'status_id'  => $newsletter->getStatusId(),
-            'groups'  => serialize($newsletter->getGroups()),
-            'text'  => $newsletter->getText(),
+            'email' => $subscriber->getEmail(),
+            'first_name'  => $subscriber->getFirstName(),
+            'confirmation_code'  => $subscriber->getConfirmationCode(),
+            'groups'  => serialize($subscriber->getGroups()),
+            'status_id'  => $subscriber->getStatusId(),
         );
 
-        $id = (int) $newsletter->getId();
+        $id = (int) $subscriber->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
         } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
             } else {
-                throw new \Exception('Newsletter id does not exist');
+                throw new \Exception('Subscriber id does not exist');
             }
         }
     }
@@ -59,10 +79,9 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
             $tmp[] = $this->getGroupsToDisplay($row->getGroups());
             $tmp[] = $this->getLabelToDisplay($row->getStatusId());
 
-            $tmp[] = '<a href="newsletter/send-newsletter/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-facebook" data-toggle="tooltip" title="Wysyłanie wiadomości"><i class="fa fa-paper-plane-o"></i></a> ' .
-                '<a href="newsletter/preview-newsletter/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="newsletter/edit-newsletter/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="newsletter/delete-newsletter/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+            $tmp[] = '<a href="subscriber-list/preview-subscriber/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
+                '<a href="subscriber-list/edit-subscriber/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                '<a href="subscriber-group/delete-group/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -72,8 +91,8 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $status = $this->getStatusTable()->getBy(array('id' => $labelValue));
         $currentStatus = reset($status);
-        $currentStatus->getName() == 'Send' ? $checked = 'label-primary' : $checked = 'label-default';
-        $currentStatus->getName() == 'Send' ? $name = 'Wysłana' : $name= 'Szkic';
+        $currentStatus->getName() == 'Confirmed' ? $checked = 'label-primary' : $checked = 'label-default';
+        $currentStatus->getName() == 'Confirmed' ? $name = 'Potwierdzony' : $name = 'Niepotwierdzony';
 
         $template = '<span class="label ' . $checked . '">' .$name . '</span>';
         return $template;
@@ -123,5 +142,4 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $this->serviceLocator = $serviceLocator;
     }
-
 }

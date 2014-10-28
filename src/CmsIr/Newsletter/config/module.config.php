@@ -12,12 +12,16 @@ return array(
     'view_manager' => array(
         'template_map' => array(
             'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
+            'partial/send-newsletter-modal'  => __DIR__ . '/../view/partial/send-newsletter-modal.phtml',
             'partial/delete-group-modal'  => __DIR__ . '/../view/partial/delete-group-modal.phtml',
             'partial/delete-newsletter-modal'  => __DIR__ . '/../view/partial/delete-newsletter-modal.phtml',
+            'partial/delete-subscriber-modal'  => __DIR__ . '/../view/partial/delete-subscriber-modal.phtml',
             'partial/form/basic-data'  => __DIR__ . '/../view/partial/form/basic-data.phtml',
             'partial/form/basic-newsletter-data'  => __DIR__ . '/../view/partial/form/basic-newsletter-data.phtml',
+            'partial/form/basic-subscriber-data'  => __DIR__ . '/../view/partial/form/basic-subscriber-data.phtml',
             'partial/form/files'  => __DIR__ . '/../view/partial/form/files.phtml',
             'partial/form/actions'  => __DIR__ . '/../view/partial/form/actions.phtml',
+            'partial/form/actions-subscriber'  => __DIR__ . '/../view/partial/form/actions-subscriber.phtml',
             'partial/form/newsletter-actions'  => __DIR__ . '/../view/partial/form/newsletter-actions.phtml',
         ),
         'template_path_stack' => array(

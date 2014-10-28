@@ -74,17 +74,27 @@ $(function () {
             }).modal('show');
         });
 
+        // send mailas
+        $('#datatable-newsletter tbody').on('click', '.btn-facebook', function (e) {
+            e.preventDefault();
+            var entityId = $(this).attr('id');
+            $('#sendModal').on('show.bs.modal', function () {
+                $('.spinner').show();
+                $.ajax({
+                    type: "POST",
+                    url: "/cms-ir/newsletter/send-newsletter/"+entityId,
+                    dataType : 'json',
+                    data: {},
+                    success: function(json)
+                    {
+                        window.location.reload();
+                    }
+                });
+            }).modal('show');
+        });
+
     }
-//
-//    var configChosen = {
-//      '.chosen-select'           : {},
-//      '.chosen-select-deselect'  : {allow_single_deselect:true},
-//      '.chosen-select-no-single' : {disable_search_threshold:10},
-//      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-//      '.chosen-select-width'     : {width:"100%"}
-//    }
-//    for (var selector in configChosen) {
-      $('.chosen-select').chosen();
-//    }
+
+    $('.chosen-select').chosen();
 
 });

@@ -4,11 +4,11 @@ namespace CmsIr\Newsletter\Form;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
-class NewsletterForm extends Form
+class NewsletterSettingsForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('Newsletter');
+        parent::__construct('NewsletterSettings');
         $this->setAttribute('method', 'post');
         $this->setHydrator(new ClassMethods());
 
@@ -21,49 +21,34 @@ class NewsletterForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'subject',
+            'name' => 'sender_email',
             'attributes' => array(
                 'class' => 'form-control',
-                'id' => 'subject',
+                'id' => 'sender_email',
                 'type'  => 'text',
             ),
             'options' => array(
-                'label' => 'Temat',
+                'label' => 'Email wysyłający',
             ),
         ));
 
         $this->add(array(
-            'type' => 'select',
+            'name' => 'sender',
             'attributes' => array(
                 'class' => 'form-control',
-                'name' => 'status_id',
+                'id' => 'sender',
+                'type'  => 'text',
             ),
             'options' => array(
-                'label' => 'Status',
-                'value_options' => array(
-                    '4' => 'Szkic',
-                    '3' => 'Wysłany'
-                ),
-            )
-        ));
-
-        $this->add(array(
-            'type' => 'select',
-            'attributes' => array(
-                'class' => 'form-control chosen-select',
-                'name' => 'groups',
-                'multiple' => 'multiple',
-                'data-placeholder' => 'Wybierz grupy'
+                'label' => 'Nadawca',
             ),
-            'options' => array(
-                'label' => 'Grupy',
-            )
         ));
 
+
         $this->add(array(
-            'name' => 'text',
+            'name' => 'footer',
             'attributes' => array(
-                'id' => 'text',
+                'id' => 'footer',
                 'class' => 'summernote-lg',
                 'type'  => 'textarea',
             ),

@@ -61,14 +61,107 @@ return array(
             ),
         ),
     ),
+    'preview-newsletter' => array(
+        'may_terminate' => true,
+        'type' => 'Segment',
+        'options' => array(
+            'route' => '/cms-ir/newsletter/preview-newsletter/:newsletter_id',
+            'defaults' => array(
+                'module' => 'CmsIr\Newsletter',
+                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                'action' => 'previewNewsletter',
+            ),
+            'constraints' => array(
+                'newsletter_id' => '[0-9]+'
+            ),
+        ),
+    ),
+    'send-newsletter' => array(
+        'may_terminate' => true,
+        'type' => 'Segment',
+        'options' => array(
+            'route' => '/cms-ir/newsletter/send-newsletter/:newsletter_id',
+            'defaults' => array(
+                'module' => 'CmsIr\Newsletter',
+                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                'action' => 'sendNewsletter',
+            ),
+            'constraints' => array(
+                'newsletter_id' => '[0-9]+'
+            ),
+        ),
+    ),
     'subscriber-list' => array(
         'type'    => 'Segment',
+        'may_terminate' => true,
         'options' => array(
             'route'    => '/cms-ir/newsletter/subscriber-list',
             'defaults' => array(
                 'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
                 'action'     => 'subscriberList',
+            ),
+        ),
+        'child_routes' => array(
+            'create-subscriber' => array(
+                'may_terminate' => true,
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/create-subscriber',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Newsletter',
+                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                        'action' => 'createSubscriber',
+                    ),
+                ),
+            ),
+            'edit-subscriber' => array(
+                'may_terminate' => true,
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/edit-subscriber/:subscriber_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Newsletter',
+                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                        'action' => 'editSubscriber',
+                    ),
+
+                    'constraints' => array(
+                        'subscriber_id' => '[0-9]+'
+                    ),
+                ),
+            ),
+            'preview-subscriber' => array(
+                'may_terminate' => true,
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/preview-subscriber/:subscriber_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Newsletter',
+                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                        'action' => 'previewSubscriber',
+                    ),
+
+                    'constraints' => array(
+                        'subscriber_id' => '[0-9]+'
+                    ),
+                ),
+            ),
+            'delete-subscriber' => array(
+                'may_terminate' => true,
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/delete-subscriber/:subscriber_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Newsletter',
+                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                        'action' => 'deleteSubscriber',
+                    ),
+
+                    'constraints' => array(
+                        'subscriber_id' => '[0-9]+'
+                    ),
+                ),
             ),
         ),
     ),
