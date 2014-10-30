@@ -36,6 +36,34 @@ class FormInput extends ZendFormInput
 
                 );
             break;
+            case 'select' :
+                $error = new FormElementErrors();
+
+                $options = $element->getOptions();
+
+                $label = $options['label'];
+
+                $values = $options['value_options'];
+
+                $valueString = '';
+
+                foreach($values as $k => $value){
+                    $valueString .= '<option value="'. $k .'">'. $value .'</option>';
+                }
+
+                $errorMessage =  $error->setMessageOpenFormat('<small data-bv-validator="notEmpty" class="help-block" style="color: #E9573F">')
+                    ->setMessageCloseString('</small>')
+                    ->render($element);
+
+                return sprintf(
+                    '<div class="form-group ' . (count($element->getMessages()) > 0 ? 'has-error' : '') . ' has-feedback">
+                    <label> %s </label><select %s class="form-control">%s</select>%s</div>',
+                    $label,
+                    $this->createAttributesString($attributes),
+                    $valueString,
+                    $errorMessage
+                );
+                break;
             case 'file' :
                 return sprintf(
                     '<input %s class="form-control" %s  ',
@@ -73,7 +101,7 @@ class FormInput extends ZendFormInput
                     ->render($element);
 
                 return sprintf(
-                    '<div class="form group"><label> %s </label><textarea %s class="form-control">%s</textarea></div> %s',
+                    '<div class="form group"><label> %s </label><textarea %s class="form-control">%s</textarea> %s</div>',
                     $options,
                     $this->createAttributesString($attributes),
                     $value,
