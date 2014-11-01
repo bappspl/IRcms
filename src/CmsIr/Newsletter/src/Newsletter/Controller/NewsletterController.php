@@ -120,7 +120,7 @@ class NewsletterController extends AbstractActionController
             );
             array_push($tmpArrayGroups, $tmp);
         }
-        $form->get('groups')->setValueOptions($tmpArrayGroups);
+        $form->get('groups')->setAttribute('options' ,$tmpArrayGroups);
 
 
         $request = $this->getRequest();

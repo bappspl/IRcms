@@ -10,8 +10,8 @@
     <?php echo $this->formInput($form->get('confirmation_code')->setAttributes(array('disabled' => 'disabled'))) ?>
 </div>
 <div class="form-group">
-    <label><?php echo $this->formLabel($form->get('groups')); ?></label>
-    <?php echo $this->formSelect($form->get('groups')) ?>
+<!--    <label>--><?php //echo $this->formLabel($form->get('groups')); ?><!--</label>-->
+    <?php echo $this->customFormHelper($form->get('groups')) ?>
 </div>
 <div class="form-group">
     <label><?php echo $this->formLabel($form->get('status_id')); ?></label>

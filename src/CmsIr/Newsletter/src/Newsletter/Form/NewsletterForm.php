@@ -40,6 +40,8 @@ class NewsletterForm extends Form
             ),
             'options' => array(
                 'label' => 'Status',
+                'empty_option' => 'Wybierz status',
+                'disable_inarray_validator' => true,
                 'value_options' => array(
                     '4' => 'Szkic',
                     '3' => 'Wysłany'
@@ -57,6 +59,7 @@ class NewsletterForm extends Form
             ),
             'options' => array(
                 'label' => 'Grupy',
+                'disable_inarray_validator' => true,
             )
         ));
 

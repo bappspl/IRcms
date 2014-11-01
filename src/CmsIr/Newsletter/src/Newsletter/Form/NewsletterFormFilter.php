@@ -48,12 +48,28 @@ class NewsletterFormFilter extends InputFilter
         ));
 
         $this->add(array(
-            'name'       => 'text',
+            'name'       => 'status_id',
             'required' => true,
             'filters'  => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
+            'validators' => array(
+                array(
+                    'name' => 'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            NotEmpty::IS_EMPTY => 'Uzupełnij pole!'
+                        )
+                    )
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name'       => 'text',
+            'required' => true,
+
             'validators' => array(
                 array(
                     'name' => 'NotEmpty',
