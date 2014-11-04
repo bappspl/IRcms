@@ -8,7 +8,7 @@ echo $this->form()->openTag($form);
 
         <div class="the-box">
             <h4 class="small-title">Dane podstawowe</h4>
-            <?php echo $this->partial('partial/form/basic-data'); ?>
+            <?php echo $this->partial('partial/form/basic-subscriber-group-data'); ?>
 
         </div>
 
@@ -17,7 +17,7 @@ echo $this->form()->openTag($form);
     <div class="col-sm-6">
         <div class="the-box">
             <h4 class="small-title">Opis</h4>
-            <?php echo $this->formTextarea($form->get('description')); ?>
+            <?php echo $this->customFormHelper($form->get('description')); ?>
         </div>
     </div>
 

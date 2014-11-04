@@ -117,7 +117,7 @@ class FormInput extends ZendFormInput
                     ->render($element);
 
                 return sprintf(
-                    '<div class="form-group ' . (count($element->getMessages()) > 0 ? 'has-error' : '') . ' has-feedback"><label> %s </label><textarea %s class="form-control">%s</textarea> %s</div>',
+                    '<div class="form-group ' . (count($element->getMessages()) > 0 ? 'has-error' : '') . ' has-feedback"><label> %s </label><textarea %s class="form-control">%s</textarea> </div>%s',
                     $options,
                     $this->createAttributesString($attributes),
                     $value,

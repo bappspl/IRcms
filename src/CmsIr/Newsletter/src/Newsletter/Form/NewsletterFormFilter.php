@@ -69,7 +69,10 @@ class NewsletterFormFilter extends InputFilter
         $this->add(array(
             'name'       => 'text',
             'required' => true,
-
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+            ),
             'validators' => array(
                 array(
                     'name' => 'NotEmpty',

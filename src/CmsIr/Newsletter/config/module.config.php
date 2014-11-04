@@ -16,7 +16,7 @@ return array(
             'partial/delete-group-modal'  => __DIR__ . '/../view/partial/delete-group-modal.phtml',
             'partial/delete-newsletter-modal'  => __DIR__ . '/../view/partial/delete-newsletter-modal.phtml',
             'partial/delete-subscriber-modal'  => __DIR__ . '/../view/partial/delete-subscriber-modal.phtml',
-            'partial/form/basic-data'  => __DIR__ . '/../view/partial/form/basic-data.phtml',
+            'partial/form/basic-subscriber-group-data'  => __DIR__ . '/../view/partial/form/basic-subscriber-group-data.phtml',
             'partial/form/basic-newsletter-data'  => __DIR__ . '/../view/partial/form/basic-newsletter-data.phtml',
             'partial/form/basic-subscriber-data'  => __DIR__ . '/../view/partial/form/basic-subscriber-data.phtml',
             'partial/form/files'  => __DIR__ . '/../view/partial/form/files.phtml',
