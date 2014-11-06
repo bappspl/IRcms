@@ -1,14 +1,14 @@
 <?php
-namespace CmsIr\Newsletter\Form;
+namespace CmsIr\Post\Form;
 
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
-class NewsletterForm extends Form
+class PostForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('Newsletter');
+        parent::__construct('Post');
         $this->setAttribute('method', 'post');
         $this->setHydrator(new ClassMethods());
 
@@ -21,14 +21,13 @@ class NewsletterForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'subject',
+            'name' => 'name',
             'attributes' => array(
-                'class' => 'form-control',
-                'id' => 'subject',
+                'id' => 'name',
                 'type'  => 'text',
             ),
             'options' => array(
-                'label' => 'Temat',
+                'label' => 'Nazwa',
             ),
         ));
 
@@ -40,32 +39,22 @@ class NewsletterForm extends Form
             ),
             'options' => array(
                 'label' => 'Status',
-                'empty_option' => 'Wybierz status',
-                'disable_inarray_validator' => true,
                 'value_options' => array(
-                    '4' => 'Szkic',
-                    '3' => 'Wysłany'
+                    '2' => 'Nieaktywny',
+                    '1' => 'Aktywny'
                 ),
             )
         ));
 
-//        $this->add(array(
-//            'name' => 'groups',
-//            'type' => 'NewsletterFieldset'
-//        ));
-
         $this->add(array(
-            'type' => 'select',
+            'name' => 'url',
             'attributes' => array(
-                'class' => 'form-control chosen-select',
-                'name' => 'groups',
-                'multiple' => 'multiple',
-                'data-placeholder' => 'Wybierz grupy'
+                'id' => 'url',
+                'type'  => 'text',
             ),
             'options' => array(
-                'label' => 'Grupy',
-                'disable_inarray_validator' => true,
-            )
+                'label' => 'Url',
+            ),
         ));
 
         $this->add(array(
@@ -76,7 +65,7 @@ class NewsletterForm extends Form
                 'type'  => 'textarea',
             ),
             'options' => array(
-                'label' => 'Treść',
+                'label' => 'Opis',
             ),
         ));
 

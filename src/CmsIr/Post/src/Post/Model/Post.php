@@ -2,6 +2,8 @@
 namespace CmsIr\Post\Model;
 
 use Zend\InputFilter\InputFilterInterface;
+use CmsIr\System\Util\Inflector;
+
 class Post
 {
     protected $id;
@@ -16,7 +18,7 @@ class Post
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->url = (!empty($data['url'])) ? $data['url'] : null;
+        $this->url = (!empty($data['url'])) ? $data['url'] : Inflector::slugify($this->name);
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->text = (!empty($data['text'])) ? $data['text'] : null;

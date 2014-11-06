@@ -2,7 +2,7 @@ $(function () {
 
     /** BEGIN DATATABLE EXAMPLE **/
     if ($('#datatable-post').length > 0){
-        var category = 'news';
+        var category = $('#category').val();
         $('#datatable-post').dataTable({
             "oLanguage": {
                 "sProcessing":   "Przetwarzanie...",
@@ -38,7 +38,7 @@ $(function () {
             "aoColumnDefs": [
                 {
                     "bSortable": false,
-                    "aTargets": [ -1 ]
+                    "aTargets": [ -1, -2 ]
                 },
             ]
         });
@@ -46,21 +46,16 @@ $(function () {
         $('#datatable-post tbody').on('click', '.btn-danger', function (e) {
             e.preventDefault();
             var entityId = $(this).attr('id');
-            var name = $(this).parent().prev().prev().prev().text();
-            var surname = $(this).parent().prev().prev().text();
             $('#deleteModal').on('show.bs.modal', function () {
-
-                $('#deleteModal form').attr('action', 'users/delete/'+entityId);
-                $('#deleteModal form input[name=id]').val(entityId);
-                $('#deleteModal .modal-body p b').text(name + ' ' + surname);
 
                 $('#deleteModal form input').click(function (ev) {
                     ev.preventDefault();
-                    $('.spinner').show();
                     var del = $(this).val();
+                    del == 'Tak' ? $('.spinner').show() : $('.spinner').hide();
+
                     $.ajax({
                         type: "POST",
-                        url: "/cms-ir/users/delete/"+entityId,
+                        url: "/cms-ir/post-list/" + category + "/delete/" +entityId,
                         dataType : 'json',
                         data: {
                             modal: true,
@@ -69,7 +64,7 @@ $(function () {
                         },
                         success: function(json)
                         {
-                           window.location.reload();
+                            window.location.reload();
                         }
                     });
 

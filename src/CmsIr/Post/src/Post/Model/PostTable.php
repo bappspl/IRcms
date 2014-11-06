@@ -35,7 +35,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway->delete(array('id' => $id));
     }
 
-    public function savePost(Post $post)
+    public function save(Post $post)
     {
         $data = array(
             'name' => $post->getName(),
@@ -57,7 +57,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         }
     }
 
-    public function getDataToDisplay ($filteredRows, $columns)
+    public function getDataToDisplay ($filteredRows, $columns, $category)
     {
         $dataArray = array();
         foreach($filteredRows as $row) {
@@ -69,9 +69,9 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             }
             $tmp[] = $this->getLabelToDisplay($row->getStatusId());
 
-            $tmp[] = '<a href="users/preview/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="users/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="users/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+            $tmp[] = '<a href="'.$category.'/preview/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
+                '<a href="'.$category.'/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                '<a href="'.$category.'/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -98,21 +98,22 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
                 new Predicate\PredicateSet(
                     $this->getFilterPredicate($columns, $data),
                     Predicate\PredicateSet::COMBINED_BY_OR
-                )
+                ),
             );
+            $where['category'] = $category;
             $displayFlag = true;
+        } else {
+            $where['category'] = $category;
         }
-
-        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where, $category){
+        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
             $select
                 ->where($where)
-                ->where(array('category' => $category))
                 ->order($sorting[0] . ' ' . $sorting[1])
                 ->limit($trueLimit)
                 ->offset($trueOffset);
         });
 
-        $dataArray = $this->getDataToDisplay($filteredRows, $columns);
+        $dataArray = $this->getDataToDisplay($filteredRows, $columns, $category);
 
         if($displayFlag == true) {
             $countFilteredRows = $filteredRows->count();
