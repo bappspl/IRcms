@@ -11,10 +11,10 @@ return array(
     'view_manager' => array(
         'template_map' => array(
             'partial/flashmessages-post'  => __DIR__ . '/../view/partial/flashmessages-post.phtml',
-            'partial/delete-modal'  => __DIR__ . '/../view/partial/delete-modal.phtml',
-            'partial/form/basic-data'  => __DIR__ . '/../view/partial/form/basic-data.phtml',
+            'partial/delete-post-modal'  => __DIR__ . '/../view/partial/delete-post-modal.phtml',
+            'partial/form/basic-post-data'  => __DIR__ . '/../view/partial/form/basic-post-data.phtml',
             'partial/form/files'  => __DIR__ . '/../view/partial/form/files.phtml',
-            'partial/form/actions'  => __DIR__ . '/../view/partial/form/actions.phtml',
+            'partial/form/actions-post'  => __DIR__ . '/../view/partial/form/actions-post.phtml',
         ),
         'template_path_stack' => array(
             'post' => __DIR__ . '/../view'

@@ -1,0 +1,36 @@
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="row">
+    <div class="col-sm-6">
+
+        <div class="the-box">
+            <h4 class="small-title">Dane podstawowe</h4>
+            <?php echo $this->partial('partial/form/basic-post-data'); ?>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+        <div class="the-box">
+            <label><?php echo $this->formLabel($form->get('text')); ?></label>
+            <?php echo $this->formTextarea($form->get('text')); ?>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <?php echo $this->partial('partial/form/actions-post'); ?>
+        </div>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>

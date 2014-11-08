@@ -111,16 +111,16 @@ class NewsletterController extends AbstractActionController
     {
         $form = new NewsletterForm();
 
-        $subscriberGroups = $this->getSubscriberGroupTable()->getAll();
-        $tmpArrayGroups = array();
-        foreach ($subscriberGroups as $keyGroup => $group) {
-            $tmp = array(
-                'value' => $group->getId(),
-                'label' => $group->getName()
-            );
-            array_push($tmpArrayGroups, $tmp);
-        }
-        $form->get('groups')->setAttribute('options' ,$tmpArrayGroups);
+//        $subscriberGroups = $this->getSubscriberGroupTable()->getAll();
+//        $tmpArrayGroups = array();
+//        foreach ($subscriberGroups as $keyGroup => $group) {
+//            $tmp = array(
+//                'value' => $group->getId(),
+//                'label' => $group->getName()
+//            );
+//            array_push($tmpArrayGroups, $tmp);
+//        }
+//        $form->get('groups')->setAttribute('options' ,$tmpArrayGroups);
 
 
         $request = $this->getRequest();

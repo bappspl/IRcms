@@ -15,8 +15,10 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Authentication\AuthenticationService;
+use CmsIr\Newsletter\Form\NewsletterFieldset;
+//use Zend\ModuleManager\Feature\FormElementProviderInterface;
 
-class Module
+class Module //implements FormElementProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
@@ -48,6 +50,22 @@ class Module
             ),
         );
     }
+
+//    public function getFormElementConfig()
+//    {
+//
+//        $a = array(
+//            'factories' => array(
+//                'NewsletterFieldset' => function($sm)
+//                {
+//                    $serviceLocator = $sm->getServiceLocator();
+//                    $subscriberGroupTable = $serviceLocator->get('CmsIr\Newsletter\Model\SubscriberGroupTable');
+//                    $fieldset = new NewsletterFieldset($subscriberGroupTable);
+//                }
+//            )
+//        );
+//        return $a;
+//    }
 
     public function getServiceConfig()
     {

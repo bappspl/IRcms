@@ -82,7 +82,7 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
     public function getGroupsToDisplay ($groups)
     {
         $subscriberGroups = unserialize($groups);
-
+        if(!is_array($subscriberGroups)) $subscriberGroups = array($subscriberGroups);
         $template = '';
         foreach($subscriberGroups as $groupId) {
             $gruopName = $this->getSubscriberGroupTable()->getOneBy(array('id' => $groupId));
