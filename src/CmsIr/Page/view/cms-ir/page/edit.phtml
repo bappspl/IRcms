@@ -5,7 +5,7 @@ echo $this->form()->openTag($form);
 ?>
 
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6">
         <div class="the-box">
 
             <h4 class="small-title">Dane podstawowe</h4>
@@ -16,6 +16,14 @@ echo $this->form()->openTag($form);
 
             <?php echo $this->customFormHelper($form->get('name')) ?>
             <?php echo $this->customFormHelper($form->get('slug')) ?>
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="the-box">
+
+            <h4 class="small-title">Opis</h4>
+
             <?php echo $this->customFormHelper($form->get('content')) ?>
 
         </div>
