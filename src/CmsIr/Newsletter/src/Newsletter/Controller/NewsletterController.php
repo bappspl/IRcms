@@ -24,7 +24,6 @@ class NewsletterController extends AbstractActionController
 
     public function newsletterAction()
     {
-        //var_dump(serialize(array('testowa', 'testowa2'))); die;
         $request = $this->getRequest();
         if ($request->isPost()) {
 
@@ -109,19 +108,8 @@ class NewsletterController extends AbstractActionController
 
     public function createNewsletterAction()
     {
-        $form = new NewsletterForm();
-
-//        $subscriberGroups = $this->getSubscriberGroupTable()->getAll();
-//        $tmpArrayGroups = array();
-//        foreach ($subscriberGroups as $keyGroup => $group) {
-//            $tmp = array(
-//                'value' => $group->getId(),
-//                'label' => $group->getName()
-//            );
-//            array_push($tmpArrayGroups, $tmp);
-//        }
-//        $form->get('groups')->setAttribute('options' ,$tmpArrayGroups);
-
+        $formManager = $this->getServiceLocator()->get('FormElementManager');
+        $form = $formManager->create('newsletterForm');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -157,39 +145,20 @@ class NewsletterController extends AbstractActionController
             return $this->redirect()->toRoute('newsletter');
         }
 
-        $form = new NewsletterForm();
-        $form->bind($newsletter);
+        $formManager = $this->getServiceLocator()->get('FormElementManager');
+        $form = $formManager->create('newsletterForm');
 
         $newsletterGroups = $newsletter->getGroups();
         $newsletterArrayGroups = unserialize($newsletterGroups);
 
-        $subscriberGroups = $this->getSubscriberGroupTable()->getAll();
-        $tmpArrayGroups = array();
-        foreach ($subscriberGroups as $keyGroup => $group) {
-
-            if(in_array($group->getId(), $newsletterArrayGroups)){
-                $tmp = array(
-                    'value' => $group->getId(),
-                    'label' => $group->getName(),
-                    'selected' => true
-                );
-            } else {
-                $tmp = array(
-                    'value' => $group->getId(),
-                    'label' => $group->getName()
-                );
-            }
-
-            array_push($tmpArrayGroups, $tmp);
-        }
-        $form->get('groups')->setValueOptions($tmpArrayGroups);
+        $newsletter->setGroups($newsletterArrayGroups);
+        $form->bind($newsletter);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $form->setInputFilter(new NewsletterFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
-
             if ($form->isValid()) {
                 $this->getNewsletterTable()->save($newsletter);
                 $this->flashMessenger()->addMessage('Wiadomość została zedytowana poprawnie.');
@@ -214,32 +183,14 @@ class NewsletterController extends AbstractActionController
             return $this->redirect()->toRoute('newsletter');
         }
 
-        $form = new NewsletterForm();
-        $form->bind($newsletter);
+        $formManager = $this->getServiceLocator()->get('FormElementManager');
+        $form = $formManager->create('newsletterForm');
 
         $newsletterGroups = $newsletter->getGroups();
         $newsletterArrayGroups = unserialize($newsletterGroups);
 
-        $subscriberGroups = $this->getSubscriberGroupTable()->getAll();
-        $tmpArrayGroups = array();
-        foreach ($subscriberGroups as $keyGroup => $group) {
-
-            if(in_array($group->getId(), $newsletterArrayGroups)){
-                $tmp = array(
-                    'value' => $group->getId(),
-                    'label' => $group->getName(),
-                    'selected' => true
-                );
-            } else {
-                $tmp = array(
-                    'value' => $group->getId(),
-                    'label' => $group->getName()
-                );
-            }
-
-            array_push($tmpArrayGroups, $tmp);
-        }
-        $form->get('groups')->setValueOptions($tmpArrayGroups);
+        $newsletter->setGroups($newsletterArrayGroups);
+        $form->bind($newsletter);
 
         $viewParams = array();
         $viewParams['form'] = $form;

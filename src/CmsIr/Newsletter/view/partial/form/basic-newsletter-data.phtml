@@ -3,4 +3,5 @@
     <?php echo $this->customFormHelper($form->get('subject')) ?>
 </div>
 <?php echo $this->customFormHelper($form->get('status_id')) ?>
-<?php echo $this->customFormHelper($form->get('groups')) ?>
+<?php echo $this->formLabel($form->get('groups')) ?>
+<?php echo $this->formSelect($form->get('groups')) ?>

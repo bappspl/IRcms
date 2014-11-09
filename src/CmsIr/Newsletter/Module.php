@@ -12,13 +12,12 @@ use CmsIr\Newsletter\Model\Subscriber;
 use CmsIr\Newsletter\Model\SubscriberTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\ModuleManager\Feature\FormElementProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Authentication\AuthenticationService;
-use CmsIr\Newsletter\Form\NewsletterFieldset;
-//use Zend\ModuleManager\Feature\FormElementProviderInterface;
 
-class Module //implements FormElementProviderInterface
+class Module implements FormElementProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
@@ -51,21 +50,19 @@ class Module //implements FormElementProviderInterface
         );
     }
 
-//    public function getFormElementConfig()
-//    {
-//
-//        $a = array(
-//            'factories' => array(
-//                'NewsletterFieldset' => function($sm)
-//                {
-//                    $serviceLocator = $sm->getServiceLocator();
-//                    $subscriberGroupTable = $serviceLocator->get('CmsIr\Newsletter\Model\SubscriberGroupTable');
-//                    $fieldset = new NewsletterFieldset($subscriberGroupTable);
-//                }
-//            )
-//        );
-//        return $a;
-//    }
+    public function getFormElementConfig()
+    {
+        return array(
+            'factories' => array(
+                'newsletterForm' => function($sm) {
+                    $serviceLocator = $sm->getServiceLocator();
+                    $service = $serviceLocator->get('CmsIr\Newsletter\Service\NewsletterService');
+                    $form = new \CmsIr\Newsletter\Form\NewsletterForm($service);
+                    return $form;
+                },
+            )
+        );
+    }
 
     public function getServiceConfig()
     {

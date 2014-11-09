@@ -1,12 +1,13 @@
 <?php
 namespace CmsIr\Newsletter\Form;
 
+use CmsIr\Newsletter\Service\NewsletterService;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 class NewsletterForm extends Form
 {
-    public function __construct($name = null)
+    public function __construct(NewsletterService $service)
     {
         parent::__construct('Newsletter');
         $this->setAttribute('method', 'post');
@@ -49,11 +50,7 @@ class NewsletterForm extends Form
             )
         ));
 
-//        $this->add(array(
-//            'name' => 'groups',
-//            'type' => 'NewsletterFieldset'
-//        ));
-
+        $groups = $service->findSubscriberGroupsAsArray();
         $this->add(array(
             'type' => 'select',
             'attributes' => array(
@@ -65,6 +62,7 @@ class NewsletterForm extends Form
             'options' => array(
                 'label' => 'Grupy',
                 'disable_inarray_validator' => true,
+                'value_options' => $groups
             )
         ));
 

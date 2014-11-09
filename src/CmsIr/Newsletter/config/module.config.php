@@ -33,6 +33,9 @@ return array(
         'abstract_factories' => array(
             'Zend\Form\FormAbstractServiceFactory',
         ),
+        'factories' => array(
+            'CmsIr\Newsletter\Service\NewsletterService' => 'CmsIr\Newsletter\Service\Factory\NewsletterService',
+        ),
 	),
     'strategies' => array(
         'ViewJsonStrategy',
