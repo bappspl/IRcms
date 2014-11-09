@@ -48,6 +48,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         $id = (int) $post->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
+            $id = $this->tableGateway->lastInsertValue;
         } else {
             if ($this->getPost($id)) {
                 $this->tableGateway->update($data, array('id' => $id));
@@ -55,6 +56,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
                 throw new \Exception('Post id does not exist');
             }
         }
+        return $id;
     }
 
     public function getDataToDisplay ($filteredRows, $columns, $category)

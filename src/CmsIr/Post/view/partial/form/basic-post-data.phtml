@@ -1,4 +1,6 @@
 <?php echo $this->formInput($form->get('id')); ?>
+<?php echo $this->formInput($form->get('filename')); ?>
+
 <div class="form-group">
     <?php echo $this->customFormHelper($form->get('name')); ?>
 </div>
@@ -7,4 +9,8 @@
 </div>
 <div class="form-group">
     <?php echo $this->customFormHelper($form->get('status_id')); ?>
+</div>
+<div class="form-group">
+    <label><?php echo $this->formLabel($form->get('text')); ?></label>
+    <?php echo $this->formTextarea($form->get('text')); ?>
 </div>

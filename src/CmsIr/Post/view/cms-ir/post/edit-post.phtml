@@ -16,8 +16,24 @@ echo $this->form()->openTag($form);
 
     <div class="col-sm-6">
         <div class="the-box">
-            <label><?php echo $this->formLabel($form->get('text')); ?></label>
-            <?php echo $this->formTextarea($form->get('text')); ?>
+            <h4 class="small-title">Pliki</h4>
+
+            <div class="form-group">
+                <?php echo $this->customFormHelper($form->get('upload')); ?>
+                <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
+                <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
+                <div id="queue"></div>
+                <div class="files">
+                    <?php if(!empty($postFiles)): ?>
+                        <?php foreach($postFiles as $file): ?>
+                            <div id="<?php echo $file->getId(); ?>" class="deletePhoto">
+                                <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i>
+                                <img src="/files/post/<?php echo $file->getFilename(); ?>" alt="<?php echo $file->getFilename(); ?>" class="thumb" />
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -32,5 +48,10 @@ echo $this->form()->openTag($form);
 </div>
 <?php echo $this->form()->closeTag(); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/post.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/post-form.js'); ?>

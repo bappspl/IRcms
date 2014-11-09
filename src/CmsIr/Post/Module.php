@@ -3,6 +3,8 @@ namespace CmsIr\Post;
 
 // Add this for Table Date Gateway
 use CmsIr\Post\Model\Post;
+use CmsIr\Post\Model\PostFile;
+use CmsIr\Post\Model\PostFileTable;
 use CmsIr\Post\Model\PostTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
@@ -57,6 +59,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Post());
                     return new TableGateway('cms_post', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\Post\Model\PostFileTable' =>  function($sm) {
+                    $tableGateway = $sm->get('PostFileTableGateway');
+                    $table = new PostFileTable($tableGateway);
+                    return $table;
+                },
+                'PostFileTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new PostFile());
+                    return new TableGateway('cms_post_file', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

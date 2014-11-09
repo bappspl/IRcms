@@ -65,7 +65,7 @@ class PostForm extends Form
                 'type'  => 'textarea',
             ),
             'options' => array(
-                'label' => 'Opis',
+                'label' => 'Treść',
             ),
         ));
 
@@ -76,6 +76,26 @@ class PostForm extends Form
                 'value' => 'Zapisz',
                 'id' => 'submit',
                 'class' => 'btn btn-primary pull-right'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'filename',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'filename'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'upload',
+            'attributes' => array(
+                'type'  => 'file',
+                'id' => 'upload',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Upload',
             ),
         ));
     }
