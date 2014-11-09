@@ -1,5 +1,17 @@
 <?php
 return array(
+    'slider-main' => array(
+        'may_terminate' => true,
+        'type' => 'Literal',
+        'options' => array(
+            'route' => '/cms-ir/slider',
+            'defaults' => array(
+                'module' => 'CmsIr\Slider',
+                'controller' => 'CmsIr\Slider\Controller\Slider',
+                'action' => 'list',
+            ),
+        ),
+    ),
     'slider' => array(
         'may_terminate' => true,
         'type' => 'Literal',

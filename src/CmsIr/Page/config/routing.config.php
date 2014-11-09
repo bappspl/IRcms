@@ -1,5 +1,17 @@
 <?php
 return array(
+    'page-main' => array(
+        'may_terminate' => true,
+        'type' => 'Literal',
+        'options' => array(
+            'route' => '/cms-ir/page',
+            'defaults' => array(
+                'module' => 'CmsIr\Page',
+                'controller' => 'CmsIr\Page\Controller\Page',
+                'action' => 'list',
+            ),
+        ),
+    ),
     'page' => array(
         'may_terminate' => true,
         'type' => 'Literal',
