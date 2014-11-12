@@ -51,10 +51,10 @@ class MenuHelper extends AbstractHelper
 
     public function addExtraOptions()
     {
+//        $extraFields = '<li class="parent right-icon">
+//                            <i class="fa fa-search" id="nav-icon-search"></i>
+//                        </li>
         $extraFields = '<li class="parent right-icon">
-                            <i class="fa fa-search" id="nav-icon-search"></i>
-                        </li>
-                        <li class="parent right-icon">
                             <i class="fa fa-phone" id="nav-icon-phone"></i>
                         </li>';
         return $extraFields;

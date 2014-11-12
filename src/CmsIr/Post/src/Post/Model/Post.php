@@ -12,6 +12,8 @@ class Post
     protected $status_id;
     protected $category;
     protected $text;
+    protected $files;
+    protected $date;
 
 
     public function exchangeArray($data) 
@@ -22,6 +24,8 @@ class Post
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->text = (!empty($data['text'])) ? $data['text'] : null;
+        $this->files = (!empty($data['files'])) ? $data['files'] : null;
+        $this->date = (!empty($data['date'])) ? $data['date'] : null;
     }
 
     public function getArrayCopy()
@@ -40,6 +44,38 @@ class Post
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @param mixed $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files)
+    {
+        $this->files = $files;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFiles()
+    {
+        return $this->files;
     }
 
     /**
