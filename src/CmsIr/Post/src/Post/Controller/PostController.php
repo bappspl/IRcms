@@ -23,7 +23,7 @@ class PostController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array( 'name', 'url');
+            $columns = array('name', 'url', 'date');
 
             $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category);
             $output = array(
@@ -60,6 +60,7 @@ class PostController extends AbstractActionController
                 $post = new Post();
                 $post->exchangeArray($form->getData());
                 $post->setCategory($category);
+                $post->setDate(date('Y-m-d'));
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -121,6 +122,8 @@ class PostController extends AbstractActionController
             if ($form->isValid()) {
 
                 $post->setCategory($category);
+                $post->setDate(date('Y-m-d'));
+
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
