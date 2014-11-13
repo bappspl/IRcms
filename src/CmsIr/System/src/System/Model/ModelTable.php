@@ -181,9 +181,11 @@ class ModelTable
 
         $resultSetPrototype = new ResultSet();
         $resultSetPrototype->setArrayObjectPrototype($object);
+        $resultSetPrototype->buffer();
 
         $paginatorAdapter = new DbSelect($select, $this->tableGateway->getAdapter(), $resultSetPrototype);
         $paginator = new Paginator($paginatorAdapter);
+
         return $paginator;
     }
 
