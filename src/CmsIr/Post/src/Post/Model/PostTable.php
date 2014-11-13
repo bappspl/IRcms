@@ -137,6 +137,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         $template = '<span class="label ' . $checked . '">' .$name . '</span>';
         return $template;
     }
+
     /**
      * @return \CmsIr\System\Model\StatusTable
      */
