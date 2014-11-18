@@ -173,7 +173,7 @@ class IndexController extends AbstractActionController
         $viewModel = new ViewModel(array('token' => $token));
         try {
             $user = $this->getUsersTable()->getUserByToken($token);
-            $id = $user->id;
+            $id = $user->getId();
             $this->getUsersTable()->activateUser($id);
         }
         catch(\Exception $e) {

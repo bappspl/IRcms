@@ -74,7 +74,7 @@ class Module
 		}
 		
 		if (!$acl->isAllowed($role, $controller, $action)) {
-			$url = $e->getRouter()->assemble(array(), array('name' => 'home'));
+			$url = $e->getRouter()->assemble(array(), array('name' => 'login'));
 			$response = $e->getResponse();
 
 			$response->getHeaders()->addHeaderLine('Location', $url);

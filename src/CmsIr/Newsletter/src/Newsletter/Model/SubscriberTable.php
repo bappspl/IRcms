@@ -45,11 +45,18 @@ class SubscriberTable extends ModelTable implements ServiceLocatorAwareInterface
 
     public function save(Subscriber $subscriber)
     {
+        $subscriberGrups = $subscriber->getGroups();
+        if(!is_array($subscriberGrups)){
+            $groups = array($subscriberGrups);
+        } else {
+            $groups = $subscriberGrups;
+        }
+
         $data = array(
             'email' => $subscriber->getEmail(),
             'first_name'  => $subscriber->getFirstName(),
             'confirmation_code'  => $subscriber->getConfirmationCode(),
-            'groups'  => serialize($subscriber->getGroups()),
+            'groups'  => serialize($groups),
             'status_id'  => $subscriber->getStatusId(),
         );
 

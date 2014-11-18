@@ -94,14 +94,21 @@ class NewsletterController extends AbstractActionController
     {
         $transport = $this->getServiceLocator()->get('mail.transport');
 
+        $html = new MimePart($content);
+        $html->type = "text/html";
+
+        $body = new MimeMessage();
+        $body->setParts(array($html));
+
         foreach($emails as $email)
         {
             $message = new Message();
             $this->getRequest()->getServer();
             $message->addTo($email)
                 ->addFrom('mailer@web-ir.pl')
+                ->setEncoding('UTF-8')
                 ->setSubject($subject)
-                ->setBody($content);
+                ->setBody($body);
             $transport->send($message);
         }
     }

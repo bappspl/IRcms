@@ -135,7 +135,7 @@ class UsersController extends AbstractActionController
         $id = $this->params()->fromRoute('id');
 
         $user = $this->getUsersTable()->getUser($id);
-
+        //var_dump($user);die;
         if(!$user) {
             return $this->redirect()->toRoute('users-list');
         }
@@ -175,13 +175,6 @@ class UsersController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $data = $form->getData();
-                //var_dump($data);die;
-                $user->setName($data->getName());
-                $user->setSurname($data->getSurname());
-                $user->setEmail($data->getEmail());
-                $user->setRole($data->getRole());
-                $user->setFilename($data->getFilename());
                 $this->getUsersTable()->saveUser($user);
 
                 $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');

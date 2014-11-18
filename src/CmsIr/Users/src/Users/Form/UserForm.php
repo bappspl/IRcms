@@ -17,6 +17,20 @@ class UserForm extends Form
                 'id' => 'id'
             ),
         ));
+        $this->add(array(
+            'name' => 'password',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'password'
+            ),
+        ));
+        $this->add(array(
+            'name' => 'password_salt',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'password_salt'
+            ),
+        ));
 
         $this->add(array(
             'name' => 'filename',
