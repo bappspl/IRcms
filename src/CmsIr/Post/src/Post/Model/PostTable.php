@@ -44,6 +44,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             'category'  => $post->getCategory(),
             'text'  => $post->getText(),
             'date'  => $post->getDate(),
+            'author_id'  => $post->getAuthorId(),
         );
 
         $id = (int) $post->getId();
@@ -80,7 +81,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         return $dataArray;
     }
 
-    public function getPostDatatables($columns, $data, $category)
+    public function getPostDatatables($columns, $data, $category, $userId = null)
     {
         $displayFlag = false;
 
@@ -108,6 +109,9 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         } else {
             $where['category'] = $category;
         }
+
+        if($userId) $where['author_id'] = $userId;
+
         $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
             $select
                 ->where($where)

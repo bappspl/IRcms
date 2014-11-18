@@ -5,6 +5,7 @@ use CmsIr\Post\Form\PostForm;
 use CmsIr\Post\Form\PostFormFilter;
 use CmsIr\Post\Model\Post;
 use CmsIr\Post\Model\PostFile;
+use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -19,13 +20,17 @@ class PostController extends AbstractActionController
     public function postListAction()
     {
         $category = $this->params()->fromRoute('category');
+
+        $userRoleId = $this->identity()->role;
+        $userRoleId < 3 ? $userId = $this->identity()->id : $userId = null;
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name', 'url', 'date');
 
-            $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category);
+            $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category, $userId);
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
                 "iTotalRecords" => $listData['iTotalRecords'],
@@ -50,6 +55,9 @@ class PostController extends AbstractActionController
         $form = new PostForm();
         $category = $this->params()->fromRoute('category');
 
+        $userRoleId = $this->identity()->role;
+        if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
@@ -61,6 +69,10 @@ class PostController extends AbstractActionController
                 $post->exchangeArray($form->getData());
                 $post->setCategory($category);
                 $post->setDate(date('Y-m-d'));
+                $post->setAuthorId($this->identity()->id);
+
+                if($userRoleId < 3) $post->setStatusId(2);
+
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -100,6 +112,9 @@ class PostController extends AbstractActionController
         $id = $this->params()->fromRoute('post_id');
         $category = $this->params()->fromRoute('category');
 
+        $userRoleId = $this->identity()->role;
+
+
         /**
          * @var $post Post
          */
@@ -111,6 +126,7 @@ class PostController extends AbstractActionController
         }
 
         $form = new PostForm();
+        if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
         $form->bind($post);
 
         $request = $this->getRequest();
@@ -123,6 +139,9 @@ class PostController extends AbstractActionController
 
                 $post->setCategory($category);
                 $post->setDate(date('Y-m-d'));
+                $post->setAuthorId($this->identity()->id);
+
+                if($userRoleId < 3) $post->setStatusId(2);
 
                 $id = $this->getPostTable()->save($post);
 

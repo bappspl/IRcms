@@ -38,12 +38,14 @@
 
                             <ul class="submenu" style="display: block;">
                                 <?php foreach($page->getPages() as $realActiveChild): ?>
-                                    <?php if($realActiveChild->visibleInPrimary == true): ?>
-                                    <li <?php if($realActiveChild->isActive()) echo 'class="selected"'?>>
-                                        <a href="<?php echo $realActiveChild->getHref() ?>">
-                                             <?php echo $this->translate($realActiveChild->getLabel()) ?>
-                                        </a>
-                                    </li>
+                                    <?php if($userRole >= $realActiveChild->getId()): ?>
+                                        <?php if($realActiveChild->visibleInPrimary == true): ?>
+                                        <li <?php if($realActiveChild->isActive()) echo 'class="selected"'?>>
+                                            <a href="<?php echo $realActiveChild->getHref() ?>">
+                                                 <?php echo $this->translate($realActiveChild->getLabel()) ?>
+                                            </a>
+                                        </li>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                  <?php endforeach; ?>
                             </ul>
@@ -61,17 +63,19 @@
 
                             <ul class="submenu">
                                 <?php foreach($page->getPages() as $realChild): ?>
-                                    <?php if( ! $realChild->isVisible() || !$this->navigation()->accept($realChild)) continue; ?>
-                                    <?php if($realChild->visibleInPrimary == true): ?>
-                                    <li <?php if($realChild->isActive()) echo 'class="selected"'?>>
+                                    <?php if($userRole >= $realChild->getId()): ?>
+                                        <?php if( ! $realChild->isVisible() || !$this->navigation()->accept($realChild)) continue; ?>
+                                        <?php if($realChild->visibleInPrimary == true): ?>
+                                        <li <?php if($realChild->isActive()) echo 'class="selected"'?>>
 
-                                        <a href="<?php echo $realChild->getHref() ?>">
+                                            <a href="<?php echo $realChild->getHref() ?>">
 
-                                            <?php echo $this->translate($realChild->getLabel()) ?>
+                                                <?php echo $this->translate($realChild->getLabel()) ?>
 
-                                        </a>
+                                            </a>
 
-                                    </li>
+                                        </li>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </ul>

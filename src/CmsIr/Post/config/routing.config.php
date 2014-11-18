@@ -3,7 +3,7 @@ return array(
     'fake-post' => array(
         'type'    => 'Segment',
         'options' => array(
-            'route'    => '/cms-ir/post-list/news',
+            'route'    => '/cms-ir/post-list/event',
             'defaults' => array(
             ),
         ),
