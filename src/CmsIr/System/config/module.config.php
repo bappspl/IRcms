@@ -2,7 +2,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-
+            'CmsIr\System\Controller\System' => 'CmsIr\System\Controller\SystemController'
         ),
     ),
     'router' => array(
