@@ -65,7 +65,7 @@ class PageForm extends Form
                 'id' => 'content',
                 'type'  => 'textarea',
                 'placeholder' => 'Wprowadź zawartość strony',
-                'class' => 'summernote'
+                'class' => 'summernote-lg',
             ),
             'options' => array(
                 'label' => 'Zawartość strony',

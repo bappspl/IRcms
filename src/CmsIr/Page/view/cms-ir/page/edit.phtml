@@ -40,15 +40,3 @@ echo $this->form()->openTag($form);
         </div>
     </div>
 </div>
-
-<?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
-
-<?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
-
-<script>
-    $(document).ready(function() {
-        $('.summernote').summernote({
-            height: 200
-        });
-    });
-</script>
