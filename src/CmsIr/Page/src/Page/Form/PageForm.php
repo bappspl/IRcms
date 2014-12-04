@@ -21,19 +21,19 @@ class PageForm extends Form
         ));
 
         $this->add(array(
-            'type' => 'select',
-            'attributes' => array(
-                'class' => 'form-control',
-                'name' => 'status_id',
+        'type' => 'select',
+        'attributes' => array(
+            'class' => 'form-control',
+            'name' => 'status_id',
+        ),
+        'options' => array(
+            'label' => 'Status',
+            'value_options' => array(
+                '2' => 'Nieaktywna',
+                '1' => 'Aktywna'
             ),
-            'options' => array(
-                'label' => 'Status',
-                'value_options' => array(
-                     '2' => 'Nieaktywna',
-                     '1' => 'Aktywna'
-                ),
-            )
-        ));
+        )
+    ));
 
         $this->add(array(
             'name' => 'name',

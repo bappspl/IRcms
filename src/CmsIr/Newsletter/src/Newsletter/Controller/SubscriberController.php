@@ -295,7 +295,6 @@ class SubscriberController extends AbstractActionController
         $id = $this->params()->fromRoute('subscriber_group_id');
 
         $subscriberGroup = $this->getSubscriberGroupTable()->getOneBy(array('id' => $id));
-
         if(!$subscriberGroup) {
             return $this->redirect()->toRoute('subscriber-group');
         }
