@@ -22,6 +22,11 @@ class Users
     protected $registration_token;
     protected $email_confirmed;
 
+    protected $position;
+    protected $facebook;
+    protected $twitter;
+    protected $google;
+
     public function exchangeArray($data) 
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
@@ -37,7 +42,12 @@ class Users
         $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
         $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
         $this->email_confirmed = (isset($data['email_confirmed'])) ? $data['email_confirmed'] : null;
-    }	
+
+        $this->position = (isset($data['position'])) ? $data['position'] : null;
+        $this->facebook = (isset($data['facebook'])) ? $data['facebook'] : null;
+        $this->twitter = (isset($data['twitter'])) ? $data['twitter'] : null;
+        $this->google = (isset($data['google'])) ? $data['google'] : null;
+    }
 
     public function getArrayCopy()
     {
@@ -247,6 +257,70 @@ class Users
     public function getSurname()
     {
         return $this->surname;
+    }
+
+    /**
+     * @param mixed $facebook
+     */
+    public function setFacebook($facebook)
+    {
+        $this->facebook = $facebook;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFacebook()
+    {
+        return $this->facebook;
+    }
+
+    /**
+     * @param mixed $google
+     */
+    public function setGoogle($google)
+    {
+        $this->google = $google;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoogle()
+    {
+        return $this->google;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $twitter
+     */
+    public function setTwitter($twitter)
+    {
+        $this->twitter = $twitter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwitter()
+    {
+        return $this->twitter;
     }
 
 

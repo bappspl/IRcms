@@ -25,6 +25,7 @@ class PostForm extends Form
             'attributes' => array(
                 'id' => 'name',
                 'type'  => 'text',
+                'class' => 'form-control',
             ),
             'options' => array(
                 'label' => 'Nazwa',
@@ -47,10 +48,36 @@ class PostForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'date',
+            'attributes' => array(
+                'id' => 'text',
+                'class' => 'form-control datepicker',
+                'data-date-format' => 'yyyy-mm-dd',
+                'type'  => 'text',
+                'placeholder'  => 'yyyy-mm-dd',
+            ),
+            'options' => array(
+                'label' => 'Data',
+            ),
+        ));
+
+        $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'author_id',
+            ),
+            'options' => array(
+                'label' => 'Autor',
+            )
+        ));
+
+        $this->add(array(
             'name' => 'url',
             'attributes' => array(
                 'id' => 'url',
                 'type'  => 'text',
+                'class' => 'form-control',
             ),
             'options' => array(
                 'label' => 'Url',

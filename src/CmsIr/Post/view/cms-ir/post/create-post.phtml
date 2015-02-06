@@ -41,7 +41,9 @@ echo $this->form()->openTag($form);
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/post.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/datepicker.min.css'); ?>
 
+<?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap-datepicker.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>

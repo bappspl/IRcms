@@ -58,21 +58,30 @@ class PostController extends AbstractActionController
         $userRoleId = $this->identity()->role;
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
 
+        $users = $this->getUsersTable()->getAll();
+        $tmpUsersArray = array();
+        foreach($users as $user)
+        {
+            $tmp = array(
+                'value' => $user->getId(),
+                'label' => $user->getName() . ' ' . $user->getSurname(),
+            );
+            array_push($tmpUsersArray, $tmp);
+        }
+
+        $form->get('author_id')->setValueOptions($tmpUsersArray);
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $form->setInputFilter(new PostFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
-
             if ($form->isValid()) {
                 $post = new Post();
                 $post->exchangeArray($form->getData());
                 $post->setCategory($category);
-                $post->setDate(date('Y-m-d'));
-                $post->setAuthorId($this->identity()->id);
 
                 if($userRoleId < 3) $post->setStatusId(2);
-
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -114,7 +123,6 @@ class PostController extends AbstractActionController
 
         $userRoleId = $this->identity()->role;
 
-
         /**
          * @var $post Post
          */
@@ -127,7 +135,33 @@ class PostController extends AbstractActionController
 
         $form = new PostForm();
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
+
+        $users = $this->getUsersTable()->getAll();
+        $tmpUsersArray = array();
+
+        $postAuthorId = $post->getAuthorId();
+        foreach($users as $user)
+        {
+            if($postAuthorId == $user->getId())
+            {
+                $tmp = array(
+                    'value' => $user->getId(),
+                    'label' => $user->getName() . ' ' . $user->getSurname(),
+                    'selected' => true
+                );
+            } else
+            {
+                $tmp = array(
+                    'value' => $user->getId(),
+                    'label' => $user->getName() . ' ' . $user->getSurname(),
+                );
+            }
+
+            array_push($tmpUsersArray, $tmp);
+        }
+
         $form->bind($post);
+        $form->get('author_id')->setValueOptions($tmpUsersArray);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -138,9 +172,6 @@ class PostController extends AbstractActionController
             if ($form->isValid()) {
 
                 $post->setCategory($category);
-                $post->setDate(date('Y-m-d'));
-                $post->setAuthorId($this->identity()->id);
-
                 if($userRoleId < 3) $post->setStatusId(2);
 
                 $id = $this->getPostTable()->save($post);
@@ -309,6 +340,14 @@ class PostController extends AbstractActionController
     public function getPostFileTable()
     {
         return $this->getServiceLocator()->get('CmsIr\Post\Model\PostFileTable');
+    }
+
+    /**
+     * @return \CmsIr\Users\Model\UsersTable
+     */
+    public function getUsersTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Users\Model\UsersTable');
     }
 
 }
