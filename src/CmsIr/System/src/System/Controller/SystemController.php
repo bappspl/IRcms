@@ -1,6 +1,7 @@
 <?php
 namespace CmsIr\System\Controller;
 
+use PHPThumb\GD;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -46,46 +47,10 @@ class SystemController extends AbstractActionController
         if(!is_dir($pathToThumbs))
             mkdir($pathToThumbs);
 
-        list($width, $height) = getimagesize($imgSrc);
-
-        //$gd = new GD($sourcePath, array('resizeUp' => true, 'jpegQuality' => 92));
-
-        $info = pathinfo($imgSrc);
-
-        switch(strtolower(($info['extension'])))
-        {
-            case 'jpg':
-                $myImage = imagecreatefromjpeg($imgSrc);
-            break;
-            case 'png':
-                $myImage = imagecreatefrompng($imgSrc);
-            break;
-            case 'gif':
-                $myImage = imagecreatefromgif($imgSrc);
-            break;
-            default:
-                $myImage = imagecreatefromjpeg($imgSrc);
-            break;
-
-        }
-
-
-        if ($width > $height) {
-            $y = 0;
-            $x = ($width - $height) / 2;
-            $smallestSide = $height;
-        } else {
-            $x = 0;
-            $y = ($height - $width) / 2;
-            $smallestSide = $width;
-        }
-
-        $thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
-        imagecopyresampled($thumb, $myImage, 0, 0, $x, $y, $thumbWidth, $thumbHeight, $smallestSide, $smallestSide);
-
-        header('Content-type: image/jpeg');
-        imagejpeg($thumb);
-        imagejpeg($thumb, $pathToThumbs . '/' .$fileName);
+        $gd = new GD($imgSrc, array('resizeUp' => true, 'jpegQuality' => 100));
+        $gd->adaptiveResize($thumbWidth, $thumbHeight);
+        $gd->save($pathToThumbs . '/' . $fileName);
+        $gd->show();
 
     }
 }
