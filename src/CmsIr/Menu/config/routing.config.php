@@ -1,6 +1,6 @@
 <?php
 return array(
-    'fake' => array(
+    'fake-menu' => array(
         'type'    => 'Segment',
         'options' => array(
             'route'    => '/cms-ir/menu',
