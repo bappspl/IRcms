@@ -86,4 +86,16 @@ return array(
             ),
         ),
     ),
+
+    'user-change-password' => array(
+        'type'    => 'Segment',
+        'options' => array(
+            'route'    => '/cms-ir/users/change-password',
+            'defaults' => array(
+                'module' => 'CmsIr\Users',
+                'controller' => 'CmsIr\Users\Controller\Users',
+                'action'     => 'changePassword',
+            ),
+        ),
+    ),
 );
