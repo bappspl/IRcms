@@ -1,15 +1,21 @@
 <?php
 namespace CmsIr\Post\Controller;
 
+use CmsIr\Newsletter\Model\Subscriber;
 use CmsIr\Post\Form\PostForm;
 use CmsIr\Post\Form\PostFormFilter;
 use CmsIr\Post\Model\Post;
 use CmsIr\Post\Model\PostFile;
+use CmsIr\System\Model\Status;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
+
+use Zend\Mail\Message;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
 
 class PostController extends AbstractActionController
 {
@@ -102,7 +108,35 @@ class PostController extends AbstractActionController
                     }
                 }
 
-                $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
+                // Only for DNA
+                if($post->getStatusId() == 1)
+                {
+                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
+                                         "Kliknij w poniższy link, aby go przeczytać: <a href='" .
+                                         $this->getRequest()->getServer('HTTP_ORIGIN') .
+                                         $this->url()->fromRoute('oneNews', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
+
+                    /** @var $confirmedStatus Status */
+                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
+                    $confirmedStatusId = $confirmedStatus->getId();
+
+                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
+
+                    $subscriberEmails = array();
+                    /** @var $subscriber Subscriber */
+                    foreach($subscribers as $subscriber)
+                    {
+                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
+                    }
+                    $this->sendEmails($subscriberEmails, "Nowy artykuł na stronie DNA!", $newsletterContent);
+
+                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
+
+                } else
+                {
+                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
+
+                }
 
                 return $this->redirect()->toRoute('post-list', array('category' => $category));
             }
@@ -326,6 +360,30 @@ class PostController extends AbstractActionController
         echo $jsonObject;
         return $this->response;
     }
+
+    public function sendEmails($emails, $subject, $content)
+    {
+        $transport = $this->getServiceLocator()->get('mail.transport');
+
+        $html = new MimePart($content);
+        $html->type = "text/html";
+
+        $body = new MimeMessage();
+        $body->setParts(array($html));
+
+        foreach($emails as $email)
+        {
+            $message = new Message();
+            $this->getRequest()->getServer();
+            $message->addTo($email)
+                ->addFrom('mailer@web-ir.pl')
+                ->setEncoding('UTF-8')
+                ->setSubject($subject)
+                ->setBody($body);
+            $transport->send($message);
+        }
+    }
+
     /**
      * @return \CmsIr\Post\Model\PostTable
      */
@@ -350,4 +408,19 @@ class PostController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\Users\Model\UsersTable');
     }
 
+    /**
+     * @return \CmsIr\System\Model\StatusTable
+     */
+    public function getStatusTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\StatusTable');
+    }
+
+    /**
+     * @return \CmsIr\Newsletter\Model\SubscriberTable
+     */
+    public function getSubscriberTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Newsletter\Model\SubscriberTable');
+    }
 }
