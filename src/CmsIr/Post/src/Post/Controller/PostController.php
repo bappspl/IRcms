@@ -138,7 +138,7 @@ class PostController extends AbstractActionController
 
                 }
 
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -164,7 +164,7 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();
@@ -230,7 +230,7 @@ class PostController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Wpis został zedytowany poprawnie.');
 
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -255,7 +255,7 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();
@@ -277,7 +277,7 @@ class PostController extends AbstractActionController
         $category = (int) $this->params()->fromRoute('category');
 
         if (!$id) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         if ($request->isPost()) {
@@ -309,7 +309,7 @@ class PostController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         return array();

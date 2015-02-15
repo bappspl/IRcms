@@ -57,7 +57,7 @@ class UsersController extends AbstractActionController
         $user = $this->getUsersTable()->getUser($id);
 
         if(!$user) {
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         $form = new UserForm();
@@ -128,7 +128,7 @@ class UsersController extends AbstractActionController
                 $this->sendConfirmationEmail($user, $data[1]);
                 $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
 
-                return $this->redirect()->toRoute('users-list');
+                return $this->redirect()->toRoute('users');
             }
         }
 
@@ -144,7 +144,7 @@ class UsersController extends AbstractActionController
         $user = $this->getUsersTable()->getUser($id);
         //var_dump($user);die;
         if(!$user) {
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         $form = new UserForm();
@@ -185,7 +185,7 @@ class UsersController extends AbstractActionController
                 $this->getUsersTable()->saveUser($user);
 
                 $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');
-                return $this->redirect()->toRoute('users-list');
+                return $this->redirect()->toRoute('users');
             }
         }
         $viewParams = array();
@@ -198,7 +198,7 @@ class UsersController extends AbstractActionController
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         if ($request->isPost()) {
@@ -216,7 +216,7 @@ class UsersController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         return array(
@@ -428,7 +428,7 @@ class UsersController extends AbstractActionController
                     $this->getAuthUsersTable()->saveUser($authUser);
 
                     $this->flashMessenger()->addMessage('Poprawnie zmieniono hasło.');
-                    return $this->redirect()->toRoute('users-list');
+                    return $this->redirect()->toRoute('users');
                 }
             }
         }
