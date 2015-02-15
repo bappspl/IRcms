@@ -4,6 +4,7 @@ namespace CmsIr\Menu\Controller;
 use CmsIr\Menu\Model\Menu;
 use CmsIr\Menu\Model\MenuItem;
 use CmsIr\Menu\Model\MenuNode;
+use CmsIr\System\Model\Status;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -42,10 +43,16 @@ class MenuController extends AbstractActionController
         $menuTree = $this->getMenuService()->getMenuTable()->getOneBy(array('id' => $treeId));
         $menu = $this->getMenuService()->getMenuByTreeId($treeId);
 
+        /* @var $activeStatus Status */
+        $activeStatus = $this->getStatusTable()->getOneBy(array('slug' => 'active'));
+        $activeStatusId = $activeStatus->getId();
+        $existingPages = $this->getPageTable()->getBy(array('status_id' => $activeStatusId));
+
         $viewParams = array();
         $viewParams['menu'] = $menu;
         $viewParams['menuTree'] = $menuTree;
         $viewParams['treeId'] = $treeId;
+        $viewParams['existingPages'] = $existingPages;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -128,6 +135,7 @@ class MenuController extends AbstractActionController
             $nodeLabel = $request->getPost('label');
             $nodeUrl = $request->getPost('url');
             $treeId = $request->getPost('treeId');
+            $pageProvider = $request->getPost('pageProvider');
 
             $nodeExist = $this->getMenuService()->getMenuItemTable()->getOneBy(array('url' => $nodeUrl));
             if($nodeExist == false)
@@ -136,7 +144,7 @@ class MenuController extends AbstractActionController
                 $menuNode = new MenuNode();
                 $menuNode->setDepth(0);
                 $menuNode->setIsVisible(1);
-                $menuNode->setProviderType('page-provider');
+                $menuNode->setProviderType($pageProvider);
                 $menuNode->setPosition(0);
                 $menuNode->setParentId(null);
                 $menuNode->setTreeId($treeId);
@@ -169,6 +177,22 @@ class MenuController extends AbstractActionController
     public function getMenuService()
     {
         return $this->getServiceLocator()->get('CmsIr\Menu\Service\MenuService');
+    }
+
+    /**
+     * @return \CmsIr\Page\Model\PageTable
+     */
+    public function getPageTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Page\Model\PageTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Model\StatusTable
+     */
+    public function getStatusTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\StatusTable');
     }
 
 }
