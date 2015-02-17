@@ -44,6 +44,10 @@ class UsersTable extends ModelTable
             'role'  => $user->getRole(),
             'active'  => 1,
             'filename'  => $user->getFilename(),
+            'position'  => $user->getPosition(),
+            'facebook'  => $user->getFacebook(),
+            'twitter'  => $user->getTwitter(),
+            'google'  => $user->getGoogle(),
         );
 
         $id = (int) $user->getId();

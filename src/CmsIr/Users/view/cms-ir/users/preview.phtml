@@ -10,13 +10,13 @@ echo $this->form()->openTag($form);
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->formInput($form->get('filename')); ?>
             <div class="form-group">
-                <?php echo $this->formInput($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
+                <?php echo $this->customFormHelper($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
             <div class="form-group">
-                <?php echo $this->formInput($form->get('surname')->setAttributes(array('disabled' => 'disabled'))); ?>
+                <?php echo $this->customFormHelper($form->get('surname')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
             <div class="form-group">
-                <?php echo $this->formInput($form->get('email')->setAttributes(array('disabled' => 'disabled'))); ?>
+                <?php echo $this->customFormHelper($form->get('email')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
 
             <div class="form-group">
@@ -24,6 +24,21 @@ echo $this->form()->openTag($form);
                 <?php echo $this->formSelect($form->get('role')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
 
+            <div class="form-group">
+                <?php echo $this->customFormHelper($form->get('position')->setAttributes(array('disabled' => 'disabled'))); ?>
+            </div>
+
+            <div class="form-group">
+                <?php echo $this->customFormHelper($form->get('facebook')->setAttributes(array('disabled' => 'disabled'))); ?>
+            </div>
+
+            <div class="form-group">
+                <?php echo $this->customFormHelper($form->get('twitter')->setAttributes(array('disabled' => 'disabled'))); ?>
+            </div>
+
+            <div class="form-group">
+                <?php echo $this->customFormHelper($form->get('google')->setAttributes(array('disabled' => 'disabled'))); ?>
+            </div>
         </div>
 
     </div>
@@ -44,7 +59,7 @@ echo $this->form()->openTag($form);
     <div class="col-sm-12">
         <div class="the-box">
             <div class="input-group col-sm-12 text-right">
-                <a class="btn btn-primary" href="<?php echo $this->url('users-list'); ?>">Powrót</a> &nbsp
+                <a class="btn btn-primary" href="<?php echo $this->url('users'); ?>">Powrót</a> &nbsp
             </div>
         </div>
     </div>

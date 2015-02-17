@@ -1,14 +1,17 @@
 <?php
 return array(
-    'fake-post' => array(
+    'post-main' => array(
         'type'    => 'Segment',
         'options' => array(
-            'route'    => '/cms-ir/post-list/event',
+            'route'    => '/cms-ir/post-list/news',
             'defaults' => array(
+                'module' => 'CmsIr\Post',
+                'controller' => 'CmsIr\Post\Controller\Post',
+                'action'     => 'postList',
             ),
         ),
     ),
-    'post-list' => array(
+    'post' => array(
         'type'    => 'Segment',
         'may_terminate' => true,
         'options' => array(
@@ -23,7 +26,7 @@ return array(
             ),
         ),
         'child_routes' => array(
-            'post-create' => array(
+            'create' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/create',
@@ -37,8 +40,7 @@ return array(
                     ),
                 ),
             ),
-
-            'post-edit' => array(
+            'edit' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/edit/:post_id',
@@ -53,8 +55,7 @@ return array(
                     ),
                 ),
             ),
-
-            'post-preview' => array(
+            'preview' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/preview/:post_id',
@@ -69,8 +70,7 @@ return array(
                     ),
                 ),
             ),
-
-            'post-delete' => array(
+            'delete' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/delete/:post_id',
@@ -85,8 +85,7 @@ return array(
                     ),
                 ),
             ),
-
-            'post-upload' => array(
+            'upload' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/upload',
@@ -99,7 +98,6 @@ return array(
                     ),
                 ),
             ),
-
             'delete-photo' => array(
                 'type'    => 'Segment',
                 'options' => array(

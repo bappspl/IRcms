@@ -16,7 +16,6 @@ $(function () {
             }
 
             $('.deletePhoto i').on('click', function () {
-                alert('asd');
                 var id = 0;
                 var fullPathToImage = $(this).next().attr('src');
 
@@ -44,7 +43,6 @@ $(function () {
     });
 
     $('.deletePhoto i').on('click', function () {
-        alert('asd');
         var id = 0;
         var fullPathToImage = $(this).next().attr('src');
 

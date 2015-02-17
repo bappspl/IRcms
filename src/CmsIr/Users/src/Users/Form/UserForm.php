@@ -76,6 +76,54 @@ class UserForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'position',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'position',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Stanowisko',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'facebook',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'facebook',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Facebook',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'twitter',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'twitter',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Twitter',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'google',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'google',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Google+',
+            ),
+        ));
+
+        $this->add(array(
             'type' => 'select',
             'name' => 'role',
             'attributes' => array(

@@ -1,15 +1,21 @@
 <?php
 namespace CmsIr\Post\Controller;
 
+use CmsIr\Newsletter\Model\Subscriber;
 use CmsIr\Post\Form\PostForm;
 use CmsIr\Post\Form\PostFormFilter;
 use CmsIr\Post\Model\Post;
 use CmsIr\Post\Model\PostFile;
+use CmsIr\System\Model\Status;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
+
+use Zend\Mail\Message;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
 
 class PostController extends AbstractActionController
 {
@@ -58,21 +64,30 @@ class PostController extends AbstractActionController
         $userRoleId = $this->identity()->role;
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
 
+        $users = $this->getUsersTable()->getAll();
+        $tmpUsersArray = array();
+        foreach($users as $user)
+        {
+            $tmp = array(
+                'value' => $user->getId(),
+                'label' => $user->getName() . ' ' . $user->getSurname(),
+            );
+            array_push($tmpUsersArray, $tmp);
+        }
+
+        $form->get('author_id')->setValueOptions($tmpUsersArray);
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $form->setInputFilter(new PostFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
-
             if ($form->isValid()) {
                 $post = new Post();
                 $post->exchangeArray($form->getData());
                 $post->setCategory($category);
-                $post->setDate(date('Y-m-d'));
-                $post->setAuthorId($this->identity()->id);
 
                 if($userRoleId < 3) $post->setStatusId(2);
-
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -93,9 +108,37 @@ class PostController extends AbstractActionController
                     }
                 }
 
-                $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
+                // Only for DNA
+                if($post->getStatusId() == 1)
+                {
+                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
+                                         "Kliknij w poniższy link, aby go przeczytać: <a href='" .
+                                         $this->getRequest()->getServer('HTTP_ORIGIN') .
+                                         $this->url()->fromRoute('oneNews', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
 
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                    /** @var $confirmedStatus Status */
+                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
+                    $confirmedStatusId = $confirmedStatus->getId();
+
+                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
+
+                    $subscriberEmails = array();
+                    /** @var $subscriber Subscriber */
+                    foreach($subscribers as $subscriber)
+                    {
+                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
+                    }
+                    $this->sendEmails($subscriberEmails, "Nowy artykuł na stronie DNA!", $newsletterContent);
+
+                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
+
+                } else
+                {
+                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
+
+                }
+
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -114,7 +157,6 @@ class PostController extends AbstractActionController
 
         $userRoleId = $this->identity()->role;
 
-
         /**
          * @var $post Post
          */
@@ -122,12 +164,38 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
+
+        $users = $this->getUsersTable()->getAll();
+        $tmpUsersArray = array();
+
+        $postAuthorId = $post->getAuthorId();
+        foreach($users as $user)
+        {
+            if($postAuthorId == $user->getId())
+            {
+                $tmp = array(
+                    'value' => $user->getId(),
+                    'label' => $user->getName() . ' ' . $user->getSurname(),
+                    'selected' => true
+                );
+            } else
+            {
+                $tmp = array(
+                    'value' => $user->getId(),
+                    'label' => $user->getName() . ' ' . $user->getSurname(),
+                );
+            }
+
+            array_push($tmpUsersArray, $tmp);
+        }
+
         $form->bind($post);
+        $form->get('author_id')->setValueOptions($tmpUsersArray);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -138,9 +206,6 @@ class PostController extends AbstractActionController
             if ($form->isValid()) {
 
                 $post->setCategory($category);
-                $post->setDate(date('Y-m-d'));
-                $post->setAuthorId($this->identity()->id);
-
                 if($userRoleId < 3) $post->setStatusId(2);
 
                 $id = $this->getPostTable()->save($post);
@@ -165,7 +230,7 @@ class PostController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Wpis został zedytowany poprawnie.');
 
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -190,7 +255,7 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();
@@ -212,7 +277,7 @@ class PostController extends AbstractActionController
         $category = (int) $this->params()->fromRoute('category');
 
         if (!$id) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         if ($request->isPost()) {
@@ -244,7 +309,7 @@ class PostController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         return array();
@@ -295,6 +360,30 @@ class PostController extends AbstractActionController
         echo $jsonObject;
         return $this->response;
     }
+
+    public function sendEmails($emails, $subject, $content)
+    {
+        $transport = $this->getServiceLocator()->get('mail.transport');
+
+        $html = new MimePart($content);
+        $html->type = "text/html";
+
+        $body = new MimeMessage();
+        $body->setParts(array($html));
+
+        foreach($emails as $email)
+        {
+            $message = new Message();
+            $this->getRequest()->getServer();
+            $message->addTo($email)
+                ->addFrom('mailer@web-ir.pl')
+                ->setEncoding('UTF-8')
+                ->setSubject($subject)
+                ->setBody($body);
+            $transport->send($message);
+        }
+    }
+
     /**
      * @return \CmsIr\Post\Model\PostTable
      */
@@ -311,4 +400,27 @@ class PostController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\Post\Model\PostFileTable');
     }
 
+    /**
+     * @return \CmsIr\Users\Model\UsersTable
+     */
+    public function getUsersTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Users\Model\UsersTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Model\StatusTable
+     */
+    public function getStatusTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\StatusTable');
+    }
+
+    /**
+     * @return \CmsIr\Newsletter\Model\SubscriberTable
+     */
+    public function getSubscriberTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Newsletter\Model\SubscriberTable');
+    }
 }

@@ -1,7 +1,12 @@
 <?php
 namespace CmsIr\Users\Controller;
 
+use CmsIr\Authentication\Model\Authentication;
+use CmsIr\Users\Form\ChangePasswordFilter;
+use CmsIr\Users\Form\ChangePasswordForm;
 use CmsIr\Users\Model\Users;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Result;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -11,12 +16,14 @@ use CmsIr\Users\Form\UserFormFilter;
 use CmsIr\Users\Form\UsereditFormFilter;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
+use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter as AuthAdapter;
 
 use Zend\Mail\Message;
 
 class UsersController extends AbstractActionController
 {
     protected $usersTable;
+    protected $authUsersTable;
     protected $uploadDir = 'public/files/users/';
     protected $appName = 'Cms-ir';
 
@@ -50,7 +57,7 @@ class UsersController extends AbstractActionController
         $user = $this->getUsersTable()->getUser($id);
 
         if(!$user) {
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         $form = new UserForm();
@@ -121,7 +128,7 @@ class UsersController extends AbstractActionController
                 $this->sendConfirmationEmail($user, $data[1]);
                 $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
 
-                return $this->redirect()->toRoute('users-list');
+                return $this->redirect()->toRoute('users');
             }
         }
 
@@ -137,7 +144,7 @@ class UsersController extends AbstractActionController
         $user = $this->getUsersTable()->getUser($id);
         //var_dump($user);die;
         if(!$user) {
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         $form = new UserForm();
@@ -178,7 +185,7 @@ class UsersController extends AbstractActionController
                 $this->getUsersTable()->saveUser($user);
 
                 $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');
-                return $this->redirect()->toRoute('users-list');
+                return $this->redirect()->toRoute('users');
             }
         }
         $viewParams = array();
@@ -191,7 +198,7 @@ class UsersController extends AbstractActionController
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         if ($request->isPost()) {
@@ -209,7 +216,7 @@ class UsersController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('users-list');
+            return $this->redirect()->toRoute('users');
         }
 
         return array(
@@ -376,6 +383,87 @@ class UsersController extends AbstractActionController
         $transport->send($message);
     }
 
+    public function changePasswordAction()
+    {
+        $form = new ChangePasswordForm();
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $form->setInputFilter(new ChangePasswordFilter());
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $data = $request->getPost()->toArray();
+
+                $sm = $this->getServiceLocator();
+                $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+
+                $config = $this->getServiceLocator()->get('Config');
+                $staticSalt = $config['static_salt'];
+
+                $user = $this->identity();
+
+                $authAdapter = new AuthAdapter($dbAdapter, 'cms_users', 'email', 'password', "MD5(CONCAT('$staticSalt', ?, password_salt)) AND active = 1" );
+                $authAdapter
+                    ->setIdentity($user->email)
+                    ->setCredential($data['password_last']);
+
+                $result = $authAdapter->authenticate();
+
+                if ($result->getCode() == Result::FAILURE_CREDENTIAL_INVALID) {
+                    $message = 'Błędne hasło';
+
+                    $viewParams = array();
+                    $viewParams['form'] = $form;
+                    $viewParams['message'] = $message;
+                    return new ViewModel($viewParams);
+                } else {
+
+                    $data = $this->prepareUser($data, $user);
+
+                    $authUser = new Authentication();
+                    $authUser->exchangeArray($data);
+                    $this->getAuthUsersTable()->saveUser($authUser);
+
+                    $this->flashMessenger()->addMessage('Poprawnie zmieniono hasło.');
+                    return $this->redirect()->toRoute('users');
+                }
+            }
+        }
+
+        $viewParams = array();
+        $viewParams['form'] = $form;
+        return new ViewModel($viewParams);
+    }
+
+    public function prepareUser($data, $user)
+    {
+        $data['password_salt'] = $this->generateDynamicSalt();
+        $data['password'] = $this->encriptPassword(
+            $this->getStaticSalt(),
+            $data['password_new'],
+            $data['password_salt']
+        );
+        $data['id'] = $user->id;
+        $data['name'] = $user->name;
+        $data['surname'] = $user->surname;
+        $data['email'] = $user->email;
+        $data['email_confirmed'] = 1;
+        $data['role'] = $user->role;
+        $data['filename'] = $user->filename;
+        $data['registration_date'] = $user->registration_date;
+        $data['registration_token'] = $user->registration_token;
+        $data['position'] = $user->position;
+        $data['facebook'] = $user->facebook;
+        $data['twitter'] = $user->twitter;
+        $data['google'] = $user->google;
+        $data['active'] = 1;
+
+        return $data;
+    }
+
     /**
      * @return \CmsIr\Users\Model\UsersTable
      */
@@ -386,5 +474,17 @@ class UsersController extends AbstractActionController
             $this->usersTable = $sm->get('CmsIr\Users\Model\UsersTable');
         }
         return $this->usersTable;
+    }
+
+    /**
+     * @return \CmsIr\Authentication\Model\UsersTable
+     */
+    public function getAuthUsersTable()
+    {
+        if (!$this->authUsersTable) {
+            $sm = $this->getServiceLocator();
+            $this->authUsersTable = $sm->get('CmsIr\Authentication\Model\UsersTable');
+        }
+        return $this->authUsersTable;
     }
 }

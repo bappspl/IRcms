@@ -14,7 +14,8 @@ class Post
     protected $text;
     protected $files;
     protected $date;
-    protected $authorId;
+    protected $author_id;
+    protected $author;
 
 
     public function exchangeArray($data) 
@@ -27,7 +28,8 @@ class Post
         $this->text = (!empty($data['text'])) ? $data['text'] : null;
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
         $this->date = (!empty($data['date'])) ? $data['date'] : null;
-        $this->authorId = (!empty($data['authorId'])) ? $data['authorId'] : null;
+        $this->author_id = (!empty($data['author_id'])) ? $data['author_id'] : null;
+        $this->author = (!empty($data['author'])) ? $data['author'] : null;
     }
 
     public function getArrayCopy()
@@ -46,6 +48,22 @@ class Post
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 
     /**
@@ -181,15 +199,15 @@ class Post
      */
     public function getAuthorId()
     {
-        return $this->authorId;
+        return $this->author_id;
     }
 
     /**
      * @param mixed $authorId
      */
-    public function setAuthorId($authorId)
+    public function setAuthorId($author_id)
     {
-        $this->authorId = $authorId;
+        $this->author_id = $author_id;
     }
 
 }

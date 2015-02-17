@@ -1,15 +1,20 @@
 <?php
 return array(
-    'fake-newsletter' => array(
-        'type'    => 'Segment',
+    'newsletter-main' => array(
+        'may_terminate' => true,
+        'type'    => 'Literal',
         'options' => array(
             'route'    => '/cms-ir/newsletter',
             'defaults' => array(
+                'module' => 'CmsIr\Newsletter',
+                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                'action' => 'newsletter',
             ),
         ),
     ),
     'newsletter' => array(
-        'type'    => 'Segment',
+        'may_terminate' => true,
+        'type'    => 'Literal',
         'options' => array(
             'route'    => '/cms-ir/newsletter',
             'defaults' => array(
@@ -18,249 +23,250 @@ return array(
                 'action'     => 'newsletter',
             ),
         ),
-    ),
-    'create-newsletter' => array(
-        'may_terminate' => true,
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/cms-ir/newsletter/create-newsletter',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
-                'action' => 'createNewsletter',
-            ),
-        ),
-    ),
-    'edit-newsletter' => array(
-        'may_terminate' => true,
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/cms-ir/newsletter/edit-newsletter/:newsletter_id',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
-                'action' => 'editNewsletter',
-            ),
-            'constraints' => array(
-                'newsletter_id' => '[0-9]+'
-            ),
-        ),
-    ),
-    'delete-newsletter' => array(
-        'may_terminate' => true,
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/cms-ir/newsletter/delete-newsletter/:newsletter_id',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
-                'action' => 'deleteNewsletter',
-            ),
-            'constraints' => array(
-                'newsletter_id' => '[0-9]+'
-            ),
-        ),
-    ),
-    'preview-newsletter' => array(
-        'may_terminate' => true,
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/cms-ir/newsletter/preview-newsletter/:newsletter_id',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
-                'action' => 'previewNewsletter',
-            ),
-            'constraints' => array(
-                'newsletter_id' => '[0-9]+'
-            ),
-        ),
-    ),
-    'send-newsletter' => array(
-        'may_terminate' => true,
-        'type' => 'Segment',
-        'options' => array(
-            'route' => '/cms-ir/newsletter/send-newsletter/:newsletter_id',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
-                'action' => 'sendNewsletter',
-            ),
-            'constraints' => array(
-                'newsletter_id' => '[0-9]+'
-            ),
-        ),
-    ),
-    'subscriber-list' => array(
-        'type'    => 'Segment',
-        'may_terminate' => true,
-        'options' => array(
-            'route'    => '/cms-ir/newsletter/subscriber-list',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                'action'     => 'subscriberList',
-            ),
-        ),
         'child_routes' => array(
-            'create-subscriber' => array(
+            'create' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/create-subscriber',
+                    'route' => '/create-newsletter',
                     'defaults' => array(
                         'module' => 'CmsIr\Newsletter',
-                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'createSubscriber',
+                        'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                        'action' => 'createNewsletter',
                     ),
                 ),
             ),
-            'edit-subscriber' => array(
+            'edit' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/edit-subscriber/:subscriber_id',
+                    'route' => '/edit-newsletter/:newsletter_id',
                     'defaults' => array(
                         'module' => 'CmsIr\Newsletter',
-                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'editSubscriber',
+                        'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                        'action' => 'editNewsletter',
                     ),
-
                     'constraints' => array(
-                        'subscriber_id' => '[0-9]+'
+                        'newsletter_id' => '[0-9]+'
                     ),
                 ),
             ),
-            'preview-subscriber' => array(
+            'delete' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/preview-subscriber/:subscriber_id',
+                    'route' => '/delete-newsletter/:newsletter_id',
                     'defaults' => array(
                         'module' => 'CmsIr\Newsletter',
-                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'previewSubscriber',
+                        'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                        'action' => 'deleteNewsletter',
                     ),
-
                     'constraints' => array(
-                        'subscriber_id' => '[0-9]+'
+                        'newsletter_id' => '[0-9]+'
                     ),
                 ),
             ),
-            'delete-subscriber' => array(
+            'preview' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/delete-subscriber/:subscriber_id',
+                    'route' => '/preview-newsletter/:newsletter_id',
                     'defaults' => array(
                         'module' => 'CmsIr\Newsletter',
-                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'deleteSubscriber',
+                        'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                        'action' => 'previewNewsletter',
                     ),
-
                     'constraints' => array(
-                        'subscriber_id' => '[0-9]+'
+                        'newsletter_id' => '[0-9]+'
                     ),
                 ),
             ),
-        ),
-    ),
-    'subscriber-group' => array(
-        'type'    => 'Segment',
-        'may_terminate' => true,
-        'options' => array(
-            'route'    => '/cms-ir/newsletter/subscriber-group',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                'action'     => 'subscriberGroup',
-            ),
-        ),
-        'child_routes' => array(
-            'create-group' => array(
+            'send' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/create-group',
+                    'route' => '/send-newsletter/:newsletter_id',
                     'defaults' => array(
                         'module' => 'CmsIr\Newsletter',
-                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'createSubscriberGroup',
+                        'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                        'action' => 'sendNewsletter',
                     ),
-                ),
-            ),
-            'edit-group' => array(
-                'may_terminate' => true,
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/edit-group/:subscriber_group_id',
-                    'defaults' => array(
-                        'module' => 'CmsIr\Newsletter',
-                        'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'editSubscriberGroup',
-                    ),
-
                     'constraints' => array(
-                        'subscriber_group_id' => '[0-9]+'
+                        'newsletter_id' => '[0-9]+'
                     ),
                 ),
             ),
-            'delete-group' => array(
-                'may_terminate' => true,
-                'type' => 'Segment',
+            'settings' => array(
+                'type'    => 'Segment',
                 'options' => array(
-                    'route' => '/delete-group/:subscriber_group_id',
+                    'route'    => '/newsletter-settings',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Newsletter',
+                        'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                        'action'     => 'newsletterSettings',
+                    ),
+                ),
+            ),
+            'upload' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Users',
+                        'controller' => 'CmsIr\Users\Controller\Users',
+                        'action'     => 'upload',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
+            'subscriber-group' => array(
+                'type'    => 'Segment',
+                'may_terminate' => true,
+                'options' => array(
+                    'route'    => '/subscriber-group',
                     'defaults' => array(
                         'module' => 'CmsIr\Newsletter',
                         'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'deleteSubscriberGroup',
+                        'action'     => 'subscriberGroup',
                     ),
+                ),
+                'child_routes' => array(
+                    'create' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/create-group',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'createSubscriberGroup',
+                            ),
+                        ),
+                    ),
+                    'edit' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/edit-group/:subscriber_group_id',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'editSubscriberGroup',
+                            ),
 
-                    'constraints' => array(
-                        'subscriber_group_id' => '[0-9]+'
+                            'constraints' => array(
+                                'subscriber_group_id' => '[0-9]+'
+                            ),
+                        ),
+                    ),
+                    'delete' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/delete-group/:subscriber_group_id',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'deleteSubscriberGroup',
+                            ),
+
+                            'constraints' => array(
+                                'subscriber_group_id' => '[0-9]+'
+                            ),
+                        ),
+                    ),
+                    'preview' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/preview-group/:subscriber_group_id',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'previewSubscriberGroup',
+                            ),
+
+                            'constraints' => array(
+                                'subscriber_group_id' => '[0-9]+'
+                            ),
+                        ),
                     ),
                 ),
             ),
-            'preview-group' => array(
+            'subscriber-list' => array(
+                'type'    => 'Segment',
                 'may_terminate' => true,
-                'type' => 'Segment',
                 'options' => array(
-                    'route' => '/preview-group/:subscriber_group_id',
+                    'route'    => '/subscriber-list',
                     'defaults' => array(
                         'module' => 'CmsIr\Newsletter',
                         'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
-                        'action' => 'previewSubscriberGroup',
-                    ),
-
-                    'constraints' => array(
-                        'subscriber_group_id' => '[0-9]+'
+                        'action'     => 'subscriberList',
                     ),
                 ),
-            ),
-        ),
-    ),
-    'newsletter-settings' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/newsletter/newsletter-settings',
-            'defaults' => array(
-                'module' => 'CmsIr\Newsletter',
-                'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
-                'action'     => 'newsletterSettings',
-            ),
-        ),
-    ),
+                'child_routes' => array(
+                    'create' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/create-subscriber',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'createSubscriber',
+                            ),
+                        ),
+                    ),
+                    'edit' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/edit-subscriber/:subscriber_id',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'editSubscriber',
+                            ),
 
-    'upload' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/users/upload',
-            'defaults' => array(
-                'module' => 'CmsIr\Users',
-                'controller' => 'CmsIr\Users\Controller\Users',
-                'action'     => 'upload',
-            ),
-            'constraints' => array(
+                            'constraints' => array(
+                                'subscriber_id' => '[0-9]+'
+                            ),
+                        ),
+                    ),
+                    'preview' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/preview-subscriber/:subscriber_id',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'previewSubscriber',
+                            ),
+
+                            'constraints' => array(
+                                'subscriber_id' => '[0-9]+'
+                            ),
+                        ),
+                    ),
+                    'delete' => array(
+                        'may_terminate' => true,
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/delete-subscriber/:subscriber_id',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action' => 'deleteSubscriber',
+                            ),
+
+                            'constraints' => array(
+                                'subscriber_id' => '[0-9]+'
+                            ),
+                        ),
+                    ),
+                ),
             ),
         ),
     ),
