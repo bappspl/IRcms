@@ -20,12 +20,14 @@ class SliderController extends AbstractActionController
     public function listAction()
     {
         $request = $this->getRequest();
+        $currentWebsiteId = $_COOKIE['website_id'];
+
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name', 'slug');
 
-            $listData = $this->getSliderTable()->getDatatables($columns,$data);
+            $listData = $this->getSliderTable()->getDatatables($columns,$data, $currentWebsiteId);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -75,7 +77,10 @@ class SliderController extends AbstractActionController
     public function editAction()
     {
         $id = $this->params()->fromRoute('slider_id');
-
+        $currentWebsiteId = $_COOKIE['website_id'];
+        /**
+         * @var $slider Slider
+         */
         $slider = $this->getSliderTable()->getOneBy(array('id' => $id));
 
         if(!$slider) {
@@ -93,6 +98,7 @@ class SliderController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $slider->setWebsiteId($currentWebsiteId);
                 $this->getSliderTable()->save($slider);
 
                 $this->flashMessenger()->addMessage('Slider został edytowany poprawnie.');

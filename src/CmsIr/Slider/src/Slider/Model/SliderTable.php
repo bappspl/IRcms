@@ -78,6 +78,7 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
             'name' => $slider->getName(),
             'slug'  => $slider->getSlug(),
             'status_id'  => $slider->getStatusId(),
+            'website_id'  => $slider->getWebsiteId(),
         );
 
         $id = (int) $slider->getId();

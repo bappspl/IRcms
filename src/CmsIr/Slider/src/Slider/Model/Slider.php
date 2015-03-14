@@ -10,6 +10,7 @@ class Slider extends Model
     protected $name;
     protected $slug;
     protected $status_id;
+    protected $website_id;
 
     //virtual
 
@@ -22,6 +23,23 @@ class Slider extends Model
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = Inflector::slugify($this->name);
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
+        $this->website_id = (!empty($data['website_id'])) ? $data['website_id'] : 2;
+    }
+
+    /**
+     * @param mixed $website_id
+     */
+    public function setWebsiteId($website_id)
+    {
+        $this->website_id = $website_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWebsiteId()
+    {
+        return $this->website_id;
     }
 
     /**
