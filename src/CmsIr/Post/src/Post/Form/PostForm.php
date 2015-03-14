@@ -46,16 +46,16 @@ class PostForm extends Form
             )
         ));
 
-        $this->add(array(
-            'name' => 'url',
-            'attributes' => array(
-                'id' => 'url',
-                'type'  => 'text',
-            ),
-            'options' => array(
-                'label' => 'Url',
-            ),
-        ));
+//        $this->add(array(
+//            'name' => 'url',
+//            'attributes' => array(
+//                'id' => 'url',
+//                'type'  => 'text',
+//            ),
+//            'options' => array(
+//                'label' => 'Url',
+//            ),
+//        ));
 
         $this->add(array(
             'name' => 'text',

@@ -16,13 +16,14 @@ class MenuController extends AbstractActionController
 
     public function menuListAction()
     {
+        $currentWebsiteId = $_COOKIE['website_id'];
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name', 'machineName');
 
-            $listData = $this->getMenuService()->getMenuTable()->getDatatables($columns,$data);
+            $listData = $this->getMenuService()->getMenuTable()->getDatatables($columns,$data, $currentWebsiteId);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -42,7 +43,8 @@ class MenuController extends AbstractActionController
     public function editAction()
     {
         $treeId = $this->params()->fromRoute('id');
-        $menuTree = $this->getMenuService()->getMenuTable()->getOneBy(array('id' => $treeId));
+        $currentWebsiteId = $_COOKIE['website_id'];
+        $menuTree = $this->getMenuService()->getMenuTable()->getOneBy(array('id' => $treeId, 'website_id' => $currentWebsiteId));
         $menu = $this->getMenuService()->getMenuByTreeId($treeId);
 
         $existingPages = array(

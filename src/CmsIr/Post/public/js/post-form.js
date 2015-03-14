@@ -6,7 +6,7 @@ $(function () {
             'files': $('#filename').val()
         },
         'method'   : 'post',
-        'multi'         : true,
+        'multi'         : false,
         'queueID'          : 'queue',
         'uploadScript'     : '/cms-ir/post-list/'+ category +'/upload',
         'onUploadComplete' : function(file, data) {
@@ -16,7 +16,6 @@ $(function () {
             }
 
             $('.deletePhoto i').on('click', function () {
-                alert('asd');
                 var id = 0;
                 var fullPathToImage = $(this).next().attr('src');
 

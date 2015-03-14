@@ -39,14 +39,14 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $data = array(
             'name' => $post->getName(),
-            'url'  => $post->getUrl(),
+            'url'  => 'a',
             'status_id'  => $post->getStatusId(),
             'category'  => $post->getCategory(),
             'text'  => $post->getText(),
-            'date'  => $post->getDate(),
-            'author_id'  => $post->getAuthorId(),
+//            'date'  => $post->getDate(),
+//            'author_id'  => $post->getAuthorId(),
+            'website_id'  => (int) $post->getWebsiteId(),
         );
-
         $id = (int) $post->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
@@ -81,7 +81,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         return $dataArray;
     }
 
-    public function getPostDatatables($columns, $data, $category, $userId = null)
+    public function getPostDatatables($columns, $data, $category, $websiteId, $userId = null)
     {
         $displayFlag = false;
 
@@ -105,9 +105,11 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
                 ),
             );
             $where['category'] = $category;
+            $where['website_id'] = $websiteId;
             $displayFlag = true;
         } else {
             $where['category'] = $category;
+            $where['website_id'] = $websiteId;
         }
 
         if($userId) $where['author_id'] = $userId;
