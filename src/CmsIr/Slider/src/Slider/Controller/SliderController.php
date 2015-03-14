@@ -20,12 +20,14 @@ class SliderController extends AbstractActionController
     public function listAction()
     {
         $request = $this->getRequest();
+        $currentWebsiteId = $_COOKIE['website_id'];
+
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name', 'slug');
 
-            $listData = $this->getSliderTable()->getDatatables($columns,$data);
+            $listData = $this->getSliderTable()->getDatatables($columns,$data, $currentWebsiteId);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
