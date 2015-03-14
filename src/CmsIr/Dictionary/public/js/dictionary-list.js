@@ -55,7 +55,7 @@ $(function () {
 
                     $.ajax({
                         type: "POST",
-                        url: "/cms-ir/dictionary/"  + category +  "delete/" +entityId,
+                        url: "/cms-ir/dictionary/"  + category +  "/delete/" +entityId,
                         dataType : 'json',
                         data: {
                             modal: true,

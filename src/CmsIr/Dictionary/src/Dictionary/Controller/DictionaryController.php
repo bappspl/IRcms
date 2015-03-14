@@ -3,6 +3,7 @@ namespace CmsIr\Dictionary\Controller;
 
 use CmsIr\Dictionary\Form\DictionaryForm;
 use CmsIr\Dictionary\Form\DictionaryFormFilter;
+use CmsIr\Dictionary\Model\Dictionary;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
@@ -13,6 +14,8 @@ class DictionaryController extends AbstractActionController
     public function listAction()
     {
         $category = $this->params()->fromRoute('category');
+        $currentWebsiteId = $_COOKIE['website_id'];
+
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -20,7 +23,7 @@ class DictionaryController extends AbstractActionController
             $data = $this->getRequest()->getPost();
             $columns = array('name');
 
-            $listData = $this->getDictionaryTable()->getDictionaryDatatables($columns, $data, $category);
+            $listData = $this->getDictionaryTable()->getDictionaryDatatables($columns, $data, $category, $currentWebsiteId);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -44,6 +47,7 @@ class DictionaryController extends AbstractActionController
     public function createAction()
     {
         $category = $this->params()->fromRoute('category');
+        $currentWebsiteId = $_COOKIE['website_id'];
         $form = new DictionaryForm();
 
         $request = $this->getRequest();
@@ -54,14 +58,16 @@ class DictionaryController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $page = new Dictionary();
+                $dictionary = new Dictionary();
 
-                $page->exchangeArray($form->getData());
-                $this->getDictionaryTable()->save($page);
+                $dictionary->exchangeArray($form->getData());
+                $dictionary->setWebsiteId($currentWebsiteId);
+                $dictionary->setCategory($category);
+                $this->getDictionaryTable()->save($dictionary);
 
                 $this->flashMessenger()->addMessage('Element słownika została dodana poprawnie.');
 
-                return $this->redirect()->toRoute('dictionary');
+                return $this->redirect()->toRoute('dictionary', array('category' => $category));
             }
         }
 
@@ -76,11 +82,13 @@ class DictionaryController extends AbstractActionController
     public function editAction()
     {
         $id = $this->params()->fromRoute('dictionary_id');
+        $category = $this->params()->fromRoute('category');
+        $currentWebsiteId = $_COOKIE['website_id'];
 
         $dictionary = $this->getDictionaryTable()->getOneBy(array('id' => $id));
 
         if(!$dictionary) {
-            return $this->redirect()->toRoute('dictionary');
+            return $this->redirect()->toRoute('dictionary', array('category' => $category));
         }
 
         $form = new DictionaryForm();
@@ -94,16 +102,18 @@ class DictionaryController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $dictionary->setWebsiteId($currentWebsiteId);
                 $this->getDictionaryTable()->save($dictionary);
 
                 $this->flashMessenger()->addMessage('Element słownika została edytowana poprawnie.');
 
-                return $this->redirect()->toRoute('dictionary');
+                return $this->redirect()->toRoute('dictionary', array('category' => $category));
             }
         }
 
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['category'] = $category;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -123,21 +133,8 @@ class DictionaryController extends AbstractActionController
             if ($del == 'Tak') {
                 $id = (int) $request->getPost('id');
 
-                $dictionaryConnected = $this->getDictionaryTable()->getBy(array('id' => $id));
-                if(!empty($dictionaryConnected))
-                {
-                    $dictionaries = array();
-                    foreach($dictionaryConnected as $dictionary)
-                    {
-                        $dictionaries[$dictionary->getId()] = $dictionary->getName();
-                    }
-                    $this->flashMessenger()->addErrorMessage('Element nie może być usunięty, ponieważ jest przypisana do słownika: ' . implode(', ', $dictionaries) . '.');
-
-                } else
-                {
-                    $this->getDictionaryTable()->deleteDictionary($id);
-                    $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
-                }
+                $this->getDictionaryTable()->deleteDictionary($id);
+                $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
 
                 $modal = $request->getPost('modal', false);
                 if($modal == true) {

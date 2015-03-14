@@ -14,6 +14,7 @@ class Dictionary extends Model
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
+        $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->websiteId = (!empty($data['website_id'])) ? $data['website_id'] : null;
     }
 

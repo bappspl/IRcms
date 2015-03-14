@@ -54,7 +54,7 @@ class DictionaryTable extends ModelTable
         return $dataArray;
     }
 
-    public function getDictionaryDatatables($columns, $data, $category, $userId = null)
+    public function getDictionaryDatatables($columns, $data, $category, $websiteId)
     {
         $displayFlag = false;
 
@@ -78,9 +78,11 @@ class DictionaryTable extends ModelTable
                 ),
             );
             $where['category'] = $category;
+            $where['website_id'] = $websiteId;
             $displayFlag = true;
         } else {
             $where['category'] = $category;
+            $where['website_id'] = $websiteId;
         }
 
         $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
@@ -106,6 +108,8 @@ class DictionaryTable extends ModelTable
     {
         $data = array(
             'name' => $dictionary->getName(),
+            'category' => $dictionary->getCategory(),
+            'website_id' => $dictionary->getWebsiteId(),
         );
 
         $id = (int) $dictionary->getId();
