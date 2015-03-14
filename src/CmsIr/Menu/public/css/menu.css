@@ -1,7 +1,16 @@
 .spinner {
     display: none;
 }
-
+.thumb-ico {
+    max-width: 100px;
+    width: auto;
+}
+.ico {
+    display: none;
+}
+.modal-body .files {
+    margin-top: 10px;
+}
 /**
  * Nestable
  */

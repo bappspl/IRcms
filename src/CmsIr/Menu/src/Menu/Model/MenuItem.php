@@ -9,6 +9,7 @@ class MenuItem extends Model
     protected $node_id;
     protected $label;
     protected $url;
+    protected $filename;
     protected $position;
 
     public function exchangeArray($data) 
@@ -17,7 +18,24 @@ class MenuItem extends Model
         $this->node_id = (!empty($data['node_id'])) ? $data['node_id'] : null;
         $this->label = (!empty($data['label'])) ? $data['label'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
+        $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
+    }
+
+    /**
+     * @param mixed $filename
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**

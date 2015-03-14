@@ -72,9 +72,31 @@ $(function () {
 
         var label = $(this).parent().parent().find('.label').text();
         var url = $(this).parent().parent().find('.url').text();
+        var ico = $(this).parent().parent().find('.ico').text();
 
         var $cache = $(this);
         $('#'+modal).on('show.bs.modal', function () {
+            $('#'+modal+' .filename-edit').val(ico);
+
+            $('.upload-edit').uploadifive({
+                'auto'             : true,
+                'formData'         : {
+                },
+                'multi'         : false,
+                'queueID'          : 'queue-edit',
+                'uploadScript'     : '/cms-ir/menu/upload',
+                'onUploadComplete' : function(file, data) {
+                    $('#'+modal+' .filename-edit').val(data);
+
+                    if($('#'+modal+' .filename-edit').val().length > 0) {
+                        var filename = $('#'+modal+' .filename').val();
+                        $('#'+modal+' .files img').remove();
+                        $('#'+modal+' .files').append('<img src="/files/menu/'+data+'" class="thumb-ico" />')
+                    }
+
+                }
+            });
+
             if(modal == 'editModal')
             {
                 $('#'+modal+' #label').val(label);
@@ -84,9 +106,14 @@ $(function () {
                 $('#'+modal+' #page option[value="' + url +'"]').attr("selected","selected");
             }
 
+            if($('#'+modal+' .filename-edit').val().length > 0) {
+                var filename = $('#'+modal+' .filename-edit').val();
+                $('#'+modal+' .files').append('<img src="/files/menu/'+filename+'" class="thumb-ico" />')
+            }
+
             $('#'+modal+' form input[name=save]').click(function (ev) {
                 ev.preventDefault();
-                var newLabel, newUrl;
+                var newLabel, newUrl, newIco;
 
                 $('.spinner').show();
 
@@ -100,6 +127,8 @@ $(function () {
                     newUrl = $('#'+modal+' select[name="page"] option:selected').val();
                 }
 
+                newIco = $('#'+modal+' .filename-edit').val();
+
                 $.ajax({
                     type: "POST",
                     url: "/cms-ir/menu/menu-edit-node",
@@ -107,6 +136,7 @@ $(function () {
                     data: {
                         nodeId: nodeId,
                         label: newLabel,
+                        ico: newIco,
                         url: newUrl
                     },
                     success: function(json)
@@ -121,6 +151,8 @@ $(function () {
                             $('#'+modal+' .modal-body .form-group .group').removeClass('has-error');
                             $('#'+modal+' .modal-body .form-group .group .glyphicon-remove').hide();
                             $('#'+modal+' .modal-body .form-group .help-block').hide();
+                            $('#'+modal+' .files img').remove();
+                            $('#'+modal+' .filename').val('');
 
                             $('#'+modal+'').modal('hide');
                         } else {
@@ -148,9 +180,34 @@ $(function () {
 
         $('#'+modal).on('show.bs.modal', function () {
 
+            $('.upload').uploadifive({
+                'auto'             : true,
+                'formData'         : {
+                },
+                'multi'         : false,
+                'queueID'          : 'queue',
+                'uploadScript'     : '/cms-ir/menu/upload',
+                'onUploadComplete' : function(file, data) {
+                    $('#'+modal+' .filename').val(data);
+
+                    if($('#'+modal+' .filename').val().length > 0) {
+                        var filename = $('#'+modal+' .filename').val();
+                        $('#'+modal+' .files img').remove();
+                        $('#'+modal+' .files').html('<img src="/files/menu/'+data+'" class="thumb-ico" />')
+                    }
+
+                }
+            });
+
+            if($('#'+modal+' .filename').val().length > 0) {
+                var filename = $('#'+modal+' .filename').val();
+                $('#'+modal+' .files').html('<img src="/files/menu/'+filename+'" class="thumb-ico" />')
+            }
+
             $('#'+modal+' form input[name=save]').click(function (ev) {
                 ev.preventDefault();
-                var newLabel, newUrl;
+                var newLabel, newUrl, newIco;
+                newIco = $('#'+modal+' .filename').val();
 
                 $('.spinner').show();
 
@@ -170,6 +227,7 @@ $(function () {
                     data: {
                         label: newLabel,
                         url: newUrl,
+                        ico: newIco,
                         treeId: treeId,
                         pageProvider: pageType
                     },
@@ -193,6 +251,8 @@ $(function () {
                             $('#'+modal+' .modal-body .form-group .group').removeClass('has-error');
                             $('#'+modal+' .modal-body .form-group .group .glyphicon-remove').hide();
                             $('#'+modal+' .modal-body .form-group .help-block').hide();
+                            $('#'+modal+' .files img').remove();
+                            $('#'+modal+' .filename').val('');
 
                             $('#'+modal+'').modal('hide');
                         }
