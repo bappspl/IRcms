@@ -77,7 +77,10 @@ class SliderController extends AbstractActionController
     public function editAction()
     {
         $id = $this->params()->fromRoute('slider_id');
-
+        $currentWebsiteId = $_COOKIE['website_id'];
+        /**
+         * @var $slider Slider
+         */
         $slider = $this->getSliderTable()->getOneBy(array('id' => $id));
 
         if(!$slider) {
@@ -95,6 +98,7 @@ class SliderController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $slider->setWebsiteId($currentWebsiteId);
                 $this->getSliderTable()->save($slider);
 
                 $this->flashMessenger()->addMessage('Slider został edytowany poprawnie.');
