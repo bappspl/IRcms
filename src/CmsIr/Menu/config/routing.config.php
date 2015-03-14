@@ -1,15 +1,20 @@
 <?php
 return array(
-    'fake-menu' => array(
-        'type'    => 'Segment',
+    'menu-main' => array(
+        'may_terminate' => true,
+        'type'    => 'Literal',
         'options' => array(
             'route'    => '/cms-ir/menu',
             'defaults' => array(
+                'module' => 'CmsIr\Menu',
+                'controller' => 'CmsIr\Menu\Controller\Menu',
+                'action' => 'menuList',
             ),
         ),
     ),
-    'menu-list' => array(
-        'type'    => 'Segment',
+    'menu' => array(
+        'may_terminate' => true,
+        'type'    => 'Literal',
         'options' => array(
             'route'    => '/cms-ir/menu',
             'defaults' => array(
@@ -18,77 +23,75 @@ return array(
                 'action'     => 'menuList',
             ),
         ),
-    ),
-    'menu-create' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/menu/create',
-            'defaults' => array(
-                'module' => 'CmsIr\Menu',
-                'controller' => 'CmsIr\Menu\Controller\Menu',
-                'action'     => 'create',
+        'child_routes' => array(
+            'create' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/create',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Menu',
+                        'controller' => 'CmsIr\Menu\Controller\Menu',
+                        'action'     => 'create',
+                    ),
+                ),
             ),
-        ),
-    ),
-    'menu-edit' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/menu/edit/:id',
-            'defaults' => array(
-                'module' => 'CmsIr\Menu',
-                'controller' => 'CmsIr\Menu\Controller\Menu',
-                'action'     => 'edit',
+            'edit' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/edit/:id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Menu',
+                        'controller' => 'CmsIr\Menu\Controller\Menu',
+                        'action'     => 'edit',
+                    ),
+                    'constraints' => array(
+                        'id' => '[0-9]+'
+                    ),
+                ),
             ),
-            'constraints' => array(
-                'id' => '[0-9]+'
+            'order' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/order',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Menu',
+                        'controller' => 'CmsIr\Menu\Controller\Menu',
+                        'action'     => 'order',
+                    ),
+                ),
             ),
-        ),
-    ),
-
-    'menu-order' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/menu/order',
-            'defaults' => array(
-                'module' => 'CmsIr\Menu',
-                'controller' => 'CmsIr\Menu\Controller\Menu',
-                'action'     => 'order',
+            'delete-node' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/menu-delete-node',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Menu',
+                        'controller' => 'CmsIr\Menu\Controller\Menu',
+                        'action'     => 'deleteNode',
+                    ),
+                ),
             ),
-        ),
-    ),
-
-    'menu-delete-node' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/menu/menu-delete-node',
-            'defaults' => array(
-                'module' => 'CmsIr\Menu',
-                'controller' => 'CmsIr\Menu\Controller\Menu',
-                'action'     => 'deleteNode',
+            'edit-node' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/menu-edit-node',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Menu',
+                        'controller' => 'CmsIr\Menu\Controller\Menu',
+                        'action'     => 'editNode',
+                    ),
+                ),
             ),
-        ),
-    ),
-
-    'menu-edit-node' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/menu/menu-edit-node',
-            'defaults' => array(
-                'module' => 'CmsIr\Menu',
-                'controller' => 'CmsIr\Menu\Controller\Menu',
-                'action'     => 'editNode',
-            ),
-        ),
-    ),
-
-    'menu-create-node' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/menu/menu-create-node',
-            'defaults' => array(
-                'module' => 'CmsIr\Menu',
-                'controller' => 'CmsIr\Menu\Controller\Menu',
-                'action'     => 'createNode',
+            'create-node' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/menu-create-node',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Menu',
+                        'controller' => 'CmsIr\Menu\Controller\Menu',
+                        'action'     => 'createNode',
+                    ),
+                ),
             ),
         ),
     ),
