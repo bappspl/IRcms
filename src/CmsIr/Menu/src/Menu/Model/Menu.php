@@ -8,6 +8,7 @@ class Menu extends Model
     protected $id;
     protected $name;
     protected $machine_name;
+    protected $website_id;
     protected $position;
 
     public function exchangeArray($data) 
@@ -15,6 +16,7 @@ class Menu extends Model
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->machine_name = (!empty($data['machine_name'])) ? $data['machine_name'] : null;
+        $this->website_id = (!empty($data['website_id'])) ? $data['website_id'] : null;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
     }
 

@@ -24,13 +24,15 @@ class PostController extends AbstractActionController
         $userRoleId = $this->identity()->role;
         $userRoleId < 3 ? $userId = $this->identity()->id : $userId = null;
 
+        $currentWebsiteId = $_COOKIE['website_id'];
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name', 'url', 'date');
+            $columns = array('name', 'date');
 
-            $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category, $userId);
+            $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category, $currentWebsiteId, $userId);
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
                 "iTotalRecords" => $listData['iTotalRecords'],
@@ -54,6 +56,7 @@ class PostController extends AbstractActionController
     {
         $form = new PostForm();
         $category = $this->params()->fromRoute('category');
+        $currentWebsiteId = $_COOKIE['website_id'];
 
         $userRoleId = $this->identity()->role;
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
@@ -70,9 +73,9 @@ class PostController extends AbstractActionController
                 $post->setCategory($category);
                 $post->setDate(date('Y-m-d'));
                 $post->setAuthorId($this->identity()->id);
+                $post->setWebsiteId($currentWebsiteId);
 
                 if($userRoleId < 3) $post->setStatusId(2);
-
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -94,8 +97,7 @@ class PostController extends AbstractActionController
                 }
 
                 $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
-
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -111,6 +113,7 @@ class PostController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('post_id');
         $category = $this->params()->fromRoute('category');
+        $currentWebsiteId = $_COOKIE['website_id'];
 
         $userRoleId = $this->identity()->role;
 
@@ -122,7 +125,7 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();
@@ -140,6 +143,7 @@ class PostController extends AbstractActionController
                 $post->setCategory($category);
                 $post->setDate(date('Y-m-d'));
                 $post->setAuthorId($this->identity()->id);
+                $post->setWebsiteId($currentWebsiteId);
 
                 if($userRoleId < 3) $post->setStatusId(2);
 
@@ -165,7 +169,7 @@ class PostController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Wpis został zedytowany poprawnie.');
 
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -190,7 +194,7 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();

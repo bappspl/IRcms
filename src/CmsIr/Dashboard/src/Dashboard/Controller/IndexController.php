@@ -19,7 +19,10 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-
+        if(!isset($_COOKIE['website_id']))
+        {
+            $_COOKIE['website_id'] = 1;
+        }
         $viewParams = array();
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);

@@ -15,19 +15,21 @@ class Post
     protected $files;
     protected $date;
     protected $authorId;
+    protected $website_id;
 
 
     public function exchangeArray($data) 
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->url = (!empty($data['url'])) ? $data['url'] : Inflector::slugify($this->name);
+        $this->url = (!empty($data['url'])) ? $data['url'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->text = (!empty($data['text'])) ? $data['text'] : null;
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
         $this->date = (!empty($data['date'])) ? $data['date'] : null;
         $this->authorId = (!empty($data['authorId'])) ? $data['authorId'] : null;
+        $this->website_id = (!empty($data['website_id'])) ? $data['website_id'] : null;
     }
 
     public function getArrayCopy()
@@ -46,6 +48,22 @@ class Post
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @param mixed $website_id
+     */
+    public function setWebsiteId($website_id)
+    {
+        $this->website_id = $website_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWebsiteId()
+    {
+        return $this->website_id;
     }
 
     /**

@@ -3,6 +3,7 @@
     <?php
         $layoutViewModel = $this->viewModel()->getRoot();
         $userRole = $layoutViewModel->loggedUser->role;
+        $currentWebsiteId = $_COOKIE['website_id'];
     ?>
 
     <!-- Some HTML -->
@@ -12,12 +13,14 @@
                 <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
                 <?php $hasChildren = $page->hasPages() ?>
                 <?php if( ! $hasChildren): ?>
-                    <li <?php if($page->isActive()) echo 'class="selected"'?> id="<?php echo $page->getId(); ?>">
-                        <a class="nav-header" href="<?php echo $page->getHref() ?>">
-                            <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
-                            <?php echo $this->translate($page->getLabel()) ?>
-                        </a>
-                    </li>
+                    <?php if(!$page->website_id || $page->website_id == $currentWebsiteId): ?>
+                        <li <?php if($page->isActive()) echo 'class="selected"'?> id="<?php echo $page->getId(); ?>">
+                            <a class="nav-header" href="<?php echo $page->getHref() ?>">
+                                <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
+                                <?php echo $this->translate($page->getLabel()) ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 <?php else: ?>
 
                     <?php $flag = 0; ?>
@@ -27,7 +30,7 @@
                     <?php endforeach; ?>
 
                     <?php if($flag == 1): ?>
-
+                        <?php if(!$page->website_id || $page->website_id == $currentWebsiteId): ?>
                         <li class="active" id="<?php echo $page->getId(); ?>">
 
                             <a href="#">
@@ -39,6 +42,7 @@
                             <ul class="submenu" style="display: block;">
                                 <?php foreach($page->getPages() as $realActiveChild): ?>
                                     <?php if($userRole >= $realActiveChild->getId()): ?>
+                                        <?php if(!$realActiveChild->website_id || $realActiveChild->website_id == $currentWebsiteId): ?>
                                         <?php if($realActiveChild->visibleInPrimary == true): ?>
                                         <li <?php if($realActiveChild->isActive()) echo 'class="selected"'?>>
                                             <a href="<?php echo $realActiveChild->getHref() ?>">
@@ -46,13 +50,14 @@
                                             </a>
                                         </li>
                                         <?php endif; ?>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                  <?php endforeach; ?>
                             </ul>
                         </li>
-
+                        <?php endif; ?>
                     <?php else: ?>
-
+                        <?php if(!$page->website_id || $page->website_id == $currentWebsiteId): ?>
                         <li>
 
                             <a href="#">
@@ -65,6 +70,7 @@
                                 <?php foreach($page->getPages() as $realChild): ?>
                                     <?php if($userRole >= $realChild->getId()): ?>
                                         <?php if( ! $realChild->isVisible() || !$this->navigation()->accept($realChild)) continue; ?>
+                                        <?php if(!$realChild->website_id || $realChild->website_id == $currentWebsiteId): ?>
                                         <?php if($realChild->visibleInPrimary == true): ?>
                                         <li <?php if($realChild->isActive()) echo 'class="selected"'?>>
 
@@ -76,11 +82,12 @@
 
                                         </li>
                                         <?php endif; ?>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </ul>
                         </li>
-
+                        <?php endif; ?>
                     <?php endif; ?>
 
                 <?php endif ?>

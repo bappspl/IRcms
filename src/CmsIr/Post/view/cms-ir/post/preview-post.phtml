@@ -12,9 +12,9 @@ echo $this->form()->openTag($form);
             <div class="form-group">
                 <?php echo $this->customFormHelper($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
-            <div class="form-group">
-                <?php echo $this->customFormHelper($form->get('url')->setAttributes(array('disabled' => 'disabled'))); ?>
-            </div>
+<!--            <div class="form-group">-->
+<!--                --><?php //echo $this->customFormHelper($form->get('url')->setAttributes(array('disabled' => 'disabled'))); ?>
+<!--            </div>-->
             <div class="form-group">
                 <?php echo $this->customFormHelper($form->get('status_id')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
@@ -51,7 +51,7 @@ echo $this->form()->openTag($form);
     <div class="col-sm-12">
         <div class="the-box">
             <div class="input-group col-sm-12 text-right">
-                <a class="btn btn-primary" href="<?php echo $this->url('post-list', array('category' => $category)); ?>">Powrót</a> &nbsp
+                <a class="btn btn-primary" href="<?php echo $this->url('post', array('category' => $category)); ?>">Powrót</a> &nbsp
             </div>
         </div>
     </div>

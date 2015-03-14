@@ -191,7 +191,7 @@ class ModelTable
 
     // datatables
 
-    public function getDatatables($columns, $data)
+    public function getDatatables($columns, $data, $websiteId)
     {
         $displayFlag = false;
 
@@ -214,7 +214,10 @@ class ModelTable
                     Predicate\PredicateSet::COMBINED_BY_OR
                 )
             );
+            $where['website_id'] = $websiteId;
             $displayFlag = true;
+        } else {
+            $where['website_id'] = $websiteId;
         }
 
         $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){

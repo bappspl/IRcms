@@ -50,7 +50,16 @@
             <!-- Begin nav search form -->
             <form class="navbar-form navbar-left" role="search">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                    <label for="website_id">Zarządzasz stroną: </label>
+                    <select name="website_id" id="website_id" class="form-control">
+                        <?php if($_COOKIE['website_id'] == 1): ?>
+                            <option value="1" selected>Błękitna kraina</option>
+                            <option value="2">Pro comunications</option>
+                        <?php else: ?>
+                            <option value="1">Błękitna kraina</option>
+                            <option value="2" selected>Pro comunications</option>
+                        <?php endif; ?>
+                    </select>
                 </div>
             </form>
             <!-- End nav search form -->
@@ -62,3 +71,12 @@
 </div><!-- /.top-navbar-inner -->
 </div><!-- /.top-navbar -->
 <!-- END TOP NAV -->
+<script>
+    $(function () {
+        $('#website_id').on('change', function () {
+            var newCurrentWebsiteId = $(this).val();
+            document.cookie="website_id=" + newCurrentWebsiteId;
+            window.location.reload();
+        });
+    });
+</script>
