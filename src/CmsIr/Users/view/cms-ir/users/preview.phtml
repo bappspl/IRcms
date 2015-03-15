@@ -10,18 +10,28 @@ echo $this->form()->openTag($form);
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->formInput($form->get('filename')); ?>
             <div class="form-group">
-                <?php echo $this->formInput($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
+                <?php echo $this->customFormHelper($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
             <div class="form-group">
-                <?php echo $this->formInput($form->get('surname')->setAttributes(array('disabled' => 'disabled'))); ?>
+                <?php echo $this->customFormHelper($form->get('surname')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
             <div class="form-group">
-                <?php echo $this->formInput($form->get('email')->setAttributes(array('disabled' => 'disabled'))); ?>
+                <?php echo $this->customFormHelper($form->get('email')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
 
             <div class="form-group">
                 <label><?php echo $this->formLabel($form->get('role')); ?></label>
                 <?php echo $this->formSelect($form->get('role')->setAttributes(array('disabled' => 'disabled'))); ?>
+            </div>
+
+            <div class="form-group">
+                <label><?php echo $this->formLabel($form->get('dictionary_position_id')); ?></label>
+                <?php echo $this->formSelect($form->get('dictionary_position_id')->setAttributes(array('disabled' => 'disabled'))); ?>
+            </div>
+
+            <div class="form-group">
+                <label><?php echo $this->formLabel($form->get('dictionary_group_id')); ?></label>
+                <?php echo $this->formSelect($form->get('dictionary_group_id')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
 
         </div>
@@ -54,4 +64,4 @@ echo $this->form()->openTag($form);
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/users.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
-<?php $this->headScript()->appendFile($this->basePath().'/js/users-form.js'); ?>
+<?php //$this->headScript()->appendFile($this->basePath().'/js/users-form.js'); ?>

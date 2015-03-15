@@ -23,4 +23,25 @@ $(function () {
         $('.files').append('<img src="/files/users/'+filename+'" class="thumb" />')
     }
 
+    if($('select[name="dictionary_position_id"]').val() == 1)
+    {
+        $('select[name="dictionary_group_id"]').attr('disabled', 'disabled');
+    } else
+    {
+        $('select[name="dictionary_group_id"]').removeAttr('disabled');
+    }
+
+    if($('select[name="dictionary_position_id"]').length > 0)
+    {
+        $('select[name="dictionary_position_id"]').on('change', function () {
+            if($(this).val() == 1)
+            {
+                $('select[name="dictionary_group_id"]').attr('disabled', 'disabled');
+            } else
+            {
+                $('select[name="dictionary_group_id"]').removeAttr('disabled');
+            }
+        });
+    }
+
 });
