@@ -2,6 +2,7 @@
 namespace CmsIr\Users\Controller;
 
 use CmsIr\Authentication\Model\Authentication;
+use CmsIr\Dictionary\Model\Dictionary;
 use CmsIr\Users\Form\ChangePasswordFilter;
 use CmsIr\Users\Form\ChangePasswordForm;
 use CmsIr\Users\Model\Users;
@@ -29,13 +30,14 @@ class UsersController extends AbstractActionController
 
     public function usersListAction()
     {
+        $currentWebsiteId = $_COOKIE['website_id'];
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array( 'name', 'surname', 'email');
 
-            $listData = $this->getUsersTable()->getDatatables($columns,$data);
+            $listData = $this->getUsersTable()->getDatatables($columns,$data, $currentWebsiteId);
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
                 "iTotalRecords" => $listData['iTotalRecords'],
@@ -52,6 +54,7 @@ class UsersController extends AbstractActionController
 
     public function previewAction()
     {
+        $currentWebsiteId = $_COOKIE['website_id'];
         $id = $this->params()->fromRoute('id');
 
         $user = $this->getUsersTable()->getUser($id);
@@ -85,6 +88,55 @@ class UsersController extends AbstractActionController
             $i++;
         }
         $form->get('role')->setValueOptions($tmpArrayRoles);
+
+        $dictionaryPositions = $this->getDictionaryTable()->getBy(array('website_id' => $currentWebsiteId));
+        $positions = array();
+        $groups = array();
+        /* @var $dictionary Dictionary */
+        foreach($dictionaryPositions as $dictionary)
+        {
+            $category = $dictionary->getCategory();
+            if($category == 'position')
+            {
+                if($user->getDictionaryPositionId() == $dictionary->getId())
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName(),
+                        'selected' => true
+                    );
+                } else
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName()
+                    );
+                }
+
+                array_push($positions, $tmp);
+            } else {
+                if($user->getDictionaryPositionId() == $dictionary->getId())
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName(),
+                        'selected' => true
+                    );
+                } else
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName()
+                    );
+                }
+
+                array_push($groups, $tmp);
+            }
+        }
+
+        $form->get('dictionary_position_id')->setValueOptions($positions);
+        $form->get('dictionary_group_id')->setValueOptions($groups);
+
         $form->bind($user);
 
         $viewParams = array();
@@ -94,6 +146,7 @@ class UsersController extends AbstractActionController
 
     public function createAction()
     {
+        $currentWebsiteId = $_COOKIE['website_id'];
         $form = new UserForm();
 
         $config = $this->getServiceLocator()->get('Config');
@@ -111,6 +164,33 @@ class UsersController extends AbstractActionController
         }
         $form->get('role')->setValueOptions($tmpArrayRoles);
 
+        $dictionaryPositions = $this->getDictionaryTable()->getBy(array('website_id' => $currentWebsiteId));
+        $positions = array();
+        $groups = array();
+        /* @var $dictionary Dictionary */
+        foreach($dictionaryPositions as $dictionary)
+        {
+            $category = $dictionary->getCategory();
+            if($category == 'position')
+            {
+                $tmp = array(
+                    'value' => $dictionary->getId(),
+                    'label' => $dictionary->getName()
+                );
+                array_push($positions, $tmp);
+            } else {
+                $tmp = array(
+                    'value' => $dictionary->getId(),
+                    'label' => $dictionary->getName()
+                );
+                array_push($groups, $tmp);
+            }
+        }
+
+        $form->get('dictionary_position_id')->setValueOptions($positions);
+        $form->get('dictionary_group_id')->setValueOptions($groups);
+
+
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -124,6 +204,7 @@ class UsersController extends AbstractActionController
 
                 $user = new Users();
                 $user->exchangeArray($data[0]);
+                $user->setWebsiteId($currentWebsiteId);
                 $this->getUsersTable()->saveUser($user);
                 $this->sendConfirmationEmail($user, $data[1]);
                 $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
@@ -139,8 +220,9 @@ class UsersController extends AbstractActionController
 
     public function editAction()
     {
+        $currentWebsiteId = $_COOKIE['website_id'];
         $id = $this->params()->fromRoute('id');
-
+        /* @var $user Users */
         $user = $this->getUsersTable()->getUser($id);
         //var_dump($user);die;
         if(!$user) {
@@ -172,6 +254,55 @@ class UsersController extends AbstractActionController
             $i++;
         }
         $form->get('role')->setValueOptions($tmpArrayRoles);
+
+        $dictionaryPositions = $this->getDictionaryTable()->getBy(array('website_id' => $currentWebsiteId));
+        $positions = array();
+        $groups = array();
+        /* @var $dictionary Dictionary */
+        foreach($dictionaryPositions as $dictionary)
+        {
+            $category = $dictionary->getCategory();
+            if($category == 'position')
+            {
+                if($user->getDictionaryPositionId() == $dictionary->getId())
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName(),
+                        'selected' => true
+                    );
+                } else
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName()
+                    );
+                }
+
+                array_push($positions, $tmp);
+            } else {
+                if($user->getDictionaryPositionId() == $dictionary->getId())
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName(),
+                        'selected' => true
+                    );
+                } else
+                {
+                    $tmp = array(
+                        'value' => $dictionary->getId(),
+                        'label' => $dictionary->getName()
+                    );
+                }
+
+                array_push($groups, $tmp);
+            }
+        }
+
+        $form->get('dictionary_position_id')->setValueOptions($positions);
+        $form->get('dictionary_group_id')->setValueOptions($groups);
+
         $form->bind($user);
 
         $request = $this->getRequest();
@@ -182,6 +313,7 @@ class UsersController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $user->setWebsiteId($currentWebsiteId);
                 $this->getUsersTable()->saveUser($user);
 
                 $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');
@@ -469,11 +601,7 @@ class UsersController extends AbstractActionController
      */
     public function getUsersTable()
     {
-        if (!$this->usersTable) {
-            $sm = $this->getServiceLocator();
-            $this->usersTable = $sm->get('CmsIr\Users\Model\UsersTable');
-        }
-        return $this->usersTable;
+        return $this->getServiceLocator()->get('CmsIr\Users\Model\UsersTable');
     }
 
     /**
@@ -481,10 +609,14 @@ class UsersController extends AbstractActionController
      */
     public function getAuthUsersTable()
     {
-        if (!$this->authUsersTable) {
-            $sm = $this->getServiceLocator();
-            $this->authUsersTable = $sm->get('CmsIr\Authentication\Model\UsersTable');
-        }
-        return $this->authUsersTable;
+        return $this->getServiceLocator()->get('CmsIr\Authentication\Model\UsersTable');
+    }
+
+    /**
+     * @return \CmsIr\Dictionary\Model\DictionaryTable
+     */
+    public function getDictionaryTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Dictionary\Model\DictionaryTable');
     }
 }

@@ -44,6 +44,9 @@ class UsersTable extends ModelTable
             'role'  => $user->getRole(),
             'active'  => 1,
             'filename'  => $user->getFilename(),
+            'website_id'  => $user->getWebsiteId(),
+            'dictionary_position_id'  => $user->getDictionaryPositionId(),
+            'dictionary_group_id'  => $user->getDictionaryGroupId(),
         );
 
         $id = (int) $user->getId();

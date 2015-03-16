@@ -15,3 +15,11 @@
     <label><?php echo $this->formLabel($form->get('role')); ?></label>
     <?php echo $this->formSelect($form->get('role')); ?>
 </div>
+<div class="form-group">
+    <label><?php echo $this->formLabel($form->get('dictionary_position_id')); ?></label>
+    <?php echo $this->formSelect($form->get('dictionary_position_id')); ?>
+</div>
+<div class="form-group">
+    <label><?php echo $this->formLabel($form->get('dictionary_group_id')); ?></label>
+    <?php echo $this->formSelect($form->get('dictionary_group_id')->setAttribute('disabled', 'disabled')); ?>
+</div>

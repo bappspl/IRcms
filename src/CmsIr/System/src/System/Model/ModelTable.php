@@ -195,7 +195,7 @@ class ModelTable
     {
         $displayFlag = false;
 
-        $allRows = $this->getAll();
+        $allRows = $this->getBy(array('website_id' => $websiteId));
         $countAllRows = count($allRows);
 
         $trueOffset = (int) $data->iDisplayStart;

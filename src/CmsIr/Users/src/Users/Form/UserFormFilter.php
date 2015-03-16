@@ -84,5 +84,15 @@ class UserFormFilter extends InputFilter
             'required'   => false,
         ));
 
+        $this->add(array(
+            'name'       => 'dictionary_position_id',
+            'required'   => false,
+        ));
+
+        $this->add(array(
+            'name'       => 'dictionary_group_id',
+            'required'   => false,
+        ));
+
 	}
 }

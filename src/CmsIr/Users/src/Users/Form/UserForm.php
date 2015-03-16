@@ -108,5 +108,29 @@ class UserForm extends Form
                 'class' => 'btn btn-primary pull-right'
             ),
         ));
+
+        $this->add(array(
+            'type' => 'select',
+            'name' => 'dictionary_position_id',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'dictionary_position_id',
+            ),
+            'options' => array(
+                'label' => 'Stanowisko',
+            )
+        ));
+
+        $this->add(array(
+            'type' => 'select',
+            'name' => 'dictionary_group_id',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'dictionary_group_id',
+            ),
+            'options' => array(
+                'label' => 'Grupa',
+            )
+        ));
     }
 }

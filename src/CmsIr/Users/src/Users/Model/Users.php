@@ -22,6 +22,10 @@ class Users
     protected $registration_token;
     protected $email_confirmed;
 
+    protected $website_id;
+    protected $dictionary_position_id;
+    protected $dictionary_group_id;
+
     public function exchangeArray($data) 
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
@@ -37,7 +41,11 @@ class Users
         $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
         $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
         $this->email_confirmed = (isset($data['email_confirmed'])) ? $data['email_confirmed'] : null;
-    }	
+
+        $this->website_id = (isset($data['website_id'])) ? $data['website_id'] : null;
+        $this->dictionary_position_id = (isset($data['dictionary_position_id'])) ? $data['dictionary_position_id'] : null;
+        $this->dictionary_group_id = (isset($data['dictionary_group_id'])) ? $data['dictionary_group_id'] : null;
+    }
 
     public function getArrayCopy()
     {
@@ -55,6 +63,54 @@ class Users
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @param mixed $dictionary_group_id
+     */
+    public function setDictionaryGroupId($dictionary_group_id)
+    {
+        $this->dictionary_group_id = $dictionary_group_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDictionaryGroupId()
+    {
+        return $this->dictionary_group_id;
+    }
+
+    /**
+     * @param mixed $dictionary_position_id
+     */
+    public function setDictionaryPositionId($dictionary_position_id)
+    {
+        $this->dictionary_position_id = $dictionary_position_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDictionaryPositionId()
+    {
+        return $this->dictionary_position_id;
+    }
+
+    /**
+     * @param mixed $website_id
+     */
+    public function setWebsiteId($website_id)
+    {
+        $this->website_id = $website_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWebsiteId()
+    {
+        return $this->website_id;
     }
 
     /**
