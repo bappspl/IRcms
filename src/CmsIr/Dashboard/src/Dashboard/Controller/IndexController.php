@@ -19,7 +19,7 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        if(!isset($_COOKIE['website_id']))
+        if(!isset($_COOKIE['website_id']) || $_COOKIE['website_id'] == null)
         {
             $_COOKIE['website_id'] = 1;
         }

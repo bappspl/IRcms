@@ -31,7 +31,6 @@ class UsersController extends AbstractActionController
     public function usersListAction()
     {
         $currentWebsiteId = $_COOKIE['website_id'];
-
         $request = $this->getRequest();
         if ($request->isPost()) {
 
