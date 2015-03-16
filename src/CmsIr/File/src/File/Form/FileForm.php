@@ -33,26 +33,22 @@ class FileForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'first',
+            'name' => 'filename',
             'attributes' => array(
-                'id' => 'first',
-                'type'  => 'text',
-                'placeholder' => 'Wprowadź cenę'
-            ),
-            'options' => array(
-                'label' => 'Cena I',
+                'type'  => 'hidden',
+                'id' => 'filename'
             ),
         ));
 
         $this->add(array(
-            'name' => 'second',
+            'name' => 'upload',
             'attributes' => array(
-                'id' => 'second',
-                'type'  => 'text',
-                'placeholder' => 'Wprowadź cenę'
+                'type'  => 'file',
+                'id' => 'upload',
+                'class' => 'form-control'
             ),
             'options' => array(
-                'label' => 'Cena II',
+                'label' => 'E-mail',
             ),
         ));
 

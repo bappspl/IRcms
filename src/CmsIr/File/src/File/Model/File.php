@@ -10,7 +10,7 @@ class File extends Model
     protected $slug;
     protected $category;
     protected $websiteId;
-    protected $fileName;
+    protected $filename;
 
     public function exchangeArray($data)
     {
@@ -19,7 +19,7 @@ class File extends Model
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->websiteId = (!empty($data['website_id'])) ? $data['website_id'] : null;
-        $this->fileName = (!empty($data['file_name'])) ? $data['file_name'] : null;
+        $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
     }
 
     /**
@@ -105,17 +105,17 @@ class File extends Model
     /**
      * @return mixed
      */
-    public function getFileName()
+    public function getFilename()
     {
-        return $this->fileName;
+        return $this->filename;
     }
 
     /**
-     * @param mixed $fileName
+     * @param mixed $filename
      */
-    public function setFileName($fileName)
+    public function setFilename($filename)
     {
-        $this->fileName = $fileName;
+        $this->filename = $filename;
     }
 
 }

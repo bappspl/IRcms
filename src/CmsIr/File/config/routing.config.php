@@ -92,6 +92,19 @@ return array(
                     ),
                 ),
             ),
+            'delete-photo' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/delete-photo',
+                    'defaults' => array(
+                        'module' => 'CmsIr\File',
+                        'controller' => 'CmsIr\File\Controller\File',
+                        'action'     => 'deletePhoto',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );

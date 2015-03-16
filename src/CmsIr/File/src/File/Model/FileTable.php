@@ -110,8 +110,8 @@ class FileTable extends ModelTable
             'name' => $file->getName(),
             'category' => $file->getCategory(),
             'website_id' => $file->getWebsiteId(),
-            'first' => $file->getFirst(),
-            'second' => $file->getSecond(),
+            'filename' => $file->getFileName(),
+            'slug' => $file->getSlug(),
         );
 
         $id = (int) $file->getId();

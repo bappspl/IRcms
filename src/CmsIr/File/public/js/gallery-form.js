@@ -3,8 +3,9 @@ $(function () {
     $('#upload').uploadifive({
         'auto'             : false,
         'formData'         : {
+            'files': $('#filename').val()
         },
-        'multi'         : false,
+        'multi'         : true,
         'queueID'          : 'queue',
         'uploadScript'     : '/cms-ir/file/' + category +  '/upload',
         'onUploadComplete' : function(file, data) {
@@ -68,5 +69,4 @@ $(function () {
         });
 
     });
-
 });

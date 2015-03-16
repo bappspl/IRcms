@@ -3,6 +3,10 @@
     $form->prepare();
     echo $this->form()->openTag($form);
 ?>
+<?php echo $this->customFormHelper($form->get('filename')); ?>
+<?php echo $this->customFormHelper($form->get('id')) ?>
+
+<input type="hidden" id="category" value="<?php echo $category; ?>" />
 
 <div class="row">
     <div class="col-sm-6">
@@ -10,11 +14,6 @@
 
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->customFormHelper($form->get('name')) ?>
-            <?php echo $this->customFormHelper($form->get('first')) ?>
-
-            <?php if($category == 'konsultacje-i-terapie'): ?>
-                <?php echo $this->customFormHelper($form->get('second')) ?>
-            <?php endif ?>
 
         </div>
     </div>
@@ -46,5 +45,25 @@
 </div>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/file.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/' . $category . '-form.js'); ?>
+
+<?php if($category == 'gallery'): ?>
+
+    <script>
+        $(function() {
+            $('input[type=file]').attr('accept', 'image/*');
+        });
+    </script>
+
+<?php else: ?>
+
+    <script>
+        $(function() {
+            $('input[type=file]').attr('accept', 'application/*');
+        });
+    </script>
+
+<?php endif ?>

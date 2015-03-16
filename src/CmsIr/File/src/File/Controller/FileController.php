@@ -4,6 +4,7 @@ namespace CmsIr\File\Controller;
 use CmsIr\File\Form\FileForm;
 use CmsIr\File\Form\FileFormFilter;
 use CmsIr\File\Model\File;
+use CmsIr\System\Util\Inflector;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
@@ -11,7 +12,8 @@ use Zend\Json\Json;
 
 class FileController extends AbstractActionController
 {
-    protected $uploadDir = 'public/files/file/';
+    protected $uploadDir = 'public/temp_files/file/';
+    protected $destinationUploadDir = 'public/files/file/';
 
     public function listAction()
     {
@@ -59,11 +61,26 @@ class FileController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $file = new File();
 
+                $file = new File();
                 $file->exchangeArray($form->getData());
                 $file->setWebsiteId($currentWebsiteId);
                 $file->setCategory($category);
+                $file->setSlug(Inflector::slugify($file->getName()));
+
+                $fileArray = array();
+
+                $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
+                if(!empty($scannedDirectory))
+                {
+                    foreach($scannedDirectory as $filename)
+                    {
+                        array_push($fileArray, $filename);
+                        rename($this->uploadDir.'/'.$filename, $this->destinationUploadDir.'/'.$filename);
+                    }
+                }
+
+                $file->setFilename(serialize($fileArray));
                 $this->getFileTable()->save($file);
 
                 $this->flashMessenger()->addMessage('Usługa została dodana poprawnie.');
@@ -84,13 +101,16 @@ class FileController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('file_id');
         $category = $this->params()->fromRoute('category');
-        $currentWebsiteId = $_COOKIE['website_id'];
 
         $file = $this->getFileTable()->getOneBy(array('id' => $id));
 
         if(!$file) {
             return $this->redirect()->toRoute('file', array('category' => $category));
         }
+
+        $fileFiles = $this->getFileTable()->getBy(array('id' => $id));
+        $fileFiles = reset($fileFiles);
+        $fileFiles = unserialize($fileFiles->getFilename());
 
         $form = new FileForm();
         $form->bind($file);
@@ -103,7 +123,24 @@ class FileController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $file->setWebsiteId($currentWebsiteId);
+                $data = $form->getData();
+                $file->setName($data->getName());
+
+                $fileArray = array();
+
+                $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
+                if(!empty($scannedDirectory))
+                {
+                    foreach($scannedDirectory as $filename)
+                    {
+                        array_push($fileArray, $filename);
+                        rename($this->uploadDir.'/'.$filename, $this->destinationUploadDir.'/'.$filename);
+                    }
+                }
+
+                $allFiles = array_merge($fileFiles, $fileArray);
+
+                $file->setFilename(serialize($allFiles));
                 $this->getFileTable()->save($file);
 
                 $this->flashMessenger()->addMessage('Usługa została edytowana poprawnie.');
@@ -115,6 +152,7 @@ class FileController extends AbstractActionController
         $viewParams = array();
         $viewParams['form'] = $form;
         $viewParams['category'] = $category;
+        $viewParams['fileFiles'] = $fileFiles;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -174,6 +212,42 @@ class FileController extends AbstractActionController
             }
 
         }
+        return $this->response;
+    }
+
+    public function deletePhotoAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id');
+            $name = $request->getPost('name');
+            $filePath = $request->getPost('filePath');
+
+            if(!empty($id))
+            {
+                $file = $this->getFileTable()->getOneBy(array('id' => $id));
+                $filenames = unserialize($file->getFilename());
+
+                foreach($filenames as $key => $filename)
+                {
+                    if($filename == $name){
+                        unset($filenames[$key]);
+                    }
+                }
+
+                $newFilenames = serialize($filenames);
+                $file->setFilename($newFilenames);
+                $this->getFileTable()->save($file);
+
+                unlink('./public'.$filePath);
+            } else
+            {
+                unlink('./public'.$filePath);
+            }
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
         return $this->response;
     }
 
