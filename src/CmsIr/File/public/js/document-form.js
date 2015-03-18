@@ -11,12 +11,12 @@ $(function () {
             $('#filename').val(data);
 
             if($('#filename').val().length > 0) {
-                $('.files').append('<div class="deletePhoto">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/temp_files/file/'+data+'" class="thumb" /> </div>')
+                $('.files').append('<div class="deletePhoto">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img data-src="/temp_files/file/'+data+'" src="/img/pdf.png" class="thumb" /> </div>')
             }
 
             $('.deletePhoto i').on('click', function () {
                 var id = $('#id').val();
-                var fullPathToImage = $(this).next().attr('src');
+                var fullPathToImage = $(this).next().attr('data-src');
 
                 if($(this).parent().is("[id]"))
                 {
@@ -45,7 +45,7 @@ $(function () {
 
     $('.deletePhoto i').on('click', function () {
         var id = $('#id').val();
-        var fullPathToImage = $(this).next().attr('src');
+        var fullPathToImage = $(this).next().attr('data-src');
 
         if($(this).parent().is("[id]"))
         {

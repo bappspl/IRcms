@@ -83,7 +83,13 @@ class FileController extends AbstractActionController
                 $file->setFilename(serialize($fileArray));
                 $this->getFileTable()->save($file);
 
-                $this->flashMessenger()->addMessage('Usługa została dodana poprawnie.');
+                if($category == 'document')
+                {
+                    $this->flashMessenger()->addMessage('Dokument został dodany poprawnie.');
+                } else
+                {
+                    $this->flashMessenger()->addMessage('Galeria została dodana poprawnie.');
+                }
 
                 return $this->redirect()->toRoute('file', array('category' => $category));
             }
@@ -143,7 +149,13 @@ class FileController extends AbstractActionController
                 $file->setFilename(serialize($allFiles));
                 $this->getFileTable()->save($file);
 
-                $this->flashMessenger()->addMessage('Usługa została edytowana poprawnie.');
+                if($category == 'document')
+                {
+                    $this->flashMessenger()->addMessage('Dokument został edytowany poprawnie.');
+                } else
+                {
+                    $this->flashMessenger()->addMessage('Galeria została edytowana poprawnie.');
+                }
 
                 return $this->redirect()->toRoute('file', array('category' => $category));
             }
@@ -173,7 +185,7 @@ class FileController extends AbstractActionController
                 $id = (int) $request->getPost('id');
 
                 $this->getFileTable()->deleteFile($id);
-                $this->flashMessenger()->addMessage('Usługa została usunięta poprawnie.');
+                $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
 
                 $modal = $request->getPost('modal', false);
                 if($modal == true) {
