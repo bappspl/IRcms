@@ -13,9 +13,9 @@ class MenuService implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
 
-    public function getMenuByMachineName($machineName)
+    public function getMenuByMachineName($machineName, $websiteId = null)
     {
-        $menu = $this->getMenuTable()->getOneBy(array('machine_name' => $machineName));
+        $menu = $this->getMenuTable()->getOneBy(array('machine_name' => $machineName, 'website_id' => $websiteId));
         return $this->getMenuByTreeId($menu->getId());
     }
 

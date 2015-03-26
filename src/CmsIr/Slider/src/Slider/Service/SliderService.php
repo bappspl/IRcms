@@ -27,13 +27,12 @@ class SliderService implements ServiceLocatorAwareInterface
         return $sliders;
     }
 
-    public function findOneBySlug($slug)
+    public function findOneBySlug($slug, $websiteId = null)
     {
         /* @var $slider Slider */
-        $slider = $this->getSliderTable()->getOneBy(array('slug' => $slug));
+        $slider = $this->getSliderTable()->getOneBy(array('slug' => $slug, 'website_id' => $websiteId));
 
         $items = $this->getSliderItemTable()->getBy(array('slider_id' => $slider->getId(), 'status_id' => 1), 'position ASC');
-
 
         $slider->setItems($items);
 

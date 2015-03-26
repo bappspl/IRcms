@@ -118,6 +118,11 @@ class FileController extends AbstractActionController
         $fileFiles = reset($fileFiles);
         $fileFiles = unserialize($fileFiles->getFilename());
 
+        if(!is_array($fileFiles))
+        {
+            $fileFiles = array();
+        }
+
         $form = new FileForm();
         $form->bind($file);
 
