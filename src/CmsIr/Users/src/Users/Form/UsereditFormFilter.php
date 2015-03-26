@@ -75,5 +75,20 @@ class UsereditFormFilter extends InputFilter
             'required'   => false,
         ));
 
+        $this->add(array(
+            'name'       => 'dictionary_position_id',
+            'required'   => false,
+        ));
+
+        $this->add(array(
+            'name'       => 'dictionary_group_id',
+            'required'   => false,
+        ));
+
+        $this->add(array(
+            'name'       => 'position_description',
+            'required'   => false,
+        ));
+
 	}
 }

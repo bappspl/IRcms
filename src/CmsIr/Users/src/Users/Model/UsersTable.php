@@ -47,6 +47,7 @@ class UsersTable extends ModelTable
             'website_id'  => $user->getWebsiteId(),
             'dictionary_position_id'  => $user->getDictionaryPositionId(),
             'dictionary_group_id'  => $user->getDictionaryGroupId(),
+            'position_description'  => $user->getPositionDescription(),
         );
 
         $id = (int) $user->getId();

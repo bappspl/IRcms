@@ -94,5 +94,10 @@ class UserFormFilter extends InputFilter
             'required'   => false,
         ));
 
+        $this->add(array(
+            'name'       => 'position_description',
+            'required'   => false,
+        ));
+
 	}
 }
