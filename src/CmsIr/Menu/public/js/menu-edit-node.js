@@ -76,8 +76,11 @@ $(function () {
 
         var $cache = $(this);
         $('#'+modal).on('show.bs.modal', function () {
-            $('#'+modal+' .filename-edit').val(ico);
-
+            if(ico.length > 0){
+                $('#'+modal+' .filename-edit').val(ico);
+            } else {
+                $('#'+modal+' .filename-edit').val('');
+            }
             $('.upload-edit').uploadifive({
                 'auto'             : true,
                 'formData'         : {
@@ -108,7 +111,9 @@ $(function () {
 
             if($('#'+modal+' .filename-edit').val().length > 0) {
                 var filename = $('#'+modal+' .filename-edit').val();
-                $('#'+modal+' .files').append('<img src="/files/menu/'+filename+'" class="thumb-ico" />')
+                $('#'+modal+' .files').html('<img src="/files/menu/'+filename+'" class="thumb-ico" />')
+            } else {
+                $('#'+modal+' .files img').remove();
             }
 
             $('#'+modal+' form input[name=save]').click(function (ev) {
@@ -155,6 +160,8 @@ $(function () {
                             $('#'+modal+' .filename').val('');
 
                             $('#'+modal+'').modal('hide');
+
+                            window.location.reload();
                         } else {
                             $('.spinner').hide();
 
@@ -166,6 +173,10 @@ $(function () {
                 });
             });
         }).modal('show');
+
+        $('#'+modal).on('hidden.bs.modal', function () {
+            $('#'+modal+' .files img').remove();
+        });
     });
     //create node
     $('.the-box').on('click', '.btn-facebook', function (e) {
@@ -202,6 +213,8 @@ $(function () {
             if($('#'+modal+' .filename').val().length > 0) {
                 var filename = $('#'+modal+' .filename').val();
                 $('#'+modal+' .files').html('<img src="/files/menu/'+filename+'" class="thumb-ico" />')
+            } else {
+                $('#'+modal+' .files img').remove();
             }
 
             $('#'+modal+' form input[name=save]').click(function (ev) {
@@ -255,10 +268,15 @@ $(function () {
                             $('#'+modal+' .filename').val('');
 
                             $('#'+modal+'').modal('hide');
+                            window.location.reload();
                         }
                     }
                 });
             });
         }).modal('show');
+
+        $('#'+modal).on('hidden.bs.modal', function () {
+            $('#'+modal+' .files img').remove();
+        });
     });
 });
