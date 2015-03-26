@@ -18,6 +18,7 @@ class FileController extends AbstractActionController
     public function listAction()
     {
         $category = $this->params()->fromRoute('category');
+
         $currentWebsiteId = $_COOKIE['website_id'];
 
         $request = $this->getRequest();
