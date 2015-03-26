@@ -25,6 +25,7 @@ class Users
     protected $website_id;
     protected $dictionary_position_id;
     protected $dictionary_group_id;
+    protected $position_description;
 
     public function exchangeArray($data) 
     {
@@ -45,6 +46,7 @@ class Users
         $this->website_id = (isset($data['website_id'])) ? $data['website_id'] : null;
         $this->dictionary_position_id = (isset($data['dictionary_position_id'])) ? $data['dictionary_position_id'] : null;
         $this->dictionary_group_id = (isset($data['dictionary_group_id'])) ? $data['dictionary_group_id'] : null;
+        $this->position_description = (isset($data['position_description'])) ? $data['position_description'] : null;
     }
 
     public function getArrayCopy()
@@ -63,6 +65,22 @@ class Users
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @param mixed $position_description
+     */
+    public function setPositionDescription($position_description)
+    {
+        $this->position_description = $position_description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPositionDescription()
+    {
+        return $this->position_description;
     }
 
     /**

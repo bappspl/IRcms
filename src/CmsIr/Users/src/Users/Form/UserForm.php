@@ -132,5 +132,17 @@ class UserForm extends Form
                 'label' => 'Grupa',
             )
         ));
+
+        $this->add(array(
+            'name' => 'position_description',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'position_description',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Opis stanowiska',
+            ),
+        ));
     }
 }

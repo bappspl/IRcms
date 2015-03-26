@@ -23,3 +23,6 @@
     <label><?php echo $this->formLabel($form->get('dictionary_group_id')); ?></label>
     <?php echo $this->formSelect($form->get('dictionary_group_id')->setAttribute('disabled', 'disabled')); ?>
 </div>
+<div class="form-group">
+    <?php echo $this->customFormHelper($form->get('position_description')); ?>
+</div>
