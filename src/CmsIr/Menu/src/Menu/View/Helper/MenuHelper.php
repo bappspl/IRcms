@@ -30,6 +30,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
                 $pos = strpos($route, $checkUrl);
             } else {
+
                 $checkUrl = $item->getItems()->getUrl();
                 $pos = strpos($route, $checkUrl);
             }
@@ -87,7 +88,8 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
                 $label = $subItem->getLabel();
                 $url = $subItem->getUrl();
-                $template .= '<a href="'.$url.'" class="' . $active . '">'.$label.'</a>';
+                $filename = $subItem->getFilename();
+                $template .= '<a href="'.$url.'" class="' . $active . '"><img src="/files/menu/' . $filename . '">'.$label.'</a>';
             }
             $template .= '</li>';
         }
