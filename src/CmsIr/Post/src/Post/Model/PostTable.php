@@ -85,7 +85,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $displayFlag = false;
 
-        $allRows = $this->getBy(array('category' => $category));
+        $allRows = $this->getBy(array('category' => $category, 'website_id' => $websiteId));
         $countAllRows = count($allRows);
 
         $trueOffset = (int) $data->iDisplayStart;

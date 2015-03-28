@@ -89,7 +89,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                 $label = $subItem->getLabel();
                 $url = $subItem->getUrl();
                 $filename = $subItem->getFilename();
-                $template .= '<a href="'.$url.'" class="' . $active . '"><img src="/files/menu/' . $filename . '">'.$label.'</a>';
+                $template .= '<a href="'.$url.'" class="' . $active . '"><img src="/files/menu/' . $filename . '">'.$label.'<span class="arrow-2"></span></a>';
             }
             $template .= '</li>';
         }
