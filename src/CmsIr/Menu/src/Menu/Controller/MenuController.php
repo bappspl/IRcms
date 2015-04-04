@@ -12,6 +12,8 @@ use Zend\Json\Json;
 
 class MenuController extends AbstractActionController
 {
+    protected $uploadDir = 'public/files/menu/';
+
     public function menuListAction()
     {
         $request = $this->getRequest();
@@ -43,10 +45,10 @@ class MenuController extends AbstractActionController
         $menuTree = $this->getMenuService()->getMenuTable()->getOneBy(array('id' => $treeId));
         $menu = $this->getMenuService()->getMenuByTreeId($treeId);
 
-        /* @var $activeStatus Status */
-        $activeStatus = $this->getStatusTable()->getOneBy(array('slug' => 'active'));
-        $activeStatusId = $activeStatus->getId();
-        $existingPages = $this->getPageTable()->getBy(array('status_id' => $activeStatusId));
+        $existingPages = array(
+            array('name' => 'O nas', 'slug' => 'o-nas'),
+            array('name' => 'Informacje', 'slug' => 'informacje'),
+        );
 
         $viewParams = array();
         $viewParams['menu'] = $menu;
@@ -99,12 +101,13 @@ class MenuController extends AbstractActionController
             $nodeId = $request->getPost('nodeId');
             $nodeLabel = $request->getPost('label');
             $nodeUrl = $request->getPost('url');
+            $nodeIco = $request->getPost('ico');
 
             $nodeExist = $this->getMenuService()->getMenuItemTable()->getOneBy(array('url' => $nodeUrl));
             if($nodeExist == false)
             {
                 // update
-                $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl);
+                $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl, $nodeIco);
                 $jsonObject = Json::encode($params['status'] = 'success', true);
                 echo $jsonObject;
                 return $this->response;
@@ -113,7 +116,7 @@ class MenuController extends AbstractActionController
                 if($nodeId == $nodeExist->getId())
                 {
                     // update
-                    $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl);
+                    $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl, $nodeIco);
                     $jsonObject = Json::encode($params['status'] = 'success', true);
                     echo $jsonObject;
                     return $this->response;
@@ -134,6 +137,7 @@ class MenuController extends AbstractActionController
         if ($request->isPost()) {
             $nodeLabel = $request->getPost('label');
             $nodeUrl = $request->getPost('url');
+            $ico = $request->getPost('ico');
             $treeId = $request->getPost('treeId');
             $pageProvider = $request->getPost('pageProvider');
 
@@ -153,6 +157,7 @@ class MenuController extends AbstractActionController
                 $menuItem = new MenuItem();
                 $menuItem->setLabel($nodeLabel);
                 $menuItem->setUrl($nodeUrl);
+                $menuItem->setFilename($ico);
                 $menuItem->setNodeId($nodeId);
                 $menuItem->setPosition(0);
                 $this->getMenuService()->getMenuItemTable()->saveMenuItem($menuItem);
@@ -165,6 +170,29 @@ class MenuController extends AbstractActionController
                 $jsonObject = Json::encode($params['status'] = 'error', true);
                 echo $jsonObject;
                 return $this->response;
+            }
+
+        }
+        return $this->response;
+    }
+
+    public function uploadAction ()
+    {
+        if (!empty($_FILES)) {
+            $tempFile   = $_FILES['Filedata']['tmp_name'];
+            $targetFile = $_FILES['Filedata']['name'];
+
+            $file = explode('.', $targetFile);
+            $fileName = $file[0];
+            $fileExt = $file[1];
+
+            $uniqidFilename = $fileName.'-'.uniqid();
+            $targetFile = $uniqidFilename.'.'.$fileExt;
+
+            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
+                echo $targetFile;
+            } else {
+                echo 0;
             }
 
         }

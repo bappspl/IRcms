@@ -93,6 +93,17 @@ return array(
                     ),
                 ),
             ),
+            'upload' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Menu',
+                        'controller' => 'CmsIr\Menu\Controller\Menu',
+                        'action'     => 'upload',
+                    ),
+                ),
+            ),
         ),
     ),
 );

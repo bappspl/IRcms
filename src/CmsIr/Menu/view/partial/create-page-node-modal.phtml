@@ -14,11 +14,11 @@
                             <label for="page">Strona:</label>
                             <?php if(!empty($existingPages)): ?>
                             <select name="page" id="page" class="form-control">
-                                <?php /* @var $page \CmsIr\Page\Model\Page */ ?>
+
                                 <?php foreach($existingPages as $page): ?>
                                     <?php
-                                        $pageName = $page->getName();
-                                        $pageSlug = $page->getSlug();
+                                        $pageName = $page['name'];
+                                        $pageSlug = $page['slug'];
                                     ?>
                                     <option value="/strona/<?php echo $pageSlug; ?>"><?php echo $pageName; ?></option>
                                 <?php endforeach; ?>
@@ -29,7 +29,13 @@
                             <span class="glyphicon glyphicon-remove form-control-feedback" style="display:none;"></span>
                         </div>
                         <small data-bv-validator="notEmpty" class="help-block" style="display:none; color: #E9573F">Taki url już istnieje!</small>
-
+                        <div class="form-group">
+                            <label for="upload">Ikona:</label><br/>
+                            <input type="hidden" id="filename" name="filename" class="filename" />
+                            <input type="file" id="upload" class="upload" />
+                            <div id="queue"></div>
+                            <div class="files"></div>
+                        </div>
                     </div>
 
                 </div>

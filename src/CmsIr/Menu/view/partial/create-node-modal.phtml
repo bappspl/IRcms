@@ -20,7 +20,13 @@
                             <span class="glyphicon glyphicon-remove form-control-feedback" style="display:none;"></span>
                         </div>
                         <small data-bv-validator="notEmpty" class="help-block" style="display:none; color: #E9573F">Taki url już istnieje!</small>
-
+                        <div class="form-group">
+                            <label for="upload">Ikona:</label><br/>
+                            <input type="hidden" id="filename" name="filename" class="filename" />
+                            <input type="file" id="upload" class="upload" />
+                            <div id="queue"></div>
+                            <div class="files"></div>
+                        </div>
                     </div>
 
                 </div>
