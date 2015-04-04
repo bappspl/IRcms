@@ -4,6 +4,7 @@ namespace CmsIr\Page\Controller;
 use CmsIr\Page\Form\PageForm;
 use CmsIr\Page\Form\PageFormFilter;
 use CmsIr\Page\Model\Page;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;

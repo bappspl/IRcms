@@ -8,13 +8,13 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
 // Add this for SMTP transport
+use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mail\Transport\Smtp;
 use Zend\Mail\Transport\SmtpOptions;
 
 class Module
 {
-
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';

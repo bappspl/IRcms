@@ -22,6 +22,7 @@ return array(
         ),
         'factories' => array(
             'CmsIr\System\Service\StatusService' => 'CmsIr\System\Service\Factory\StatusService',
+            'CmsIr\System\Logger\Logger' => 'CmsIr\System\Logger\Factory\Logger',
         ),
     ),
     'strategies' => array(
