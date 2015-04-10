@@ -80,6 +80,18 @@ class SliderItemForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'url',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'url',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Url',
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'upload',
             'attributes' => array(
                 'type'  => 'file',

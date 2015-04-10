@@ -15,6 +15,7 @@ class Post
     protected $files;
     protected $date;
     protected $authorId;
+    protected $filename_main;
 
 
     public function exchangeArray($data) 
@@ -28,6 +29,7 @@ class Post
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
         $this->date = (!empty($data['date'])) ? $data['date'] : null;
         $this->authorId = (!empty($data['authorId'])) ? $data['authorId'] : null;
+        $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
     }
 
     public function getArrayCopy()
@@ -192,4 +194,19 @@ class Post
         $this->authorId = $authorId;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFilenameMain()
+    {
+        return $this->filename_main;
+    }
+
+    /**
+     * @param mixed $filename_main
+     */
+    public function setFilenameMain($filename_main)
+    {
+        $this->filename_main = $filename_main;
+    }
 }

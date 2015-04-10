@@ -45,6 +45,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             'text'  => $post->getText(),
             'date'  => $post->getDate(),
             'author_id'  => $post->getAuthorId(),
+            'filename_main'  => $post->getFilenameMain(),
         );
 
         $id = (int) $post->getId();

@@ -29,4 +29,27 @@ class SystemController extends AbstractActionController
         }
         return $this->response;
     }
+
+    public function createThumbAction()
+    {
+        $entity = $this->params()->fromRoute('entity');
+        $size = $this->params()->fromRoute('size');
+        $fileName = $this->params()->fromRoute('filename');
+
+        $pathToThumbs = 'public/files/' . $entity . '/' . $size;
+        $imgSrc = 'public/files/' . $entity . '/' . $fileName;
+
+        $sizeArray = explode('x', $size);
+        $thumbWidth = $sizeArray[0];
+        $thumbHeight = $sizeArray{1};
+
+        if(!is_dir($pathToThumbs))
+            mkdir($pathToThumbs);
+
+        $gd = new GD($imgSrc, array('resizeUp' => true, 'jpegQuality' => 100));
+        $gd->adaptiveResize($thumbWidth, $thumbHeight);
+        $gd->save($pathToThumbs . '/' . $fileName);
+        $gd->show();
+
+    }
 }

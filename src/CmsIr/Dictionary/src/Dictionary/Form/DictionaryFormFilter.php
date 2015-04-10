@@ -1,15 +1,16 @@
 <?php
-namespace CmsIr\Slider\Form;
+namespace CmsIr\Dictionary\Form;
 
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\NotEmpty;
 
-class SliderItemFormFilter extends InputFilter
+class DictionaryFormFilter extends InputFilter
 {
 	public function __construct($sm)
 	{
         $this->add(array(
-            'name'     => 'name',
+            'name'       => 'name',
             'required' => true,
             'filters'  => array(
                 array('name' => 'StripTags'),
@@ -23,7 +24,7 @@ class SliderItemFormFilter extends InputFilter
                             NotEmpty::IS_EMPTY => 'Uzupełnij pole!'
                         )
                     )
-                )
+                ),
             ),
         ));
 
@@ -31,17 +32,6 @@ class SliderItemFormFilter extends InputFilter
             'name'       => 'upload',
             'required'   => false,
         ));
-        $this->add(array(
-            'name'       => 'title',
-            'required'   => false,
-        ));
-        $this->add(array(
-            'name'       => 'description',
-            'required'   => false,
-        ));
-        $this->add(array(
-            'name'       => 'url',
-            'required'   => false,
-        ));
+
 	}
 }

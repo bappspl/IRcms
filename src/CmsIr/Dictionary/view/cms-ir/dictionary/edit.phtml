@@ -1,9 +1,10 @@
 <?php
-$form = $this->form;
-$form->prepare();
-echo $this->form()->openTag($form);
+    $form = $this->form;
+    $form->prepare();
+    echo $this->form()->openTag($form);
 ?>
-<?php echo $this->customFormHelper($form->get('id')) ?>
+
+<input type="hidden" id="category" value="<?php echo $category; ?>" />
 <?php echo $this->customFormHelper($form->get('filename')); ?>
 
 <div class="row">
@@ -11,18 +12,7 @@ echo $this->form()->openTag($form);
         <div class="the-box">
 
             <h4 class="small-title">Dane podstawowe</h4>
-            <div class="form-group">
-                <label><?php echo $this->formLabel($form->get('status_id')); ?></label>
-                <?php echo $this->formSelect($form->get('status_id')); ?>
-            </div>
-
             <?php echo $this->customFormHelper($form->get('name')) ?>
-
-            <?php echo $this->customFormHelper($form->get('title')) ?>
-
-            <?php echo $this->customFormHelper($form->get('description')) ?>
-
-            <?php echo $this->customFormHelper($form->get('url')) ?>
 
         </div>
     </div>
@@ -41,11 +31,12 @@ echo $this->form()->openTag($form);
 
     </div>
 </div>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="the-box">
             <div class="input-group col-sm-12 text-right">
-                <a class="btn btn-default" href="<?php echo $this->url('slider'); ?>">Anuluj</a> &nbsp
+                <a class="btn btn-default" href="<?php echo $this->url('dictionary', array('category' => $category)); ?>">Anuluj</a> &nbsp
                 <?php echo $this->formInput($form->get('submit')); ?>
             </div>
         </div>
@@ -55,4 +46,4 @@ echo $this->form()->openTag($form);
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
-<?php $this->headScript()->appendFile($this->basePath().'/js/slider-item-form.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/dictionary-form.js'); ?>

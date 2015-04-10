@@ -37,6 +37,7 @@ class SliderItemTable extends ModelTable
             'position'  => $slider->getPosition(),
             'title'  => $slider->getTitle(),
             'description'  => $slider->getDescription(),
+            'url'  => $slider->getUrl(),
         );
 
         $id = (int) $slider->getId();

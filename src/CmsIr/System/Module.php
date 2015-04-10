@@ -63,6 +63,17 @@ class Module
                         $resultSetPrototype->setArrayObjectPrototype(new Status());
                         return new TableGateway('cms_status', $dbAdapter, null, $resultSetPrototype);
                 },
+                'Navigation' => 'CmsIr\System\Navigation\MyNavigationFactory'
+            ),
+            'invokables' => array(
+                'menu' => 'CmsIr\System\Model\MenuTable'
+            ),
+            'initializers' => array(
+                function ($instance, $sm) {
+                    if ($instance instanceof \Zend\Db\Adapter\AdapterAwareInterface) {
+                        $instance->setDbAdapter($sm->get('Zend\Db\Adapter\Adapter'));
+                    }
+                }
             ),
         );
     }

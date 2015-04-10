@@ -98,6 +98,19 @@ return array(
                     ),
                 ),
             ),
+            'upload-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Post',
+                        'controller' => 'CmsIr\Post\Controller\Post',
+                        'action'     => 'uploadFilesMain',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
             'delete-photo' => array(
                 'type'    => 'Segment',
                 'options' => array(

@@ -95,7 +95,7 @@ class PostController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
 
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -122,11 +122,12 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
+
         $form->bind($post);
 
         $request = $this->getRequest();
@@ -165,7 +166,7 @@ class PostController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Wpis został zedytowany poprawnie.');
 
-                return $this->redirect()->toRoute('post-list', array('category' => $category));
+                return $this->redirect()->toRoute('post', array('category' => $category));
             }
         }
 
@@ -190,7 +191,7 @@ class PostController extends AbstractActionController
         $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
 
         if(!$post) {
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         $form = new PostForm();
@@ -244,7 +245,7 @@ class PostController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('post-list', array('category' => $category));
+            return $this->redirect()->toRoute('post', array('category' => $category));
         }
 
         return array();
@@ -295,6 +296,30 @@ class PostController extends AbstractActionController
         echo $jsonObject;
         return $this->response;
     }
+
+    public function uploadFilesMainAction ()
+    {
+        if (!empty($_FILES)) {
+            $tempFile   = $_FILES['Filedata']['tmp_name'];
+            $targetFile = $_FILES['Filedata']['name'];
+
+            $file = explode('.', $targetFile);
+            $fileName = $file[0];
+            $fileExt = $file[1];
+
+            $uniqidFilename = $fileName.'-'.uniqid();
+            $targetFile = $uniqidFilename.'.'.$fileExt;
+
+            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile)) {
+                echo $targetFile;
+            } else {
+                echo 0;
+            }
+
+        }
+        return $this->response;
+    }
+
     /**
      * @return \CmsIr\Post\Model\PostTable
      */

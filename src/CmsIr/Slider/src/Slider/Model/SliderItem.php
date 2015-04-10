@@ -14,6 +14,7 @@ class SliderItem extends Model
     protected $filename;
     protected $status_id;
     protected $position;
+    protected $url;
 
     //virtual
 
@@ -29,6 +30,7 @@ class SliderItem extends Model
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
+        $this->url = (!empty($data['url'])) ? $data['url'] : 0;
     }
 
     /**
@@ -173,5 +175,21 @@ class SliderItem extends Model
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 }

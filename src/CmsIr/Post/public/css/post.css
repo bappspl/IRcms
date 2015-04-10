@@ -21,5 +21,8 @@
 }
 .deletePhoto i:hover {
     opacity: 1;
+}
 
+.files-main{
+    margin-top: 15px;
 }
