@@ -4,7 +4,10 @@ namespace CmsIr\Dictionary\Controller;
 use CmsIr\Dictionary\Form\DictionaryForm;
 use CmsIr\Dictionary\Form\DictionaryFormFilter;
 use CmsIr\Dictionary\Model\Dictionary;
+use CmsIr\System\Model\MenuTable;
+use CmsIr\System\Util\Inflector;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Helper\Navigation\Menu;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 use Zend\Json\Json;
@@ -60,6 +63,11 @@ class DictionaryController extends AbstractActionController
                 $dictionary = new Dictionary();
 
                 $dictionary->exchangeArray($form->getData());
+
+                $name = $form->getData();
+                $name = $name['name'];
+
+                $this->createPostCategoryMenuItem($name);
 
                 $dictionary->setCategory($category);
                 $this->getDictionaryTable()->save($dictionary);
@@ -174,11 +182,60 @@ class DictionaryController extends AbstractActionController
         return $this->response;
     }
 
+    private function createPostCategoryMenuItem($name)
+    {
+        $backendMenuItem = array(
+            'name' => 'lista-' . Inflector::slugify($name),
+            'label' => $name,
+            'route' => 'post',
+            'visible_in_primary' => 1,
+            'parent_id' => 10,
+            'params' => "'category' => '" . Inflector::slugify($name) . "'"
+        );
+        $backendMenuItem1 = array(
+            'name' => 'tworzenie-' . Inflector::slugify($name),
+            'label' => $name,
+            'route' => 'post',
+            'visible_in_primary' => '',
+            'parent_id' => 10,
+            'params' => "'category' => '" . Inflector::slugify($name) . "'"
+        );
+        $backendMenuItem2 = array(
+            'name' => 'edycja-' . Inflector::slugify($name),
+            'label' => $name,
+            'route' => 'post',
+            'visible_in_primary' => '',
+            'parent_id' => 10,
+            'params' => "'category' => '" . Inflector::slugify($name) . "'"
+        );
+        $backendMenuItem3 = array(
+            'name' => 'podglad-' . Inflector::slugify($name),
+            'label' => $name,
+            'route' => 'post',
+            'visible_in_primary' => '',
+            'parent_id' => 10,
+            'params' => "'category' => '" . Inflector::slugify($name) . "'"
+        );
+
+        $this->getMenuTable()->save($backendMenuItem);
+        $this->getMenuTable()->save($backendMenuItem1);
+        $this->getMenuTable()->save($backendMenuItem2);
+        $this->getMenuTable()->save($backendMenuItem3);
+    }
+
     /**
      * @return \CmsIr\Dictionary\Model\DictionaryTable
      */
     public function getDictionaryTable()
     {
         return $this->getServiceLocator()->get('CmsIr\Dictionary\Model\DictionaryTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Model\MenuTable
+     */
+    public function getMenuTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\MenuTable');
     }
 }

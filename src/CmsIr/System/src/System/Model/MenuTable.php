@@ -45,4 +45,9 @@ class MenuTable extends AbstractTableGateway  implements AdapterAwareInterface
 
         return $resultSet;
     }
+
+    public function save($data)
+    {
+        $this->insert($data);
+    }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace CmsIr\System;
 
+use CmsIr\System\Model\Menu;
+use CmsIr\System\Model\MenuTable;
 use CmsIr\System\Model\Status;
 use CmsIr\System\Model\StatusTable;
 use Zend\Db\ResultSet\ResultSet;
@@ -62,6 +64,17 @@ class Module
                         $resultSetPrototype = new ResultSet();
                         $resultSetPrototype->setArrayObjectPrototype(new Status());
                         return new TableGateway('cms_status', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\System\Model\MenuTable' =>  function($sm) {
+                        $tableGateway = $sm->get('MenuTableGateway');
+                        $table = new MenuTable($tableGateway);
+                        return $table;
+                    },
+                'MenuTableGateway' => function ($sm) {
+                        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                        $resultSetPrototype = new ResultSet();
+                        $resultSetPrototype->setArrayObjectPrototype(new Menu());
+                        return new TableGateway('cms_backend_menu', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Navigation' => 'CmsIr\System\Navigation\MyNavigationFactory'
             ),
