@@ -195,7 +195,7 @@ class DictionaryController extends AbstractActionController
         $backendMenuItem1 = array(
             'name' => 'tworzenie-' . Inflector::slugify($name),
             'label' => $name,
-            'route' => 'post',
+            'route' => 'post/create',
             'visible_in_primary' => '',
             'parent_id' => 10,
             'params' => "'category' => '" . Inflector::slugify($name) . "'"
@@ -203,7 +203,7 @@ class DictionaryController extends AbstractActionController
         $backendMenuItem2 = array(
             'name' => 'edycja-' . Inflector::slugify($name),
             'label' => $name,
-            'route' => 'post',
+            'route' => 'post/edit',
             'visible_in_primary' => '',
             'parent_id' => 10,
             'params' => "'category' => '" . Inflector::slugify($name) . "'"
@@ -211,7 +211,7 @@ class DictionaryController extends AbstractActionController
         $backendMenuItem3 = array(
             'name' => 'podglad-' . Inflector::slugify($name),
             'label' => $name,
-            'route' => 'post',
+            'route' => 'post/preview',
             'visible_in_primary' => '',
             'parent_id' => 10,
             'params' => "'category' => '" . Inflector::slugify($name) . "'"

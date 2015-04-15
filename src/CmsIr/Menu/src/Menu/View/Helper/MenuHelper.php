@@ -60,7 +60,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                 array_pop($subItems);
 
 
-                $template .= '<a href="#">' . $label . '<span class="arrow"></span></a>';
+                $template .= '<a href="' . $url . '">' . $label . '<span class="arrow"></span></a>';
 
 
 
@@ -109,9 +109,10 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
             foreach($menuSmall as $small)
             {
 
-                $template .= '<div class="col-sm-4">';
-
                 if(is_array($small->getItems())) {
+
+                    $template .= '<div class="col-sm-4">';
+
                     $subItems = $small->getItems();
 
                     $fistItem = end($subItems);
@@ -136,9 +137,9 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                         $template .= '</ul>';
                     }
 
-                }
+                    $template .= '</div>';
 
-                $template .= '</div>';
+                }
 
             }
 
