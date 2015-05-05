@@ -1,0 +1,69 @@
+<?php
+    $form = $this->form;
+    $form->prepare();
+    echo $this->form()->openTag($form);
+?>
+<?php echo $this->customFormHelper($form->get('filename')); ?>
+<?php echo $this->customFormHelper($form->get('id')) ?>
+
+<input type="hidden" id="category" value="<?php echo $category; ?>" />
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="the-box">
+
+            <h4 class="small-title">Dane podstawowe</h4>
+            <?php echo $this->customFormHelper($form->get('name')) ?>
+
+        </div>
+    </div>
+    <div class="col-sm-6">
+
+        <div class="the-box">
+            <h4 class="small-title">Pliki</h4>
+
+            <?php echo $this->customFormHelper($form->get('upload')); ?>
+            <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
+            <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
+            <div id="queue"></div>
+            <div class="files"></div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <div class="input-group col-sm-12 text-right">
+                <a class="btn btn-default" href="<?php echo $this->url('file', array('category' => $category)); ?>">Anuluj</a> &nbsp
+                <?php echo $this->formInput($form->get('submit')); ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/file.css'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/' . $category . '-form.js'); ?>
+
+<?php if($category == 'gallery'): ?>
+
+    <script>
+        $(function() {
+            $('input[type=file]').attr('accept', 'image/*');
+        });
+    </script>
+
+<?php else: ?>
+
+    <script>
+        $(function() {
+            $('input[type=file]').attr('accept', 'application/pdf, application/msword');
+        });
+    </script>
+
+<?php endif ?>
