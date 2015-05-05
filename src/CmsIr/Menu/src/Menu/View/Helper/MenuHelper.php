@@ -30,11 +30,10 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
                 $pos = strpos($route, $checkUrl);
             } else {
+
                 $checkUrl = $item->getItems()->getUrl();
                 $pos = strpos($route, $checkUrl);
             }
-
-            $template .= '<li class="'.$liClass.' dropdown">';
 
             if($pos !== false && $checkUrl !== '/') {
                 $active = 'active';
@@ -47,23 +46,32 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                 }
             }
 
+
+            $template .= '<li class="'.$liClass.  ' ' . $active .'">';
+
+
+
             if(is_array($item->getItems())) {
                 $subItems = $item->getItems();
 
                 $fistItem = end($subItems);
                 $label = $fistItem->getLabel();
                 $url = $fistItem->getUrl();
-
                 array_pop($subItems);
-                $template .= '<a href="#" class="dropdown-toggle ' . $active . '" data-toggle="dropdown" role="button" aria-expanded="false">'.$label.'<span class="icon-down-open-mini"></span></a>';
-                $template .= '<ul class="'.$subUlClass.' dropdown-menu" role="menu">';
+
+
+                $template .= '<a href="' . $url . '">' . $label . '<span class="arrow"></span></a>';
+
+
+
+                $template .= '<ul>';
 
                 foreach($subItems as $subItem) {
                     $subItemNode = $subItem->getItems();
                     $label = $subItemNode->getLabel();
                     $url = $subItemNode->getUrl();
 
-                    $template .= '<li class="'.$subLiClass.'"><a href="'.$url.'">'.$label.'</a></li>';
+                    $template .= '<li><a href="'.$url.'">'.$label.'</a></li>';
                 }
 
                 $template .= '</ul>';
@@ -74,13 +82,70 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
                 $label = $subItem->getLabel();
                 $url = $subItem->getUrl();
-                $template .= '<a href="'.$url.'" class="' . $active . '">'.$label.'</a>';
+                $template .= '<a href="'.$url.'" class="' . $active . '">'.$label.'<span class="arrow-2"></span></a>';
             }
             $template .= '</li>';
         }
         // $template .= $this->addExtraOptions();
 
         $template .= '</ul>';
+        return $template;
+    }
+
+    public function renderSecondMenu($menu, $ulClass = null, $liClass = null, $ulId = null, $subUlClass = null, $subLiClass = null)
+    {
+        $route = $this->getRoute();
+
+        $menuMain = array_chunk($menu, 3);
+
+        $template = '';
+
+
+        foreach($menuMain as $menuSmall)
+        {
+
+            $template .= '<row>';
+
+            foreach($menuSmall as $small)
+            {
+
+                if(is_array($small->getItems())) {
+
+                    $template .= '<div class="col-sm-4">';
+
+                    $subItems = $small->getItems();
+
+                    $fistItem = end($subItems);
+                    $label = $fistItem->getLabel();
+                    $url = $fistItem->getUrl();
+                    array_pop($subItems);
+
+                    $template .= '<p><a href="' . $url . '">' . $label . '</a></p>';
+
+                    if(!empty($subItems))
+                    {
+                        $template .= '<ul>';
+
+                        foreach($subItems as $subItem) {
+                            $subItemNode = $subItem->getItems();
+                            $label = $subItemNode->getLabel();
+                            $url = $subItemNode->getUrl();
+
+                            $template .= '<li><a href="'.$url.'">'.$label.'</a></li>';
+                        }
+
+                        $template .= '</ul>';
+                    }
+
+                    $template .= '</div>';
+
+                }
+
+            }
+
+            $template .= '</row>';
+        }
+
         return $template;
     }
 

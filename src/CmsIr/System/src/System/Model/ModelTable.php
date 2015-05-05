@@ -41,7 +41,7 @@ class ModelTable
         return $row['row_count'];
     }
 
-    public function getBy($where, $order = null)
+    public function getBy($where, $order = null, $limit = null)
     {
         $select = $this->tableGateway->getSql()->select();
         $select->where($where);
@@ -49,6 +49,11 @@ class ModelTable
         if (!empty($order))
         {
             $select->order($order);
+        }
+
+        if (!empty($limit))
+        {
+            $select->limit($limit);
         }
 
         $resultSet = $this->tableGateway->selectWith($select);

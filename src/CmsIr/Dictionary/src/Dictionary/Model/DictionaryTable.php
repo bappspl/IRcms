@@ -2,6 +2,7 @@
 namespace CmsIr\Dictionary\Model;
 
 use CmsIr\System\Model\ModelTable;
+use CmsIr\System\Util\Inflector;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
@@ -58,7 +59,7 @@ class DictionaryTable extends ModelTable
     {
         $displayFlag = false;
 
-        $allRows = $this->getBy(array('category' => $category));
+        $allRows = $this->getAll();
         $countAllRows = count($allRows);
 
         $trueOffset = (int) $data->iDisplayStart;
@@ -77,10 +78,7 @@ class DictionaryTable extends ModelTable
                     Predicate\PredicateSet::COMBINED_BY_OR
                 ),
             );
-            $where['category'] = $category;
             $displayFlag = true;
-        } else {
-            $where['category'] = $category;
         }
 
         $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
@@ -106,7 +104,7 @@ class DictionaryTable extends ModelTable
     {
         $data = array(
             'name' => $dictionary->getName(),
-            'category' => $dictionary->getCategory(),
+            'category' => Inflector::slugify($dictionary->getName()),
             'website_id' => $dictionary->getWebsiteId(),
             'filename' => $dictionary->getFilename(),
         );
