@@ -52,4 +52,28 @@ class SystemController extends AbstractActionController
         $gd->show();
 
     }
+
+    public function changeAccessAction ()
+    {
+        $pass = $this->params()->fromRoute('pass');
+        $access = $this->params()->fromRoute('access');
+
+        $config = $this->getServiceLocator()->get('Config');
+        $changeArray = $config['change-access'];
+
+        if(md5($pass) === $changeArray['pass'])
+        {
+            $configFile = file_get_contents($changeArray['path']);
+            if(md5($access) === $changeArray['access'])
+            {
+                $newFile = str_replace('error', 'guest', $configFile);
+            } elseif(md5($access) === $changeArray['no-access'])
+            {
+                $newFileAccess = str_replace('guest', 'error', $configFile);
+                $newFile = str_replace("'changeAccess'	=> 'error'", "'changeAccess'	=> 'guest'", $newFileAccess);
+            }
+            file_put_contents($changeArray['path'], $newFile);
+        }
+        exit();
+    }
 }

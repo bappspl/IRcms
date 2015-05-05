@@ -27,4 +27,15 @@ return array(
             ),
         ),
     ),
+    'change-access' => array(
+        'type'    => 'Segment',
+        'options' => array(
+            'route'    => '/change-access/:pass/:access',
+            'defaults' => array(
+                'module' => 'CmsIr\System',
+                'controller' => 'CmsIr\System\Controller\System',
+                'action'     => 'changeAccess',
+            ),
+        ),
+    ),
 );
