@@ -1,10 +1,12 @@
 <?php
 namespace CmsIr\Post\Controller;
 
+use CmsIr\File\Model\File;
 use CmsIr\Post\Form\PostForm;
 use CmsIr\Post\Form\PostFormFilter;
 use CmsIr\Post\Model\Post;
 use CmsIr\Post\Model\PostFile;
+use CmsIr\Users\Model\Users;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -28,7 +30,7 @@ class PostController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name', 'url', 'date');
+            $columns = array('name', 'url', 'dateFrom');
 
             $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category, $userId);
             $output = array(
@@ -58,18 +60,37 @@ class PostController extends AbstractActionController
         $userRoleId = $this->identity()->role;
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
 
+        /* @var $user Users */
+        $users = $this->getUsersTable()->getAll();
+        $arrUsers = array();
+        foreach($users as $user)
+        {
+            $arrUsers[$user->getId()] = $user->getName() . ' ' . $user->getSurname();
+        }
+        $form->get('author_id')->setValueOptions($arrUsers);
+
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
 
             $form->setInputFilter(new PostFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid())
+            {
+
                 $post = new Post();
                 $post->exchangeArray($form->getData());
                 $post->setCategory($category);
-                $post->setDate(date('Y-m-d'));
-                $post->setAuthorId($this->identity()->id);
+
+                $dateFrom = new \DateTime($post->getDateFrom());
+                $dateFromFormat = date_format($dateFrom, 'Y-m-d H:i:s');
+
+                $dateTo = new \DateTime($post->getDateTo());
+                $dateToFormat = date_format($dateTo, 'Y-m-d H:i:s');
+
+                $post->setDateFrom($dateFromFormat);
+                $post->setDateTo($dateToFormat);
 
                 if($userRoleId < 3) $post->setStatusId(2);
 
@@ -80,14 +101,16 @@ class PostController extends AbstractActionController
                 {
                     foreach($scannedDirectory as $file)
                     {
-                        $fileSize = filesize($this->uploadDir.'/'.$file);
+                        $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
-                        $postFile = new PostFile();
+                        $postFile = new File();
                         $postFile->setFilename($file);
-                        $postFile->setPostId($id);
-                        $postFile->setSize($fileSize);
+                        $postFile->setEntityId($id);
+                        $postFile->setEntityType('Post');
+                        $postFile->setMimeType($mimeType);
 
-                        $this->getPostFileTable()->save($postFile);
+
+                        $this->getFileTable()->save($postFile);
 
                         rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
                     }
@@ -253,7 +276,8 @@ class PostController extends AbstractActionController
 
     public function uploadFilesAction ()
     {
-        if (!empty($_FILES)) {
+        if (!empty($_FILES))
+        {
             //var_dump($_FILES);die;
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
@@ -329,11 +353,27 @@ class PostController extends AbstractActionController
     }
 
     /**
-     * @return \CmsIr\Post\Model\PostFileTable
+     * @return \CmsIr\File\Service\FileService
      */
-    public function getPostFileTable()
+    public function getFileService()
     {
-        return $this->getServiceLocator()->get('CmsIr\Post\Model\PostFileTable');
+        return $this->getServiceLocator()->get('CmsIr\File\Service\FileService');
+    }
+
+    /**
+     * @return \CmsIr\File\Model\FileTable
+     */
+    public function getFileTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+    }
+
+    /**
+     * @return \CmsIr\Users\Model\UsersTable
+     */
+    public function getUsersTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Users\Model\UsersTable');
     }
 
 }

@@ -27,7 +27,7 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-//            'CmsIr\File\Service\FileService' => 'CmsIr\File\Service\Factory\FileService',
+            'CmsIr\File\Service\FileService' => 'CmsIr\File\Service\Factory\FileService',
         ),
     ),
 );

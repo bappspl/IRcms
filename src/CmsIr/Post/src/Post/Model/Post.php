@@ -12,11 +12,13 @@ class Post
     protected $status_id;
     protected $category;
     protected $text;
-    protected $files;
-    protected $date;
-    protected $authorId;
+    protected $date_from;
+    protected $date_to;
+    protected $author_id;
     protected $filename_main;
 
+    /*virtual fields */
+    protected $files;
 
     public function exchangeArray($data) 
     {
@@ -26,10 +28,13 @@ class Post
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->text = (!empty($data['text'])) ? $data['text'] : null;
-        $this->files = (!empty($data['files'])) ? $data['files'] : null;
-        $this->date = (!empty($data['date'])) ? $data['date'] : null;
-        $this->authorId = (!empty($data['authorId'])) ? $data['authorId'] : null;
+        $this->date_from = (!empty($data['date_from'])) ? $data['date_from'] : null;
+        $this->date_to = (!empty($data['date_to'])) ? $data['date_to'] : null;
+        $this->author_id = (!empty($data['author_id'])) ? $data['author_id'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
+
+        /*virtual fields */
+        $this->files = (!empty($data['files'])) ? $data['files'] : null;
     }
 
     public function getArrayCopy()
@@ -51,51 +56,11 @@ class Post
     }
 
     /**
-     * @param mixed $date
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-    }
-
-    /**
      * @return mixed
      */
-    public function getDate()
+    public function getId()
     {
-        return $this->date;
-    }
-
-    /**
-     * @param mixed $files
-     */
-    public function setFiles($files)
-    {
-        $this->files = $files;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFiles()
-    {
-        return $this->files;
-    }
-
-    /**
-     * @param mixed $category
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategory()
-    {
-        return $this->category;
+        return $this->id;
     }
 
     /**
@@ -109,9 +74,9 @@ class Post
     /**
      * @return mixed
      */
-    public function getId()
+    public function getName()
     {
-        return $this->id;
+        return $this->name;
     }
 
     /**
@@ -125,41 +90,9 @@ class Post
     /**
      * @return mixed
      */
-    public function getName()
+    public function getUrl()
     {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $status_id
-     */
-    public function setStatusId($status_id)
-    {
-        $this->status_id = $status_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusId()
-    {
-        return $this->status_id;
-    }
-
-    /**
-     * @param mixed $text
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getText()
-    {
-        return $this->text;
+        return $this->url;
     }
 
     /**
@@ -173,9 +106,81 @@ class Post
     /**
      * @return mixed
      */
-    public function getUrl()
+    public function getStatusId()
     {
-        return $this->url;
+        return $this->status_id;
+    }
+
+    /**
+     * @param mixed $status_id
+     */
+    public function setStatusId($status_id)
+    {
+        $this->status_id = $status_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param mixed $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateFrom()
+    {
+        return $this->date_from;
+    }
+
+    /**
+     * @param mixed $date_from
+     */
+    public function setDateFrom($date_from)
+    {
+        $this->date_from = $date_from;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateTo()
+    {
+        return $this->date_to;
+    }
+
+    /**
+     * @param mixed $date_to
+     */
+    public function setDateTo($date_to)
+    {
+        $this->date_to = $date_to;
     }
 
     /**
@@ -183,15 +188,15 @@ class Post
      */
     public function getAuthorId()
     {
-        return $this->authorId;
+        return $this->author_id;
     }
 
     /**
-     * @param mixed $authorId
+     * @param mixed $author_id
      */
-    public function setAuthorId($authorId)
+    public function setAuthorId($author_id)
     {
-        $this->authorId = $authorId;
+        $this->author_id = $author_id;
     }
 
     /**
@@ -209,4 +214,22 @@ class Post
     {
         $this->filename_main = $filename_main;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files)
+    {
+        $this->files = $files;
+    }
+
+
 }

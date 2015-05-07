@@ -32,6 +32,17 @@ class PostForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'url',
+            'attributes' => array(
+                'id' => 'url',
+                'type'  => 'text',
+            ),
+            'options' => array(
+                'label' => 'Url',
+            ),
+        ));
+
+        $this->add(array(
             'type' => 'select',
             'attributes' => array(
                 'class' => 'form-control',
@@ -47,14 +58,40 @@ class PostForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'url',
+            'name' => 'date_from',
             'attributes' => array(
-                'id' => 'url',
+                'id' => 'date_from',
                 'type'  => 'text',
+                'class'  => 'form-control datetimepicker',
             ),
             'options' => array(
-                'label' => 'Url',
+                'label' => 'Data od',
             ),
+        ));
+
+        $this->add(array(
+            'name' => 'date_to',
+            'attributes' => array(
+                'id' => 'date_to',
+                'type'  => 'text',
+                'class'  => 'form-control datetimepicker',
+            ),
+            'options' => array(
+                'label' => 'Data do',
+            ),
+        ));
+
+        $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'author_id',
+            ),
+            'options' => array(
+                'label' => 'Autor',
+                'value_options' => array(
+                ),
+            )
         ));
 
         $this->add(array(
