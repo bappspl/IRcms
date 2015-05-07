@@ -25,6 +25,9 @@ return array(
         'abstract_factories' => array(
             'Zend\Form\FormAbstractServiceFactory',
         ),
+        'factories' => array(
+            'CmsIr\Post\Service\PostService' => 'CmsIr\Post\Service\Factory\PostService',
+        ),
 	),
     'strategies' => array(
         'ViewJsonStrategy',

@@ -1,4 +1,5 @@
 $(function () {
+    $('.datetimepicker').datetimepicker();
     var category = 'news';
     $('#upload').uploadifive({
         'auto'             : false,

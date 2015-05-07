@@ -37,12 +37,15 @@ echo $this->form()->openTag($form);
         <div class="row">
             <div class="col-sm-12">
                 <div class="the-box">
-                    <h4 class="small-title">Pliki</h4>
+                    <h4 class="small-title">Galeria zdjęć</h4>
 
                     <div class="form-group">
+
                         <?php echo $this->customFormHelper($form->get('upload')); ?>
+
                         <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
-                        <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
+                        <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>
+
                         <div id="queue"></div>
                         <div class="files"></div>
                     </div>
@@ -63,6 +66,7 @@ echo $this->form()->openTag($form);
 </div>
 <?php echo $this->form()->closeTag(); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap-datetimepicker.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/post.css'); ?>
 
@@ -70,3 +74,5 @@ echo $this->form()->openTag($form);
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/post-form.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/moment.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap-datetimepicker.js'); ?>

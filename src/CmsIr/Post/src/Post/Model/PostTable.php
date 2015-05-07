@@ -43,7 +43,8 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             'status_id'  => $post->getStatusId(),
             'category'  => $post->getCategory(),
             'text'  => $post->getText(),
-            'date'  => $post->getDate(),
+            'date_from'  => $post->getDateFrom(),
+            'date_to'  => $post->getDateTo(),
             'author_id'  => $post->getAuthorId(),
             'filename_main'  => $post->getFilenameMain(),
         );
