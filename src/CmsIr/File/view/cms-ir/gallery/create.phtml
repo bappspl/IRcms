@@ -6,14 +6,16 @@
 <?php echo $this->customFormHelper($form->get('filename')); ?>
 <?php echo $this->customFormHelper($form->get('id')) ?>
 
-<input type="hidden" id="category" value="<?php echo $category; ?>" />
-
 <div class="row">
     <div class="col-sm-6">
         <div class="the-box">
 
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->customFormHelper($form->get('name')) ?>
+
+            <?php echo $this->customFormHelper($form->get('url')) ?>
+
+            <?php echo $this->customFormHelper($form->get('status_id')) ?>
 
         </div>
     </div>
@@ -37,7 +39,7 @@
     <div class="col-sm-12">
         <div class="the-box">
             <div class="input-group col-sm-12 text-right">
-                <a class="btn btn-default" href="<?php echo $this->url('file', array('category' => $category)); ?>">Anuluj</a> &nbsp
+                <a class="btn btn-default" href="<?php echo $this->url('gallery'); ?>">Anuluj</a> &nbsp
                 <?php echo $this->formInput($form->get('submit')); ?>
             </div>
         </div>
@@ -48,22 +50,4 @@
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/file.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
-<?php $this->headScript()->appendFile($this->basePath().'/js/' . $category . '-form.js'); ?>
-
-<?php if($category == 'gallery'): ?>
-
-    <script>
-        $(function() {
-            $('input[type=file]').attr('accept', 'image/*');
-        });
-    </script>
-
-<?php else: ?>
-
-    <script>
-        $(function() {
-            $('input[type=file]').attr('accept', 'application/pdf, application/msword');
-        });
-    </script>
-
-<?php endif ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/gallery-form.js'); ?>

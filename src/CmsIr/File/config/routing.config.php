@@ -72,7 +72,7 @@ return array(
                     'defaults' => array(
                         'module' => 'CmsIr\File',
                         'controller' => 'CmsIr\File\Controller\Gallery',
-                        'action'     => 'upload',
+                        'action'     => 'uploadFiles',
                     ),
                 ),
             ),

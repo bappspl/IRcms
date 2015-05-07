@@ -4,11 +4,11 @@ namespace CmsIr\File\Form;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
-class FileForm extends Form
+class GalleryForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('File');
+        parent::__construct('Gallery');
         $this->setAttribute('method', 'post');
         $this->setHydrator(new ClassMethods());
 
@@ -33,6 +33,33 @@ class FileForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'url',
+            'attributes' => array(
+                'id' => 'url',
+                'type'  => 'text',
+                'placeholder' => 'Wprowadź url'
+            ),
+            'options' => array(
+                'label' => 'Url',
+            ),
+        ));
+
+        $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'status_id',
+            ),
+            'options' => array(
+                'label' => 'Status',
+                'value_options' => array(
+                    '2' => 'Nieaktywny',
+                    '1' => 'Aktywny'
+                ),
+            )
+        ));
+
+        $this->add(array(
             'name' => 'filename',
             'attributes' => array(
                 'type'  => 'hidden',
@@ -48,7 +75,6 @@ class FileForm extends Form
                 'class' => 'form-control'
             ),
             'options' => array(
-                'label' => 'E-mail',
             ),
         ));
 

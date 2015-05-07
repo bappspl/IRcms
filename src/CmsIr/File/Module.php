@@ -3,6 +3,8 @@ namespace CmsIr\File;
 
 use CmsIr\File\Model\File;
 use CmsIr\File\Model\FileTable;
+use CmsIr\File\Model\Gallery;
+use CmsIr\File\Model\GalleryTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\ModuleRouteListener;
@@ -56,6 +58,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new File());
                     return new TableGateway('cms_file', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\File\Model\GalleryTable' =>  function($sm) {
+                    $tableGateway = $sm->get('GalleryTableGateway');
+                    $table = new GalleryTable($tableGateway);
+                    return $table;
+                },
+                'GalleryTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Gallery());
+                    return new TableGateway('cms_gallery', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

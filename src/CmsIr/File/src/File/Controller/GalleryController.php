@@ -3,7 +3,10 @@ namespace CmsIr\File\Controller;
 
 use CmsIr\File\Form\FileForm;
 use CmsIr\File\Form\FileFormFilter;
+use CmsIr\File\Form\GalleryForm;
+use CmsIr\File\Form\GalleryFormFilter;
 use CmsIr\File\Model\File;
+use CmsIr\File\Model\Gallery;
 use CmsIr\System\Util\Inflector;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -12,22 +15,18 @@ use Zend\Json\Json;
 
 class GalleryController extends AbstractActionController
 {
-    protected $uploadDir = 'public/temp_files/file/';
-    protected $destinationUploadDir = 'public/files/file/';
+    protected $uploadDir = 'public/temp_files/gallery/';
+    protected $destinationUploadDir = 'public/files/gallery/';
 
     public function listAction()
     {
-        $category = $this->params()->fromRoute('category');
-
-        $currentWebsiteId = $_COOKIE['website_id'];
-
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name');
 
-            $listData = $this->getFileTable()->getFileDatatables($columns, $data, $category, $currentWebsiteId);
+            $listData = $this->getGalleryTable()->getDatatables($columns, $data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -42,7 +41,6 @@ class GalleryController extends AbstractActionController
         }
 
         $viewParams = array();
-        $viewParams['category'] = $category;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -50,55 +48,30 @@ class GalleryController extends AbstractActionController
 
     public function createAction()
     {
-        $category = $this->params()->fromRoute('category');
-        $currentWebsiteId = $_COOKIE['website_id'];
-        $form = new FileForm();
+        $form = new GalleryForm();
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-
-            $form->setInputFilter(new FileFormFilter($this->getServiceLocator()));
+        if ($request->isPost())
+        {
+            $form->setInputFilter(new GalleryFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid())
+            {
+                $gallery = new Gallery();
+                $gallery->exchangeArray($form->getData());
+                $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
-                $file = new File();
-                $file->exchangeArray($form->getData());
-                $file->setWebsiteId($currentWebsiteId);
-                $file->setCategory($category);
-                $file->setSlug(Inflector::slugify($file->getName()));
+                $this->getGalleryTable()->save($gallery);
 
-                $fileArray = array();
-
-                $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-                if(!empty($scannedDirectory))
-                {
-                    foreach($scannedDirectory as $filename)
-                    {
-                        array_push($fileArray, $filename);
-                        rename($this->uploadDir.'/'.$filename, $this->destinationUploadDir.'/'.$filename);
-                    }
-                }
-
-                $file->setFilename(serialize($fileArray));
-                $this->getFileTable()->save($file);
-
-                if($category == 'document')
-                {
-                    $this->flashMessenger()->addMessage('Dokument został dodany poprawnie.');
-                } else
-                {
-                    $this->flashMessenger()->addMessage('Galeria została dodana poprawnie.');
-                }
-
-                return $this->redirect()->toRoute('file', array('category' => $category));
+                $this->flashMessenger()->addMessage('Galeria została dodana poprawnie.');
+                return $this->redirect()->toRoute('gallery');
             }
         }
 
         $viewParams = array();
         $viewParams['form'] = $form;
-        $viewParams['category'] = $category;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -210,25 +183,27 @@ class GalleryController extends AbstractActionController
         );
     }
 
-    public function uploadAction ()
+    public function uploadFilesAction ()
     {
-        if (!empty($_FILES)) {
+        if (!empty($_FILES))
+        {
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
-
             $file = explode('.', $targetFile);
+
             $fileName = $file[0];
             $fileExt = $file[1];
 
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
+            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile))
+            {
                 echo $targetFile;
-            } else {
+            } else
+            {
                 echo 0;
             }
-
         }
         return $this->response;
     }
@@ -270,10 +245,10 @@ class GalleryController extends AbstractActionController
     }
 
     /**
-     * @return \CmsIr\File\Model\FileTable
+     * @return \CmsIr\File\Model\GalleryTable
      */
-    public function getFileTable()
+    public function getGalleryTable()
     {
-        return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+        return $this->getServiceLocator()->get('CmsIr\File\Model\GalleryTable');
     }
 }

@@ -1,9 +1,8 @@
 $(function () {
 
     /** BEGIN DATATABLE EXAMPLE **/
-    if ($('#datatable-file').length > 0){
-        var category = $('#category').val();
-        $('#datatable-file').dataTable({
+    if ($('#datatable-gallery').length > 0){
+        $('#datatable-gallery').dataTable({
             "oLanguage": {
                 "sProcessing":   "Przetwarzanie...",
                 "sLengthMenu":   "Pokaż _MENU_ pozycji",
@@ -30,7 +29,7 @@ $(function () {
             },
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "/cms-ir/file/" + category,
+            "sAjaxSource": "/cms-ir/gallery",
             "sServerMethod": "POST",
             "bPaginate":true,
             "bSortable": true,
@@ -39,11 +38,11 @@ $(function () {
                 {
                     "bSortable": false,
                     "aTargets": [ -1 ]
-                },
+                }
             ]
         });
         // delete modal
-        $('#datatable-file tbody').on('click', '.btn-danger', function (e) {
+        $('#datatable-gallery tbody').on('click', '.btn-danger', function (e) {
             e.preventDefault();
             var entityId = $(this).attr('id');
             $('#deleteModal').on('show.bs.modal', function () {
@@ -55,7 +54,7 @@ $(function () {
 
                     $.ajax({
                         type: "POST",
-                        url: "/cms-ir/file/"  + category +  "/delete/" +entityId,
+                        url: "/cms-ir/gallery/delete/" +entityId,
                         dataType : 'json',
                         data: {
                             modal: true,

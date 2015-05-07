@@ -28,12 +28,16 @@ class FileTable extends ModelTable
         );
 
         $id = (int) $file->getId();
-        if ($id == 0) {
+        if ($id == 0)
+        {
             $this->tableGateway->insert($data);
-        } else {
-            if ($this->getOneBy(array('id' => $id))) {
+        } else
+        {
+            if ($this->getOneBy(array('id' => $id)))
+            {
                 $this->tableGateway->update($data, array('id' => $id));
-            } else {
+            } else
+            {
                 throw new \Exception('File id does not exist');
             }
         }
