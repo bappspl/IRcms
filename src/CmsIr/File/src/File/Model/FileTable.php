@@ -42,4 +42,10 @@ class FileTable extends ModelTable
             }
         }
     }
+
+    public function deleteFile($id)
+    {
+        $id  = (int) $id;
+        $this->tableGateway->delete(array('id' => $id));
+    }
 }

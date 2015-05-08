@@ -63,7 +63,26 @@ class GalleryController extends AbstractActionController
                 $gallery->exchangeArray($form->getData());
                 $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
-                $this->getGalleryTable()->save($gallery);
+                $id = $this->getGalleryTable()->save($gallery);
+
+                $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
+                if(!empty($scannedDirectory))
+                {
+                    foreach($scannedDirectory as $file)
+                    {
+                        $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
+
+                        $postFile = new File();
+                        $postFile->setFilename($file);
+                        $postFile->setEntityId($id);
+                        $postFile->setEntityType('Gallery');
+                        $postFile->setMimeType($mimeType);
+
+                        $this->getFileTable()->save($postFile);
+
+                        rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
+                    }
+                }
 
                 $this->flashMessenger()->addMessage('Galeria została dodana poprawnie.');
                 return $this->redirect()->toRoute('gallery');
@@ -79,71 +98,60 @@ class GalleryController extends AbstractActionController
 
     public function editAction()
     {
-        $id = $this->params()->fromRoute('file_id');
-        $category = $this->params()->fromRoute('category');
+        $id = $this->params()->fromRoute('gallery_id');
 
-        $file = $this->getFileTable()->getOneBy(array('id' => $id));
+        /* @var $gallery Gallery */
+        $gallery = $this->getGalleryTable()->getOneBy(array('id' => $id));
+        $galleryFiles = $this->getFileTable()->getBy(array('entity_id' => $id));
 
-        if(!$file) {
-            return $this->redirect()->toRoute('file', array('category' => $category));
-        }
-
-        $fileFiles = $this->getFileTable()->getBy(array('id' => $id));
-        $fileFiles = reset($fileFiles);
-        $fileFiles = unserialize($fileFiles->getFilename());
-
-        if(!is_array($fileFiles))
+        if(!$gallery)
         {
-            $fileFiles = array();
+            return $this->redirect()->toRoute('gallery');
         }
 
-        $form = new FileForm();
-        $form->bind($file);
+        $form = new GalleryForm();
+        $form->bind($gallery);
 
         $request = $this->getRequest();
-
-        if ($request->isPost()) {
-
-            $form->setInputFilter(new FileFormFilter($this->getServiceLocator()));
+        if ($request->isPost())
+        {
+            $form->setInputFilter(new GalleryFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $data = $form->getData();
-                $file->setName($data->getName());
+            if ($form->isValid())
+            {
+                $gallery->exchangeArray($form->getData());
+                $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
-                $fileArray = array();
+                $id = $this->getGalleryTable()->save($gallery);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
                 {
-                    foreach($scannedDirectory as $filename)
+                    foreach($scannedDirectory as $file)
                     {
-                        array_push($fileArray, $filename);
-                        rename($this->uploadDir.'/'.$filename, $this->destinationUploadDir.'/'.$filename);
+                        $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
+
+                        $postFile = new File();
+                        $postFile->setFilename($file);
+                        $postFile->setEntityId($id);
+                        $postFile->setEntityType('Gallery');
+                        $postFile->setMimeType($mimeType);
+
+                        $this->getFileTable()->save($postFile);
+
+                        rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
                     }
                 }
 
-                $allFiles = array_merge($fileFiles, $fileArray);
-
-                $file->setFilename(serialize($allFiles));
-                $this->getFileTable()->save($file);
-
-                if($category == 'document')
-                {
-                    $this->flashMessenger()->addMessage('Dokument został edytowany poprawnie.');
-                } else
-                {
-                    $this->flashMessenger()->addMessage('Galeria została edytowana poprawnie.');
-                }
-
-                return $this->redirect()->toRoute('file', array('category' => $category));
+                $this->flashMessenger()->addMessage('Galeria została edytowana poprawnie.');
+                return $this->redirect()->toRoute('gallery');
             }
         }
 
         $viewParams = array();
         $viewParams['form'] = $form;
-        $viewParams['category'] = $category;
-        $viewParams['fileFiles'] = $fileFiles;
+        $viewParams['galleryFiles'] = $galleryFiles;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -218,21 +226,9 @@ class GalleryController extends AbstractActionController
 
             if(!empty($id))
             {
-                $file = $this->getFileTable()->getOneBy(array('id' => $id));
-                $filenames = unserialize($file->getFilename());
-
-                foreach($filenames as $key => $filename)
-                {
-                    if($filename == $name){
-                        unset($filenames[$key]);
-                    }
-                }
-
-                $newFilenames = serialize($filenames);
-                $file->setFilename($newFilenames);
-                $this->getFileTable()->save($file);
-
+                $this->getFileTable()->deleteFile($id);
                 unlink('./public'.$filePath);
+
             } else
             {
                 unlink('./public'.$filePath);
@@ -250,5 +246,21 @@ class GalleryController extends AbstractActionController
     public function getGalleryTable()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Model\GalleryTable');
+    }
+
+    /**
+     * @return \CmsIr\File\Model\FileTable
+     */
+    public function getFileTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+    }
+
+    /**
+     * @return \CmsIr\File\Service\FileService
+     */
+    public function getFileService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\File\Service\FileService');
     }
 }

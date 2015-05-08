@@ -66,6 +66,7 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
         if ($id == 0)
         {
             $this->tableGateway->insert($data);
+            $id = $this->tableGateway->lastInsertValue;
         } else
         {
             if ($this->getOneBy(array('id' => $id)))
@@ -76,6 +77,14 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
                 throw new \Exception('Gallery id does not exist');
             }
         }
+
+        return $id;
+    }
+
+    public function deleteGallery($id)
+    {
+        $id  = (int) $id;
+        $this->tableGateway->delete(array('id' => $id));
     }
 
     /**

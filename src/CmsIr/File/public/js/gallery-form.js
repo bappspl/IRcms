@@ -44,14 +44,14 @@ $(function () {
     });
 
     $('.deletePhoto i').on('click', function () {
-        var id = $('#id').val();
         var fullPathToImage = $(this).next().attr('src');
 
         if($(this).parent().is("[id]"))
         {
-            var name = $(this).parent().attr('id');
+            var id = $(this).parent().attr('id');
         }
         $cache = $(this);
+
         $.ajax({
             type: "POST",
             url: "/cms-ir/gallery/delete-photo",
