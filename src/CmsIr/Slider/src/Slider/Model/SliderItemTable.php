@@ -31,8 +31,8 @@ class SliderItemTable extends ModelTable
     {
         $data = array(
             'name' => $slider->getName(),
-            'slider_id'  => $slider->getSliderId(),
-            'status_id'  => $slider->getStatusId(),
+            'slider_id'  => (int) $slider->getSliderId(),
+            'status_id'  => (int) $slider->getStatusId(),
             'filename'  => $slider->getFilename(),
             'position'  => $slider->getPosition(),
             'title'  => $slider->getTitle(),
@@ -41,7 +41,9 @@ class SliderItemTable extends ModelTable
         );
 
         $id = (int) $slider->getId();
-        if ($id == 0) {
+        if ($id == 0)
+        {
+            //var_dump($data);die;
             $this->tableGateway->insert($data);
         } else {
             if ($this->getOneBy(array('id' => $id))) {

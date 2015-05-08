@@ -1,5 +1,8 @@
 $(function () {
-    $('.datetimepicker').datetimepicker();
+    $('.datetimepicker').datetimepicker({
+        locale: 'pl',
+        format: 'YYYY-MM-DD HH:mm:ss'
+    });
     var category = 'news';
     $('#upload').uploadifive({
         'auto'             : false,
@@ -83,7 +86,7 @@ $(function () {
             $('#filename-main').val(data);
             if($('#filename-main').val().length > 0) {
                 $('.files-main img').remove();
-                $('.files-main').append('<div class="deletePhoto-main">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/files/post/'+data+'" class="thumb" /> </div>')
+                $('.files-main').append('<img src="/files/post/'+data+'" class="thumb" />')
             }
 
             $('.deletePhoto-main i').on('click', function () {
@@ -140,9 +143,9 @@ $(function () {
 
     });
 
-    if($('#filename-main').val().length > 0) {
-        var filename = $('#filename-main').val();
-        $('.files-main').append('<img src="/files/post/'+filename+'" class="thumb" />')
+    if($('#filename_main').val().length > 0) {
+        var filename = $('#filename_main').val();
+        $('.files_main').append('<img src="/files/post/'+filename+'" class="thumb" />')
     }
 
 });

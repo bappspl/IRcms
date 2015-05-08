@@ -28,7 +28,7 @@ class SliderItem extends Model
         $this->title = (!empty($data['title'])) ? $data['title'] : null;
         $this->description = (!empty($data['description'])) ? $data['description'] : null;
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
-        $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
+        $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
         $this->url = (!empty($data['url'])) ? $data['url'] : 0;
     }

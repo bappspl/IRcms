@@ -36,12 +36,13 @@ class MenuItemTable extends ModelTable
         $this->tableGateway->delete(array('node_id' => $id));
     }
 
-    public function updateMenuItem($nodeid, $label, $url)
+    public function updateMenuItem($nodeid, $label, $url, $subtitle)
     {
         $id  = (int) $nodeid;
         $data = array(
             'label' => $label,
-            'url' => $url
+            'url' => $url,
+            'subtitle' => $subtitle
         );
         $this->tableGateway->update($data, array('node_id' => $id));
     }
@@ -51,6 +52,7 @@ class MenuItemTable extends ModelTable
         $data = array(
             'label' => $menuItem->getLabel(),
             'url'  => $menuItem->getUrl(),
+            'subtitle' => $menuItem->getSubtitle(),
             'node_id'  => $menuItem->getNodeId()
         );
 
