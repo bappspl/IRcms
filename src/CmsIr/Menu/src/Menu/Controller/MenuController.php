@@ -95,29 +95,33 @@ class MenuController extends AbstractActionController
     public function editNodeAction ()
     {
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
             $nodeId = $request->getPost('nodeId');
             $nodeLabel = $request->getPost('label');
             $nodeUrl = $request->getPost('url');
+            $subtitle = $request->getPost('subtitle');
 
             $nodeExist = $this->getMenuService()->getMenuItemTable()->getOneBy(array('url' => $nodeUrl));
             if($nodeExist == false)
             {
                 // update
-                $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl);
+                $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl, $subtitle);
                 $jsonObject = Json::encode($params['status'] = 'success', true);
                 echo $jsonObject;
                 return $this->response;
-            } else {
+            } else
+            {
 
                 if($nodeId == $nodeExist->getId())
                 {
                     // update
-                    $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl);
+                    $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl, $subtitle);
                     $jsonObject = Json::encode($params['status'] = 'success', true);
                     echo $jsonObject;
                     return $this->response;
-                } else {
+                } else
+                {
                     $jsonObject = Json::encode($params['status'] = 'error', true);
                     echo $jsonObject;
                     return $this->response;
@@ -134,6 +138,7 @@ class MenuController extends AbstractActionController
         if ($request->isPost()) {
             $nodeLabel = $request->getPost('label');
             $nodeUrl = $request->getPost('url');
+            $subtitle = $request->getPost('subtitle');
             $treeId = $request->getPost('treeId');
             $pageProvider = $request->getPost('pageProvider');
 
@@ -154,6 +159,7 @@ class MenuController extends AbstractActionController
                 $menuItem->setLabel($nodeLabel);
                 $menuItem->setUrl($nodeUrl);
                 $menuItem->setNodeId($nodeId);
+                $menuItem->setSubtitle($subtitle);
                 $menuItem->setPosition(0);
                 $this->getMenuService()->getMenuItemTable()->saveMenuItem($menuItem);
 

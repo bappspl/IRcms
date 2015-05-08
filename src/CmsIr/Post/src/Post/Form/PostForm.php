@@ -128,7 +128,7 @@ class PostForm extends Form
             'name' => 'filename_main',
             'attributes' => array(
                 'type'  => 'hidden',
-                'id' => 'filename-main'
+                'id' => 'filename_main'
             ),
         ));
 

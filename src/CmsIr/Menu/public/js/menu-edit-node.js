@@ -72,6 +72,7 @@ $(function () {
 
         var label = $(this).parent().parent().find('.label').text();
         var url = $(this).parent().parent().find('.url').text();
+        var subtitle = $(this).parent().parent().find('.subtitle').text();
 
         var $cache = $(this);
         $('#'+modal).on('show.bs.modal', function () {
@@ -83,10 +84,11 @@ $(function () {
             {
                 $('#'+modal+' #page option[value="' + url +'"]').attr("selected","selected");
             }
+            $('#'+modal+' #subtitle').val(subtitle);
 
             $('#'+modal+' form input[name=save]').click(function (ev) {
                 ev.preventDefault();
-                var newLabel, newUrl;
+                var newLabel, newUrl, newSubtitle;
 
                 $('.spinner').show();
 
@@ -100,6 +102,7 @@ $(function () {
                     newUrl = $('#'+modal+' select[name="page"] option:selected').val();
                 }
 
+                newSubtitle = $('#'+modal+' #subtitle').val();
                 $.ajax({
                     type: "POST",
                     url: "/cms-ir/menu/menu-edit-node",
@@ -107,7 +110,8 @@ $(function () {
                     data: {
                         nodeId: nodeId,
                         label: newLabel,
-                        url: newUrl
+                        url: newUrl,
+                        subtitle: newSubtitle
                     },
                     success: function(json)
                     {
@@ -135,6 +139,7 @@ $(function () {
             });
         }).modal('show');
     });
+
     //create node
     $('.the-box').on('click', '.btn-facebook', function (e) {
         var pageType = $('#page-type').val();
@@ -142,7 +147,8 @@ $(function () {
         if(pageType == 'page')
         {
             modal = 'createPageModal';
-        } else {
+        } else
+        {
             modal = 'createModal';
         }
 
@@ -150,7 +156,7 @@ $(function () {
 
             $('#'+modal+' form input[name=save]').click(function (ev) {
                 ev.preventDefault();
-                var newLabel, newUrl;
+                var newLabel, newUrl, newSubtitle;
 
                 $('.spinner').show();
 
@@ -158,11 +164,14 @@ $(function () {
                 {
                     newLabel = $('#'+modal+' #label').val();
                     newUrl = $('#'+modal+' #url').val();
-                } else {
+                } else
+                {
                     newLabel = $('#'+modal+' select[name="page"] option:selected').text();
                     newUrl = $('#'+modal+' select[name="page"] option:selected').val();
                 }
+                newSubtitle = $('#'+modal+' #subtitle').val();
                 var treeId = $('#treeId').val();
+
                 $.ajax({
                     type: "POST",
                     url: "/cms-ir/menu/menu-create-node",
@@ -171,6 +180,7 @@ $(function () {
                         label: newLabel,
                         url: newUrl,
                         treeId: treeId,
+                        subtitle: newSubtitle,
                         pageProvider: pageType
                     },
                     success: function(json)

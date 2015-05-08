@@ -9,6 +9,7 @@ echo $this->form()->openTag($form);
         <div class="the-box">
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->formInput($form->get('id')); ?>
+            <?php echo $this->formInput($form->get('filename_main')); ?>
             <div class="form-group">
                 <?php echo $this->customFormHelper($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
@@ -18,6 +19,37 @@ echo $this->form()->openTag($form);
             <div class="form-group">
                 <?php echo $this->customFormHelper($form->get('status_id')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
+
+            <?php if($category == 'events'): ?>
+
+                <div class="form-group">
+
+                    <?php echo $this->customFormHelper($form->get('date_from')->setAttributes(array('disabled' => 'disabled'))); ?>
+
+                </div>
+                <div class="form-group">
+
+                    <?php echo $this->customFormHelper($form->get('date_to')->setAttributes(array('disabled' => 'disabled'))); ?>
+
+                </div>
+
+            <?php else: ?>
+
+                <div class="form-group">
+                    <div class="form-group has-feedback">
+                        <label>Data:</label>
+                        <?php echo $this->formInput($form->get('date_from')->setAttributes(array('disabled' => 'disabled'))); ?>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+
+            <div class="form-group">
+
+                <?php echo $this->customFormHelper($form->get('author_id')->setAttributes(array('disabled' => 'disabled'))); ?>
+
+            </div>
+
             <div class="form-group">
                 <label><?php echo $this->formLabel($form->get('text')); ?></label>
                 <?php echo $this->formTextarea($form->get('text')->setAttributes(array('disabled' => 'disabled'))); ?>
@@ -27,22 +59,39 @@ echo $this->form()->openTag($form);
     </div>
 
     <div class="col-sm-6">
-        <div class="the-box">
-            <h4 class="small-title">Pliki</h4>
-
-            <div class="form-group">
-            <div class="files">
-                <?php if(!empty($postFiles)): ?>
-                    <?php foreach($postFiles as $file): ?>
-                        <div id="<?php echo $file->getId(); ?>" class="deletePhoto">
-                            <img src="/files/post/<?php echo $file->getFilename(); ?>" alt="<?php echo $file->getFilename(); ?>" class="thumb" />
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="the-box">
+                    <h4 class="small-title">Zdjęcie główne</h4>
+                    <div class="form-group">
+                        <div class="files_main">
                         </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    </div>
+                </div>
             </div>
-            </div>
-
         </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="the-box">
+                    <h4 class="small-title">Galeria zdjęć</h4>
+                    <div class="form-group">
+                        <div class="files">
+
+                            <?php if(!empty($postFiles)): ?>
+                                <?php foreach($postFiles as $file): ?>
+                                    <div id="<?php echo $file->getId(); ?>" class="deletePhoto">
+                                        <img src="/files/post/<?php echo $file->getFilename(); ?>" alt="<?php echo $file->getFilename(); ?>" class="thumb" />
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -51,7 +100,7 @@ echo $this->form()->openTag($form);
     <div class="col-sm-12">
         <div class="the-box">
             <div class="input-group col-sm-12 text-right">
-                <a class="btn btn-primary" href="<?php echo $this->url('post-list', array('category' => $category)); ?>">Powrót</a> &nbsp
+                <a class="btn btn-primary" href="<?php echo $this->url('post', array('category' => $category)); ?>">Powrót</a> &nbsp
             </div>
         </div>
     </div>
@@ -59,5 +108,9 @@ echo $this->form()->openTag($form);
 <?php echo $this->form()->closeTag(); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/post.css'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
 
+<?php $this->headScript()->appendFile($this->basePath().'/js/post-form.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/moment.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap-datetimepicker.js'); ?>

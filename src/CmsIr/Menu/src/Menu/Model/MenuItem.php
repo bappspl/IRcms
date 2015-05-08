@@ -10,6 +10,7 @@ class MenuItem extends Model
     protected $label;
     protected $url;
     protected $position;
+    protected $subtitle;
 
     public function exchangeArray($data) 
     {
@@ -18,6 +19,23 @@ class MenuItem extends Model
         $this->label = (!empty($data['label'])) ? $data['label'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
+        $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubtitle()
+    {
+        return $this->subtitle;
+    }
+
+    /**
+     * @param mixed $subtitle
+     */
+    public function setSubtitle($subtitle)
+    {
+        $this->subtitle = $subtitle;
     }
 
     /**
