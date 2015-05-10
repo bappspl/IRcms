@@ -8,6 +8,11 @@ use Zend\Db\Sql\Predicate;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+use Zend\Paginator\Adapter\DbSelect;
+use Zend\Paginator\Paginator;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Expression;
+
 class PostTable extends ModelTable implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
@@ -142,6 +147,28 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
 
         $template = '<span class="label ' . $checked . '">' .$name . '</span>';
         return $template;
+    }
+
+    public function getWithPaginationBy($object, $where, $order = null)
+    {
+        $whereLike['status_id'] = $where['status_id'];
+        $whereLike[] = new Predicate\Like('name', '%'.$where['slug'].'%');
+        $select = $this->tableGateway->getSql()->select();
+        $select->where($whereLike);
+
+        if (!empty($order))
+        {
+            $select->order($order);
+        }
+
+        $resultSetPrototype = new ResultSet();
+        $resultSetPrototype->setArrayObjectPrototype($object);
+        $resultSetPrototype->buffer();
+
+        $paginatorAdapter = new DbSelect($select, $this->tableGateway->getAdapter(), $resultSetPrototype);
+        $paginator = new Paginator($paginatorAdapter);
+
+        return $paginator;
     }
 
     /**

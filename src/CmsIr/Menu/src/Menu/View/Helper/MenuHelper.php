@@ -15,7 +15,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
         return $routeMatch;
     }
 
-    public function renderMenu($menu, $ulClass = null, $liClass = null, $ulId = null, $subUlClass = null, $subLiClass = null)
+    public function renderMenu($menu, $ulClass = null, $ulId = null, $liClass = null, $subUlClass = null, $subLiClass = null)
     {
         $route = $this->getRoute();
 
@@ -57,10 +57,11 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                 $fistItem = end($subItems);
                 $label = $fistItem->getLabel();
                 $url = $fistItem->getUrl();
+                $subtitle = $fistItem->getSubtitle();
                 array_pop($subItems);
 
 
-                $template .= '<a href="' . $url . '">' . $label . '<span class="arrow"></span></a>';
+                $template .= '<a href="' . $url . '" title="'.$subtitle.'">' . $label . '<span class="arrow"></span></a>';
 
 
 
@@ -82,7 +83,8 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
                 $label = $subItem->getLabel();
                 $url = $subItem->getUrl();
-                $template .= '<a href="'.$url.'" class="' . $active . '">'.$label.'<span class="arrow-2"></span></a>';
+                $subtitle = $subItem->getSubtitle();
+                $template .= '<a href="'.$url.'" class="' . $active . '" title="'.$subtitle.'">'.$label.'<span class="arrow-2"></span></a>';
             }
             $template .= '</li>';
         }

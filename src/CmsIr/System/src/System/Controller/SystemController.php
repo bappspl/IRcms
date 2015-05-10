@@ -40,17 +40,24 @@ class SystemController extends AbstractActionController
         $pathToThumbs = 'public/files/' . $entity . '/' . $size;
         $imgSrc = 'public/files/' . $entity . '/' . $fileName;
 
-        $sizeArray = explode('x', $size);
-        $thumbWidth = $sizeArray[0];
-        $thumbHeight = $sizeArray{1};
+        if(file_exists($pathToThumbs.'/'.$fileName))
+        {
+            $gd = new GD($pathToThumbs.'/'.$fileName);
+            $gd->show();
+        } else
+        {
+            $sizeArray = explode('x', $size);
+            $thumbWidth = $sizeArray[0];
+            $thumbHeight = $sizeArray{1};
 
-        if(!is_dir($pathToThumbs))
-            mkdir($pathToThumbs);
+            if(!is_dir($pathToThumbs))
+                mkdir($pathToThumbs);
 
-        $gd = new GD($imgSrc, array('resizeUp' => true, 'jpegQuality' => 100));
-        $gd->adaptiveResize($thumbWidth, $thumbHeight);
-        $gd->save($pathToThumbs . '/' . $fileName);
-        $gd->show();
+            $gd = new GD($imgSrc, array('resizeUp' => true, 'jpegQuality' => 100));
+            $gd->adaptiveResize($thumbWidth, $thumbHeight);
+            $gd->save($pathToThumbs . '/' . $fileName);
+            $gd->show();
+        }
 
     }
 
