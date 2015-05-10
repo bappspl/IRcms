@@ -1,11 +1,11 @@
 <?php
-namespace CmsIr\Page\Form;
+namespace CmsIr\Banner\Form;
 
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\NotEmpty;
 
-class PageFormFilter extends InputFilter
+class BannerFormFilter extends InputFilter
 {
 	public function __construct($sm)
 	{
@@ -27,6 +27,7 @@ class PageFormFilter extends InputFilter
                 ),
             ),
         ));
+
         $this->add(array(
             'name'       => 'url',
             'required' => true,
@@ -45,5 +46,6 @@ class PageFormFilter extends InputFilter
                 ),
             ),
         ));
+
 	}
 }

@@ -48,4 +48,9 @@ class FileTable extends ModelTable
         $id  = (int) $id;
         $this->tableGateway->delete(array('id' => $id));
     }
+
+    public function deleteFilesWhere($where)
+    {
+        $this->tableGateway->delete($where);
+    }
 }

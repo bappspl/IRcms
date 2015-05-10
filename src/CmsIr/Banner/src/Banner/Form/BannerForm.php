@@ -1,14 +1,14 @@
 <?php
-namespace CmsIr\Page\Form;
+namespace CmsIr\Banner\Form;
 
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
-class PageForm extends Form
+class BannerForm extends Form
 {
     public function __construct($name = null)
     {
-        parent::__construct('Page');
+        parent::__construct('Banner');
         $this->setAttribute('method', 'post');
         $this->setHydrator(new ClassMethods());
 
@@ -19,21 +19,6 @@ class PageForm extends Form
                 'id' => 'id'
             ),
         ));
-
-        $this->add(array(
-        'type' => 'select',
-        'attributes' => array(
-            'class' => 'form-control',
-            'name' => 'status_id',
-        ),
-        'options' => array(
-            'label' => 'Status',
-            'value_options' => array(
-                '2' => 'Nieaktywna',
-                '1' => 'Aktywna'
-            ),
-        )
-    ));
 
         $this->add(array(
             'name' => 'name',
@@ -52,7 +37,7 @@ class PageForm extends Form
             'attributes' => array(
                 'id' => 'url',
                 'type'  => 'text',
-                'placeholder' => 'Wprowadź Url'
+                'placeholder' => 'Wprowadź url'
             ),
             'options' => array(
                 'label' => 'Url',
@@ -60,26 +45,18 @@ class PageForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'content',
+            'type' => 'select',
             'attributes' => array(
-                'id' => 'content',
-                'type'  => 'textarea',
-                'placeholder' => 'Wprowadź zawartość strony',
-                'class' => 'summernote-lg',
+                'class' => 'form-control',
+                'name' => 'status_id',
             ),
             'options' => array(
-                'label' => 'Zawartość strony',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'submit',
-            'attributes' => array(
-                'type'  => 'submit',
-                'value' => 'Zapisz',
-                'id' => 'submit',
-                'class' => 'btn btn-primary pull-right'
-            ),
+                'label' => 'Status',
+                'value_options' => array(
+                    '2' => 'Nieaktywny',
+                    '1' => 'Aktywny'
+                ),
+            )
         ));
 
         $this->add(array(
@@ -91,14 +68,6 @@ class PageForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'filename_main',
-            'attributes' => array(
-                'type'  => 'hidden',
-                'id' => 'filename-main'
-            ),
-        ));
-
-        $this->add(array(
             'name' => 'upload',
             'attributes' => array(
                 'type'  => 'file',
@@ -106,19 +75,16 @@ class PageForm extends Form
                 'class' => 'form-control'
             ),
             'options' => array(
-                'label' => 'Upload',
             ),
         ));
 
         $this->add(array(
-            'name' => 'upload_main',
+            'name' => 'submit',
             'attributes' => array(
-                'type'  => 'file',
-                'id' => 'upload-main',
-                'class' => 'form-control'
-            ),
-            'options' => array(
-                'label' => 'Upload',
+                'type'  => 'submit',
+                'value' => 'Zapisz',
+                'id' => 'submit',
+                'class' => 'btn btn-primary pull-right'
             ),
         ));
     }

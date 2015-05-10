@@ -11,6 +11,8 @@ class Page extends Model
     protected $slug;
     protected $status_id;
     protected $content;
+    protected $filename_main;
+    protected $url;
 
     public function exchangeArray($data) 
     {
@@ -19,6 +21,8 @@ class Page extends Model
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
+        $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
+        $this->url = (!empty($data['url'])) ? $data['url'] : null;
     }
 
     /**
@@ -101,5 +105,35 @@ class Page extends Model
         $this->status_id = $status_id;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFilenameMain()
+    {
+        return $this->filename_main;
+    }
 
+    /**
+     * @param mixed $filename_main
+     */
+    public function setFilenameMain($filename_main)
+    {
+        $this->filename_main = $filename_main;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
 }

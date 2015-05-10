@@ -75,7 +75,7 @@ class GalleryController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Gallery');
+                        $postFile->setEntityType('gallery');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -120,7 +120,6 @@ class GalleryController extends AbstractActionController
 
             if ($form->isValid())
             {
-                $gallery->exchangeArray($form->getData());
                 $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
                 $id = $this->getGalleryTable()->save($gallery);
@@ -135,7 +134,7 @@ class GalleryController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Gallery');
+                        $postFile->setEntityType('gallery');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -160,22 +159,30 @@ class GalleryController extends AbstractActionController
     public function deleteAction()
     {
         $request = $this->getRequest();
-        $id = (int) $this->params()->fromRoute('file_id', 0);
-        if (!$id) {
-            return $this->redirect()->toRoute('file');
+        $id = (int) $this->params()->fromRoute('gallery_id', 0);
+
+        if (!$id)
+        {
+            return $this->redirect()->toRoute('gallery');
         }
 
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Tak') {
+            if ($del == 'Tak')
+            {
                 $id = (int) $request->getPost('id');
 
-                $this->getFileTable()->deleteFile($id);
+                $this->getGalleryTable()->deleteGallery($id);
+
+                $this->getFileTable()->deleteFilesWhere(array('entity_id' => $id));
+
                 $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
 
                 $modal = $request->getPost('modal', false);
-                if($modal == true) {
+                if($modal == true)
+                {
                     $jsonObject = Json::encode($params['status'] = $id, true);
                     echo $jsonObject;
                     return $this->response;
