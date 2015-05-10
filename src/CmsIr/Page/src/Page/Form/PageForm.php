@@ -48,9 +48,9 @@ class PageForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'slug',
+            'name' => 'url',
             'attributes' => array(
-                'id' => 'slug',
+                'id' => 'url',
                 'type'  => 'text',
                 'placeholder' => 'Wprowadź Url'
             ),
@@ -79,6 +79,46 @@ class PageForm extends Form
                 'value' => 'Zapisz',
                 'id' => 'submit',
                 'class' => 'btn btn-primary pull-right'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'filename',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'filename'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'filename_main',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'filename-main'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'upload',
+            'attributes' => array(
+                'type'  => 'file',
+                'id' => 'upload',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Upload',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'upload_main',
+            'attributes' => array(
+                'type'  => 'file',
+                'id' => 'upload-main',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Upload',
             ),
         ));
     }

@@ -75,7 +75,7 @@ class GalleryController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Gallery');
+                        $postFile->setEntityType('gallery');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -134,7 +134,7 @@ class GalleryController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Gallery');
+                        $postFile->setEntityType('gallery');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);

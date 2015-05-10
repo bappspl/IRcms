@@ -67,18 +67,25 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
             'slug'  => $page->getSlug(),
             'status_id'  => $page->getStatusId(),
             'content'  => $page->getContent(),
+            'filename_main'  => $page->getFilenameMain(),
+            'url'  => $page->getUrl(),
         );
 
         $id = (int) $page->getId();
-        if ($id == 0) {
+        if ($id == 0)
+        {
             $this->tableGateway->insert($data);
-        } else {
+            $id = $this->tableGateway->lastInsertValue;
+        } else
+        {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
             } else {
                 throw new \Exception('Page id does not exist');
             }
         }
+
+        return $id;
     }
 
     /**

@@ -28,7 +28,7 @@ class PageFormFilter extends InputFilter
             ),
         ));
         $this->add(array(
-            'name'       => 'slug',
+            'name'       => 'url',
             'required' => true,
             'filters'  => array(
                 array('name' => 'StripTags'),

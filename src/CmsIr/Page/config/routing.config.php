@@ -66,6 +66,58 @@ return array(
                     ),
                 ),
             ),
+            'upload' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Page',
+                        'controller' => 'CmsIr\Page\Controller\Page',
+                        'action'     => 'uploadFiles',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
+            'upload-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Page',
+                        'controller' => 'CmsIr\Page\Controller\Page',
+                        'action'     => 'uploadFilesMain',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
+            'delete-photo' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/delete-photo',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Page',
+                        'controller' => 'CmsIr\Page\Controller\Page',
+                        'action'     => 'deletePhoto',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
+            'delete-photo-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/delete-photo-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Page',
+                        'controller' => 'CmsIr\Page\Controller\Page',
+                        'action'     => 'deletePhotoMain',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );
