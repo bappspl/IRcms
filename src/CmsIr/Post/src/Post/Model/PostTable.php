@@ -149,7 +149,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         return $template;
     }
 
-    public function getWithPaginationBy($object, $where, $order = null)
+    public function getSearchWithPaginationBy($object, $where, $order = null)
     {
         $whereLike['status_id'] = $where['status_id'];
         $whereLike[] = new Predicate\Like('name', '%'.$where['slug'].'%');

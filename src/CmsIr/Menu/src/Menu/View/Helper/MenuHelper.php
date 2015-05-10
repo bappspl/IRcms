@@ -36,11 +36,11 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
             }
 
             if($pos !== false && $checkUrl !== '/') {
-                $active = 'active';
+                $active = 'current-menu-item';
             } else {
                 if($checkUrl == '/' && strlen($route) == 1)
                 {
-                    $active = 'active';
+                    $active = 'current-menu-item';
                 } else {
                     $active = '';
                 }
