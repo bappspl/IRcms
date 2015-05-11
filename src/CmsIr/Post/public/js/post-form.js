@@ -76,15 +76,15 @@ $(function () {
     $('#upload-main').uploadifive({
         'auto'             : false,
         'formData'         : {
-            'files': $('#filename-main').val()
+            'files': $('#filename_main').val()
         },
         'method'   : 'post',
         'multi'         : true,
         'queueID'          : 'queue-main',
         'uploadScript'     : '/cms-ir/post-list/'+ category +'/upload-main',
         'onUploadComplete' : function(file, data) {
-            $('#filename-main').val(data);
-            if($('#filename-main').val().length > 0) {
+            $('#filename_main').val(data);
+            if($('#filename_main').val().length > 0) {
                 $('.files-main img').remove();
                 $('.files-main').append('<img src="/files/post/'+data+'" class="thumb" />')
             }

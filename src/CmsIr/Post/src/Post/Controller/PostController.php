@@ -6,7 +6,6 @@ use CmsIr\Newsletter\Model\Subscriber;
 use CmsIr\Post\Form\PostForm;
 use CmsIr\Post\Form\PostFormFilter;
 use CmsIr\Post\Model\Post;
-use CmsIr\Post\Model\PostFile;
 use CmsIr\System\Model\Status;
 use CmsIr\Users\Model\Users;
 use Zend\Authentication\AuthenticationService;
@@ -90,7 +89,7 @@ class PostController extends AbstractActionController
                 $post->setCategory($category);
 
                 if($userRoleId < 3) $post->setStatusId(2);
-
+                var_dump($post);die;
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
