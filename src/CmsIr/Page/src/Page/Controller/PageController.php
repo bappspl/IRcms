@@ -103,7 +103,7 @@ class PageController extends AbstractActionController
             return $this->redirect()->toRoute('page');
         }
 
-        $pageFiles = $this->getFileTable()->getBy(array('entity_id' => $id));
+        $pageFiles = $this->getFileTable()->getBy(array('entity_id' => $id, 'entity_type' => 'page'));
 
         $form = new PageForm();
         $form->bind($page);

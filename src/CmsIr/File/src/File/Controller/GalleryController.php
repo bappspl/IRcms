@@ -102,7 +102,7 @@ class GalleryController extends AbstractActionController
 
         /* @var $gallery Gallery */
         $gallery = $this->getGalleryTable()->getOneBy(array('id' => $id));
-        $galleryFiles = $this->getFileTable()->getBy(array('entity_id' => $id));
+        $galleryFiles = $this->getFileTable()->getBy(array('entity_id' => $id, 'entity_type' => 'gallery'));
 
         if(!$gallery)
         {
