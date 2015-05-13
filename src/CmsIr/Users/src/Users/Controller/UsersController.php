@@ -25,7 +25,7 @@ class UsersController extends AbstractActionController
     protected $usersTable;
     protected $authUsersTable;
     protected $uploadDir = 'public/files/users/';
-    protected $appName = 'Cms-ir';
+    protected $appName = 'CMS';
 
     public function usersListAction()
     {
@@ -376,7 +376,7 @@ class UsersController extends AbstractActionController
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($user->getEmail())
-            ->addFrom('website@dnastudio.pl')
+            ->addFrom('mailer@web-ir.pl')
             ->setSubject('Rejestracja w serwisie: ' . $this->appName)
             ->setBody($body);
         $message->setEncoding('utf-8');

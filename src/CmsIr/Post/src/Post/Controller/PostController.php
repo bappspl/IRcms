@@ -116,7 +116,7 @@ class PostController extends AbstractActionController
                     $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
                         "Kliknij w poniższy link, aby go przeczytać: <a href='" .
                         $this->getRequest()->getServer('HTTP_ORIGIN') .
-                        $this->url()->fromRoute('oneNews', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
+                        $this->url()->fromRoute('one-news', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
 
 
                     /** @var $confirmedStatus Status */
@@ -132,7 +132,7 @@ class PostController extends AbstractActionController
                         $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
                     }
 
-                    $this->sendEmails($subscriberEmails, "Nowy artykuł na stronie DNA!", $newsletterContent);
+                    $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Stowarzyszenia!", $newsletterContent);
 
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
 
@@ -144,6 +144,9 @@ class PostController extends AbstractActionController
 
                 return $this->redirect()->toRoute('post', array('category' => $category));
             }
+        } else
+        {
+            $this->emptyTempDirectory();
         }
 
         $viewParams = array();
@@ -225,6 +228,9 @@ class PostController extends AbstractActionController
 
                 return $this->redirect()->toRoute('post', array('category' => $category));
             }
+        } else
+        {
+            $this->emptyTempDirectory();
         }
 
         $viewParams = array();
@@ -287,14 +293,14 @@ class PostController extends AbstractActionController
             if ($del == 'Tak') {
                 $id = (int) $request->getPost('id');
 
-                $postFiles = $this->getPostFileTable()->getBy(array('post_id' => $id));
+                $postFiles = $this->getFileTable()->getBy(array('entity_type' => 'Post', 'entity_id' => $id));
 
                 if((!empty($postFiles)))
                 {
                     foreach($postFiles as $file)
                     {
                         unlink('./public/files/post/'.$file->getFilename());
-                        $this->getPostFileTable()->deletePostFile($file->getId());
+                        $this->getFileTable()->deleteFile($file->getId());
                     }
                 }
 
@@ -409,6 +415,17 @@ class PostController extends AbstractActionController
         }
     }
 
+    public function emptyTempDirectory()
+    {
+        $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
+        if(!empty($scannedDirectory))
+        {
+            foreach($scannedDirectory as $file)
+            {
+                unlink($this->uploadDir.'/'.$file);
+            }
+        }
+    }
     /**
      * @return \CmsIr\Post\Model\PostTable
      */
