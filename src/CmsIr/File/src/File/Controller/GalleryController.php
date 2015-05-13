@@ -87,6 +87,10 @@ class GalleryController extends AbstractActionController
                 $this->flashMessenger()->addMessage('Galeria została dodana poprawnie.');
                 return $this->redirect()->toRoute('gallery');
             }
+        } else
+        {
+            $path = $this->uploadDir . '*';
+            array_map('unlink', glob($path));
         }
 
         $viewParams = array();
@@ -146,6 +150,10 @@ class GalleryController extends AbstractActionController
                 $this->flashMessenger()->addMessage('Galeria została edytowana poprawnie.');
                 return $this->redirect()->toRoute('gallery');
             }
+        } else
+        {
+            $path = $this->uploadDir . '*';
+            array_map('unlink', glob($path));
         }
 
         $viewParams = array();
