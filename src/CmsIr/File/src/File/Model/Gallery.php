@@ -11,6 +11,8 @@ class Gallery extends Model
     protected $slug;
     protected $url;
 
+    protected $files;
+
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
@@ -18,6 +20,22 @@ class Gallery extends Model
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files)
+    {
+        $this->files = $files;
     }
 
     /**

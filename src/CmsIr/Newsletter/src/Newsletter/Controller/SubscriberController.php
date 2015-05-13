@@ -99,7 +99,7 @@ class SubscriberController extends AbstractActionController
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($email)
-            ->addFrom('mailer@web-ir.pl')
+            ->addFrom('website@dnastudio.pl')
             ->setSubject('Prosimy o potwierdzenie subskrypcji!')
             ->setBody("W celu potwierdzenia subskrypcji kliknij w link => " .
                 $this->getRequest()->getServer('HTTP_ORIGIN') .

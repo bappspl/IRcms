@@ -89,7 +89,6 @@ class PostController extends AbstractActionController
                 $post->setCategory($category);
 
                 if($userRoleId < 3) $post->setStatusId(2);
-                var_dump($post);die;
                 $id = $this->getPostTable()->save($post);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -402,7 +401,7 @@ class PostController extends AbstractActionController
             $message = new Message();
             $this->getRequest()->getServer();
             $message->addTo($email)
-                ->addFrom('website@dnastudio.pl')
+                ->addFrom('mailer@web-ir.pl')
                 ->setEncoding('UTF-8')
                 ->setSubject($subject)
                 ->setBody($body);
