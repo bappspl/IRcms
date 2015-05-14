@@ -2,6 +2,7 @@
 namespace CmsIr\File\Model;
 
 use CmsIr\System\Model\Model;
+use CmsIr\System\Util\Inflector;
 
 class Gallery extends Model
 {
@@ -19,7 +20,7 @@ class Gallery extends Model
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
-        $this->url = (!empty($data['url'])) ? $data['url'] : null;
+        $this->url = (!empty($data['url'])) ? $data['url'] : Inflector::slugify($data['name']);
     }
 
     /**
