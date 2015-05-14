@@ -35,11 +35,12 @@ $(function () {
             "bPaginate":true,
             "bSortable": true,
             "bSearchable": true,
+            "aaSorting": [[ 2, "desc" ]],
             "aoColumnDefs": [
                 {
                     "bSortable": false,
                     "aTargets": [ -1, -2 ]
-                },
+                }
             ]
         });
         // delete modal
