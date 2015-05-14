@@ -248,7 +248,7 @@ class ModelTable
             if ($data['bSortable_'.intval($data['iSortCol_'.$i])] == 'true')
             {
                 $sortingColumn = $columns[$data['iSortCol_'.$i]];
-                if(preg_match_all("/[A-Z]/", $sortingColumn) !== 0)
+                if(preg_match_all("/[A-Z]/", $sortingColumn, $matches) !== 0)
                 {
                     $sortingColumn = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $sortingColumn));
                 }
