@@ -60,6 +60,21 @@ class BannerForm extends Form
         ));
 
         $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'target',
+            ),
+            'options' => array(
+                'label' => 'Otwórz w:',
+                'value_options' => array(
+                    '_self' => 'tym samym oknie',
+                    '_blank' => 'nowym oknie'
+                ),
+            )
+        ));
+
+        $this->add(array(
             'name' => 'filename',
             'attributes' => array(
                 'type'  => 'hidden',

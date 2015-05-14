@@ -124,6 +124,11 @@ class GalleryController extends AbstractActionController
 
             if ($form->isValid())
             {
+                if(strlen($gallery->getUrl()) == 0)
+                {
+                    $gallery->setUrl(Inflector::slugify($gallery->getName()));
+                }
+
                 $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
                 $id = $this->getGalleryTable()->save($gallery);

@@ -61,6 +61,7 @@ class BannerTable extends ModelTable implements ServiceLocatorAwareInterface
             'url' => $gallery->getUrl(),
             'status_id' => $gallery->getStatusId(),
             'filename' => $gallery->getFilename(),
+            'target' => $gallery->getTarget(),
         );
 
         $id = (int) $gallery->getId();
