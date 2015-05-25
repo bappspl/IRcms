@@ -4,7 +4,9 @@ namespace CmsIr\Banner\Controller;
 use CmsIr\Banner\Form\BannerForm;
 use CmsIr\Banner\Form\BannerFormFilter;
 use CmsIr\Banner\Model\Banner;
+use CmsIr\System\Entity\Status;
 use CmsIr\System\Util\Inflector;
+use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
@@ -22,7 +24,7 @@ class BannerController extends AbstractActionController
             $data = $this->getRequest()->getPost();
             $columns = array('name');
 
-            $listData = $this->getBannerTable()->getDatatables($columns, $data);
+            $listData = $this->getEm()->getRepository('CmsIr\Banner\Entity\Banner')->getDatatables($columns, $data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -55,11 +57,15 @@ class BannerController extends AbstractActionController
 
             if ($form->isValid())
             {
-                $banner = new Banner();
+                $banner = new \CmsIr\Banner\Entity\Banner();
                 $banner->exchangeArray($form->getData());
                 $banner->setSlug(Inflector::slugify($banner->getName()));
 
-                $id = $this->getBannerTable()->save($banner);
+                $status = $this->getEm()->find('CmsIr\System\Entity\Status', $banner->getStatus());
+                $banner->setStatus($status);
+
+                $this->getEm()->persist($banner);
+                $this->getEm()->flush();
 
                 $this->flashMessenger()->addMessage('Baner została dodany poprawnie.');
                 return $this->redirect()->toRoute('banner');
@@ -77,8 +83,9 @@ class BannerController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('banner_id');
 
-        /* @var $banner Banner */
-        $banner = $this->getBannerTable()->getOneBy(array('id' => $id));
+        /* @var $banner \CmsIr\Banner\Entity\Banner */
+        $banner = $this->getEm()->find('CmsIr\Banner\Entity\Banner', $id);
+        $banner->setStatus($banner->getStatus()->getId());
 
         if(!$banner)
         {
@@ -96,9 +103,20 @@ class BannerController extends AbstractActionController
 
             if ($form->isValid())
             {
+                $filename = $banner->getFilename();
+
+                if(strlen($filename) == 0)
+                {
+                    $banner->setFilename(null);
+                }
+
                 $banner->setSlug(Inflector::slugify($banner->getName()));
 
-                $id = $this->getBannerTable()->save($banner);
+                $status = $this->getEm()->find('CmsIr\System\Entity\Status', $banner->getStatus());
+                $banner->setStatus($status);
+
+                $this->getEm()->persist($banner);
+                $this->getEm()->flush();
 
                 $this->flashMessenger()->addMessage('Baner został edytowana poprawnie.');
                 return $this->redirect()->toRoute('banner');
@@ -106,6 +124,7 @@ class BannerController extends AbstractActionController
         }
 
         $viewParams = array();
+        $viewParams['id'] = $id;
         $viewParams['form'] = $form;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
@@ -130,7 +149,10 @@ class BannerController extends AbstractActionController
             {
                 $id = (int) $request->getPost('id');
 
-                $this->getBannerTable()->deleteBanner($id);
+                $banner = $this->getEm()->find('CmsIr\Banner\Entity\Banner', $id);
+                $this->getEm()->remove($banner);
+                $this->getEm()->flush();
+
                 $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
 
                 $modal = $request->getPost('modal', false);
@@ -184,7 +206,12 @@ class BannerController extends AbstractActionController
 
             if(!empty($id))
             {
-                $this->getBannerTable()->deleteBanner($id);
+                /* @var $banner \CmsIr\Banner\Entity\Banner */
+                $banner = $this->getEm()->find('CmsIr\Banner\Entity\Banner', $id);
+                $banner->setFilename(null);
+                $this->getEm()->persist($banner);
+                $this->getEm()->flush();
+
                 unlink('./public'.$filePath);
 
             } else
@@ -212,5 +239,13 @@ class BannerController extends AbstractActionController
     public function getBannerService()
     {
         return $this->getServiceLocator()->get('CmsIr\Banner\Service\BannerService');
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEm()
+    {
+        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     }
 }

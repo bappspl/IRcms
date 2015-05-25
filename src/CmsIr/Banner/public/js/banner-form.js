@@ -35,6 +35,7 @@ $(function () {
                     success: function(json)
                     {
                         $cache.parent().remove();
+                        $('#filename').val(null);
                     }
                 });
 
@@ -45,16 +46,14 @@ $(function () {
 
     if($('#filename').val().length > 0) {
         var filename = $('#filename').val();
-        $('.files').append('<div class="deletePhoto">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/files/banner/'+filename+'" class="thumb" /> </div>')
+        $('.files').append('<div class="deletePhoto"><i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/files/banner/'+filename+'" class="thumb" /> </div>')
     }
 
     $('.deletePhoto i').on('click', function () {
         var fullPathToImage = $(this).next().attr('src');
 
-        if($(this).parent().is("[id]"))
-        {
-            var id = $(this).parent().attr('id');
-        }
+        var id = $('input[name = "id"]').val();
+
         $cache = $(this);
 
         $.ajax({
@@ -69,6 +68,7 @@ $(function () {
             success: function(json)
             {
                 $cache.parent().remove();
+                $('#filename').val(null);
             }
         });
 
