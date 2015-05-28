@@ -1,12 +1,12 @@
 <?php
 
-namespace CmsIr\Banner\Entity;
+namespace CmsIr\File\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\Expr\Join;
 
-class BannerTable extends EntityRepository
+class GalleryTable extends EntityRepository
 {
     public function getDataToDisplay ($filteredRows, $columns)
     {
@@ -23,8 +23,8 @@ class BannerTable extends EntityRepository
 
             $tmp[] = $this->getLabelToDisplay($row->getStatus()->getName());
 
-            $tmp[] = '<a href="banner/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="banner/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+            $tmp[] = '<a href="gallery/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                '<a href="gallery/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -55,18 +55,18 @@ class BannerTable extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
 
-        $qb->select('banner');
-        $qb->orderBy('banner.' . $sorting[0], $sorting[1]);
+        $qb->select('gallery');
+        $qb->orderBy('gallery.' . $sorting[0], $sorting[1]);
         $qb->setFirstResult($trueOffset);
         $qb->setMaxResults($trueLimit);
-        $qb->from('CmsIr\Banner\Entity\Banner','banner');
-        $qb->innerJoin('CmsIr\System\Entity\Status', 'status', 'WITH', 'banner.status = status.id');
+        $qb->from('CmsIr\File\Entity\Gallery','gallery');
+        $qb->innerJoin('CmsIr\System\Entity\Status', 'status', 'WITH', 'gallery.status = status.id');
 
         if ($data->sSearch != '')
         {
             for ( $i=0 ; $i<count($columns) ; $i++ )
             {
-                $qb->orWhere($qb->expr()->like('banner.' . $columns[$i], '?' . $i));
+                $qb->orWhere($qb->expr()->like('gallery.' . $columns[$i], '?' . $i));
                 $qb->setParameter($i, '%'.$data->sSearch.'%');
             }
 
@@ -109,8 +109,8 @@ class BannerTable extends EntityRepository
     public function countRows()
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('count(banner.id)');
-        $qb->from('CmsIr\Banner\Entity\Banner','banner');
+        $qb->select('count(gallery.id)');
+        $qb->from('CmsIr\File\Entity\Gallery','gallery');
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;

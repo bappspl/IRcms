@@ -48,7 +48,7 @@ class GalleryForm extends Form
             'type' => 'select',
             'attributes' => array(
                 'class' => 'form-control',
-                'name' => 'status_id',
+                'name' => 'status',
             ),
             'options' => array(
                 'label' => 'Status',

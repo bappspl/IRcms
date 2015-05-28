@@ -1,14 +1,32 @@
 <?php
-namespace CmsIr\Dictionary\Model;
 
-use CmsIr\System\Model\Model;
+namespace CmsIr\Dictionary\Entity;
 
-class Dictionary extends Model
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="CmsIr\Dictionary\Entity\DictionaryTable")
+ * @ORM\Table(name="cms_dictionary")
+ */
+class Dictionary
 {
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
     protected $id;
+
+    /** @ORM\Column(type="string") */
     protected $name;
+
+    /** @ORM\Column(type="string") */
     protected $category;
+
+    /** @ORM\Column(type="integer", name="website_id") */
     protected $websiteId;
+
+    /** @ORM\Column(type="text") */
     protected $filename;
 
     public function exchangeArray($data)
@@ -16,8 +34,16 @@ class Dictionary extends Model
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
-        $this->websiteId = (!empty($data['website_id'])) ? $data['website_id'] : null;
-        $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
+        $this->websiteId = (!empty($data['websiteId'])) ? $data['websiteId'] : null;
+        $this->filename = (!empty($data['filename'])) ? $data['filename'] : null; ;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -31,9 +57,9 @@ class Dictionary extends Model
     /**
      * @return mixed
      */
-    public function getId()
+    public function getName()
     {
-        return $this->id;
+        return $this->name;
     }
 
     /**
@@ -42,14 +68,6 @@ class Dictionary extends Model
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -99,5 +117,4 @@ class Dictionary extends Model
     {
         $this->filename = $filename;
     }
-
 }

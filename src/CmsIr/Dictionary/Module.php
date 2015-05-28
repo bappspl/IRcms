@@ -41,23 +41,4 @@ class Module
             ),
         );
     }
-
-    public function getServiceConfig()
-    {
-        return array(
-            'factories' => array(
-                'CmsIr\Dictionary\Model\DictionaryTable' =>  function($sm) {
-                    $tableGateway = $sm->get('DictionaryTableGateway');
-                    $table = new DictionaryTable($tableGateway);
-                    return $table;
-                },
-                'DictionaryTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Dictionary());
-                    return new TableGateway('cms_dictionary', $dbAdapter, null, $resultSetPrototype);
-                },
-            ),
-        );
-    }
 }

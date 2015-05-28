@@ -81,6 +81,17 @@ return array(
                     ),
                 ),
             ),
+            'delete-photo' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/delete-photo',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Dictionary',
+                        'controller' => 'CmsIr\Dictionary\Controller\Dictionary',
+                        'action'     => 'deletePhoto',
+                    ),
+                ),
+            ),
         ),
     ),
 );

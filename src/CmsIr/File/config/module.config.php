@@ -30,4 +30,18 @@ return array(
             'CmsIr\File\Service\FileService' => 'CmsIr\File\Service\Factory\FileService',
         ),
     ),
+    'doctrine' => array(
+        'driver' => array(
+            'file_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/File/Entity')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'CmsIr\File\Entity' => 'file_driver'
+                )
+            )
+        )
+    )
 );

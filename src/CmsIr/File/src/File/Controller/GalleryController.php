@@ -12,11 +12,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 use Zend\Json\Json;
+use Doctrine\ORM\EntityManager;
 
 class GalleryController extends AbstractActionController
 {
     protected $uploadDir = 'public/temp_files/gallery/';
     protected $destinationUploadDir = 'public/files/gallery/';
+    protected $entity = 'CmsIr\File\Entity\Gallery';
 
     public function listAction()
     {
@@ -26,7 +28,7 @@ class GalleryController extends AbstractActionController
             $data = $this->getRequest()->getPost();
             $columns = array('name');
 
-            $listData = $this->getGalleryTable()->getDatatables($columns, $data);
+            $listData = $this->getEm()->getRepository($this->entity)->getDatatables($columns, $data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -59,11 +61,15 @@ class GalleryController extends AbstractActionController
 
             if ($form->isValid())
             {
-                $gallery = new Gallery();
+                $gallery = new \CmsIr\File\Entity\Gallery();
                 $gallery->exchangeArray($form->getData());
                 $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
-                $id = $this->getGalleryTable()->save($gallery);
+                $status = $this->getEm()->find('CmsIr\System\Entity\Status', $gallery->getStatus());
+                $gallery->setStatus($status);
+
+                $this->getEm()->persist($gallery);
+                $this->getEm()->flush();
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -72,13 +78,14 @@ class GalleryController extends AbstractActionController
                     {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
-                        $postFile = new File();
+                        $postFile = new \CmsIr\File\Entity\File();
                         $postFile->setFilename($file);
-                        $postFile->setEntityId($id);
+                        $postFile->setGallery($gallery);
                         $postFile->setEntityType('gallery');
                         $postFile->setMimeType($mimeType);
 
-                        $this->getFileTable()->save($postFile);
+                        $this->getEm()->persist($postFile);
+                        $this->getEm()->flush();
 
                         rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
                     }
@@ -104,9 +111,9 @@ class GalleryController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('gallery_id');
 
-        /* @var $gallery Gallery */
-        $gallery = $this->getGalleryTable()->getOneBy(array('id' => $id));
-        $galleryFiles = $this->getFileTable()->getBy(array('entity_id' => $id, 'entity_type' => 'gallery'));
+        /* @var $gallery \CmsIr\File\Entity\Gallery */
+        $gallery = $this->getEm()->find($this->entity, $id);
+        $galleryFiles = $gallery->getFiles();
 
         if(!$gallery)
         {
@@ -131,7 +138,11 @@ class GalleryController extends AbstractActionController
 
                 $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
-                $id = $this->getGalleryTable()->save($gallery);
+                $status = $this->getEm()->find('CmsIr\System\Entity\Status', $gallery->getStatus());
+                $gallery->setStatus($status);
+
+                $this->getEm()->persist($gallery);
+                $this->getEm()->flush();
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -140,13 +151,14 @@ class GalleryController extends AbstractActionController
                     {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
-                        $postFile = new File();
+                        $postFile = new \CmsIr\File\Entity\File();
                         $postFile->setFilename($file);
-                        $postFile->setEntityId($id);
+                        $postFile->setGallery($gallery);
                         $postFile->setEntityType('gallery');
                         $postFile->setMimeType($mimeType);
 
-                        $this->getFileTable()->save($postFile);
+                        $this->getEm()->persist($postFile);
+                        $this->getEm()->flush();
 
                         rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
                     }
@@ -187,9 +199,19 @@ class GalleryController extends AbstractActionController
             {
                 $id = (int) $request->getPost('id');
 
-                $this->getGalleryTable()->deleteGallery($id);
+                /* @var $gallery \CmsIr\File\Entity\Gallery */
+                $gallery = $this->getEm()->find($this->entity, $id);
 
-                $this->getFileTable()->deleteFilesWhere(array('entity_id' => $id));
+                $files = $gallery->getFiles();
+
+                foreach($files as $file)
+                {
+                    $this->getEm()->remove($file);
+                    $this->getEm()->flush();
+                }
+
+                $this->getEm()->remove($gallery);
+                $this->getEm()->flush();
 
                 $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
 
@@ -246,7 +268,10 @@ class GalleryController extends AbstractActionController
 
             if(!empty($id))
             {
-                $this->getFileTable()->deleteFile($id);
+                $file = $this->getEm()->find('\CmsIr\File\Entity\File', $id);
+                $this->getEm()->remove($file);
+                $this->getEm()->flush();
+
                 unlink('./public'.$filePath);
 
             } else
@@ -261,26 +286,18 @@ class GalleryController extends AbstractActionController
     }
 
     /**
-     * @return \CmsIr\File\Model\GalleryTable
-     */
-    public function getGalleryTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\File\Model\GalleryTable');
-    }
-
-    /**
-     * @return \CmsIr\File\Model\FileTable
-     */
-    public function getFileTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
-    }
-
-    /**
      * @return \CmsIr\File\Service\FileService
      */
     public function getFileService()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Service\FileService');
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEm()
+    {
+        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     }
 }

@@ -43,34 +43,4 @@ class Module
             ),
         );
     }
-
-    public function getServiceConfig()
-    {
-        return array(
-            'factories' => array(
-                'CmsIr\File\Model\FileTable' =>  function($sm) {
-                    $tableGateway = $sm->get('FileTableGateway');
-                    $table = new FileTable($tableGateway);
-                    return $table;
-                },
-                'FileTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new File());
-                    return new TableGateway('cms_file', $dbAdapter, null, $resultSetPrototype);
-                },
-                'CmsIr\File\Model\GalleryTable' =>  function($sm) {
-                    $tableGateway = $sm->get('GalleryTableGateway');
-                    $table = new GalleryTable($tableGateway);
-                    return $table;
-                },
-                'GalleryTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Gallery());
-                    return new TableGateway('cms_gallery', $dbAdapter, null, $resultSetPrototype);
-                },
-            ),
-        );
-    }
 }

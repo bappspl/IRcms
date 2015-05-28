@@ -10,45 +10,6 @@ class FileService implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
 
-    public function findAllByCategoryAndWebsiteId($category, $websiteId)
-    {
-        $files = $this->getFileTable()->getBy(array('category' => $category, 'website_id' => $websiteId));
-
-        return $files;
-    }
-
-    public function findLastPictures($count, $websiteId = null)
-    {
-        $filesArray = array();
-
-        $galleries = $this->getFileTable()->getBy(array('category' => 'gallery', 'website_id' => $websiteId), 'id DESC');
-
-        $counter = 0;
-
-        /* @var $gallery File */
-        foreach ($galleries as $gallery)
-        {
-            $files = $gallery->getFilename();
-            if(!empty($files))
-            {
-                $files = unserialize($files);
-
-                foreach($files as $file)
-                {
-                    array_push($filesArray, $file);
-                    $counter++;
-
-                    if($counter >= $count)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $filesArray;
-    }
-
     public function getMimeContentType($filename)
     {
         if(!function_exists('finfo_open'))
@@ -132,14 +93,6 @@ class FileService implements ServiceLocatorAwareInterface
         }
 
         return $mimeType;
-    }
-
-    /**
-     * @return \CmsIr\File\Model\FileTable
-     */
-    public function getFileTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
     }
 
     /**

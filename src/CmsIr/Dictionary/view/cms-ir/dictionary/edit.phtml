@@ -6,6 +6,7 @@
 
 <input type="hidden" id="category" value="<?php echo $category; ?>" />
 <?php echo $this->customFormHelper($form->get('filename')); ?>
+<?php echo $this->customFormHelper($form->get('id')); ?>
 
 <div class="row">
     <div class="col-sm-6">
@@ -44,6 +45,8 @@
 </div>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/dictionary.css'); ?>
+
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/dictionary-form.js'); ?>

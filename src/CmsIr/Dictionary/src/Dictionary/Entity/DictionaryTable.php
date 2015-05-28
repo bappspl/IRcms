@@ -1,45 +1,34 @@
 <?php
 
-namespace CmsIr\Banner\Entity;
+namespace CmsIr\Dictionary\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\Expr\Join;
 
-class BannerTable extends EntityRepository
+class DictionaryTable extends EntityRepository
 {
-    public function getDataToDisplay ($filteredRows, $columns)
+    public function getDataToDisplay ($filteredRows, $columns, $category)
     {
         $dataArray = array();
         foreach($filteredRows as $row)
         {
-            $tmp = array();
 
+            $tmp = array();
             foreach($columns as $column)
             {
                 $column = 'get'.ucfirst($column);
                 $tmp[] = $row->$column();
             }
 
-            $tmp[] = $this->getLabelToDisplay($row->getStatus()->getName());
-
-            $tmp[] = '<a href="banner/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="banner/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+            $tmp[] = '<a href="'.$category.'/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                '<a href="'.$category.'/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
     }
 
-    public function getLabelToDisplay ($labelValue)
-    {
-        $labelValue == 'Active' ? $checked = 'label-primary' : $checked = 'label-default';
-        $labelValue == 'Active' ? $name = 'Aktywna' : $name= 'Nieaktywna';
-
-        $template = '<span class="label ' . $checked . '">' .$name . '</span>';
-        return $template;
-    }
-
-    public function getDatatables($columns, $data)
+    public function getDatatables($columns, $data, $category)
     {
         $displayFlag = false;
 
@@ -55,18 +44,17 @@ class BannerTable extends EntityRepository
 
         $qb = $this->_em->createQueryBuilder();
 
-        $qb->select('banner');
-        $qb->orderBy('banner.' . $sorting[0], $sorting[1]);
+        $qb->select('d');
+        $qb->orderBy('d.' . $sorting[0], $sorting[1]);
         $qb->setFirstResult($trueOffset);
         $qb->setMaxResults($trueLimit);
-        $qb->from('CmsIr\Banner\Entity\Banner','banner');
-        $qb->innerJoin('CmsIr\System\Entity\Status', 'status', 'WITH', 'banner.status = status.id');
+        $qb->from('CmsIr\Dictionary\Entity\Dictionary','d');
 
         if ($data->sSearch != '')
         {
             for ( $i=0 ; $i<count($columns) ; $i++ )
             {
-                $qb->orWhere($qb->expr()->like('banner.' . $columns[$i], '?' . $i));
+                $qb->orWhere($qb->expr()->like('d.' . $columns[$i], '?' . $i));
                 $qb->setParameter($i, '%'.$data->sSearch.'%');
             }
 
@@ -75,7 +63,7 @@ class BannerTable extends EntityRepository
 
         $filteredRows = $qb->getQuery()->getResult();
 
-        $dataArray = $this->getDataToDisplay($filteredRows, $columns);
+        $dataArray = $this->getDataToDisplay($filteredRows, $columns, $category);
 
         if($displayFlag == true)
         {
@@ -109,8 +97,8 @@ class BannerTable extends EntityRepository
     public function countRows()
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('count(banner.id)');
-        $qb->from('CmsIr\Banner\Entity\Banner','banner');
+        $qb->select('count(d.id)');
+        $qb->from('CmsIr\Dictionary\Entity\Dictionary','d');
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;

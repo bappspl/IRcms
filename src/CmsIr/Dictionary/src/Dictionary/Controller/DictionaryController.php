@@ -4,29 +4,30 @@ namespace CmsIr\Dictionary\Controller;
 use CmsIr\Dictionary\Form\DictionaryForm;
 use CmsIr\Dictionary\Form\DictionaryFormFilter;
 use CmsIr\Dictionary\Model\Dictionary;
-use CmsIr\System\Model\MenuTable;
 use CmsIr\System\Util\Inflector;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Helper\Navigation\Menu;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
 use Zend\Json\Json;
+use Doctrine\ORM\EntityManager;
 
 class DictionaryController extends AbstractActionController
 {
     protected $uploadDir = 'public/files/dictionary/';
+    protected $entity = 'CmsIr\Dictionary\Entity\Dictionary';
 
     public function listAction()
     {
         $category = $this->params()->fromRoute('category');
 
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name');
 
-            $listData = $this->getDictionaryTable()->getDictionaryDatatables($columns, $data, $category);
+            $listData = $this->getEm()->getRepository($this->entity)->getDatatables($columns, $data, $category);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -54,25 +55,27 @@ class DictionaryController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-
+        if ($request->isPost())
+        {
             $form->setInputFilter(new DictionaryFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $dictionary = new Dictionary();
+            if ($form->isValid())
+            {
+                $dictionary = new \CmsIr\Dictionary\Entity\Dictionary();
 
                 $dictionary->exchangeArray($form->getData());
 
-                $name = $form->getData();
-                $name = $name['name'];
+//                $name = $form->getData();
+//                $name = $name['name'];
 
-                $this->createPostCategoryMenuItem($name);
+//                $this->createPostCategoryMenuItem($name);
 
                 $dictionary->setCategory($category);
-                $this->getDictionaryTable()->save($dictionary);
+                $this->getEm()->persist($dictionary);
+                $this->getEm()->flush($dictionary);
 
-                $this->flashMessenger()->addMessage('Element słownika została dodana poprawnie.');
+                $this->flashMessenger()->addMessage('Element słownika został dodany poprawnie.');
 
                 return $this->redirect()->toRoute('dictionary', array('category' => $category));
             }
@@ -91,9 +94,10 @@ class DictionaryController extends AbstractActionController
         $id = $this->params()->fromRoute('dictionary_id');
         $category = $this->params()->fromRoute('category');
 
-        $dictionary = $this->getDictionaryTable()->getOneBy(array('id' => $id));
+        $dictionary = $this->getEm()->find($this->entity, $id);
 
-        if(!$dictionary) {
+        if(!$dictionary)
+        {
             return $this->redirect()->toRoute('dictionary', array('category' => $category));
         }
 
@@ -102,16 +106,25 @@ class DictionaryController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-
+        if ($request->isPost())
+        {
             $form->setInputFilter(new DictionaryFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid())
+            {
+                /* @var $dictionary \CmsIr\Dictionary\Entity\Dictionary */
+                $filename = $dictionary->getFilename();
 
-                $this->getDictionaryTable()->save($dictionary);
+                if(strlen($filename) == 0)
+                {
+                    $dictionary->setFilename(null);
+                }
 
-                $this->flashMessenger()->addMessage('Element słownika została edytowana poprawnie.');
+                $this->getEm()->persist($dictionary);
+                $this->getEm()->flush();
+
+                $this->flashMessenger()->addMessage('Element słownika został edytowany poprawnie.');
 
                 return $this->redirect()->toRoute('dictionary', array('category' => $category));
             }
@@ -139,7 +152,10 @@ class DictionaryController extends AbstractActionController
             if ($del == 'Tak') {
                 $id = (int) $request->getPost('id');
 
-                $this->getDictionaryTable()->deleteDictionary($id);
+                $dictionary = $this->getEm()->find($this->entity, $id);
+                $this->getEm()->remove($dictionary);
+                $this->getEm()->flush();
+
                 $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
 
                 $modal = $request->getPost('modal', false);
@@ -172,13 +188,29 @@ class DictionaryController extends AbstractActionController
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
+            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile))
+            {
                 echo $targetFile;
             } else {
                 echo 0;
             }
 
         }
+        return $this->response;
+    }
+
+    public function deletePhotoAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+            $filePath = $request->getPost('filePath');
+
+            unlink('./public'.$filePath);
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
         return $this->response;
     }
 
@@ -221,6 +253,14 @@ class DictionaryController extends AbstractActionController
         $this->getMenuTable()->save($backendMenuItem1);
         $this->getMenuTable()->save($backendMenuItem2);
         $this->getMenuTable()->save($backendMenuItem3);
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEm()
+    {
+        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     }
 
     /**

@@ -1,10 +1,9 @@
 <?php
+
 namespace CmsIr\Banner\Controller;
 
 use CmsIr\Banner\Form\BannerForm;
 use CmsIr\Banner\Form\BannerFormFilter;
-use CmsIr\Banner\Model\Banner;
-use CmsIr\System\Entity\Status;
 use CmsIr\System\Util\Inflector;
 use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -15,16 +14,18 @@ use Zend\Json\Json;
 class BannerController extends AbstractActionController
 {
     protected $uploadDir = 'public/files/banner/';
+    protected $entity = 'CmsIr\Banner\Entity\Banner';
 
     public function listAction()
     {
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name');
 
-            $listData = $this->getEm()->getRepository('CmsIr\Banner\Entity\Banner')->getDatatables($columns, $data);
+            $listData = $this->getEm()->getRepository($this->entity)->getDatatables($columns, $data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -84,7 +85,7 @@ class BannerController extends AbstractActionController
         $id = $this->params()->fromRoute('banner_id');
 
         /* @var $banner \CmsIr\Banner\Entity\Banner */
-        $banner = $this->getEm()->find('CmsIr\Banner\Entity\Banner', $id);
+        $banner = $this->getEm()->find($this->entity, $id);
         $banner->setStatus($banner->getStatus()->getId());
 
         if(!$banner)
@@ -149,7 +150,7 @@ class BannerController extends AbstractActionController
             {
                 $id = (int) $request->getPost('id');
 
-                $banner = $this->getEm()->find('CmsIr\Banner\Entity\Banner', $id);
+                $banner = $this->getEm()->find($this->entity, $id);
                 $this->getEm()->remove($banner);
                 $this->getEm()->flush();
 
@@ -199,38 +200,18 @@ class BannerController extends AbstractActionController
     public function deletePhotoAction()
     {
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
             $id = $request->getPost('id');
             $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');
 
-            if(!empty($id))
-            {
-                /* @var $banner \CmsIr\Banner\Entity\Banner */
-                $banner = $this->getEm()->find('CmsIr\Banner\Entity\Banner', $id);
-                $banner->setFilename(null);
-                $this->getEm()->persist($banner);
-                $this->getEm()->flush();
-
-                unlink('./public'.$filePath);
-
-            } else
-            {
-                unlink('./public'.$filePath);
-            }
+            unlink('./public'.$filePath);
         }
 
         $jsonObject = Json::encode($params['status'] = 'success', true);
         echo $jsonObject;
         return $this->response;
-    }
-
-    /**
-     * @return \CmsIr\Banner\Model\BannerTable
-     */
-    public function getBannerTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\Banner\Model\BannerTable');
     }
 
     /**

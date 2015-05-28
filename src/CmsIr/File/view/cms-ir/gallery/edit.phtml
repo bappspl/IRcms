@@ -13,7 +13,7 @@
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->customFormHelper($form->get('name')) ?>
             <?php echo $this->customFormHelper($form->get('url')) ?>
-            <?php echo $this->customFormHelper($form->get('status_id')) ?>
+            <?php echo $this->customFormHelper($form->get('status')) ?>
 
         </div>
     </div>
@@ -28,7 +28,7 @@
             <div id="queue"></div>
             <div class="files">
                 <?php if(!empty($galleryFiles)): ?>
-                    <?php /* @var $file \CmsIr\File\Model\File */ ?>
+                    <?php /* @var $file \CmsIr\File\Entity\File */ ?>
                     <?php foreach($galleryFiles as $file): ?>
                         <div id="<?php echo $file->getId() ?>" class="deletePhoto">
                             <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i>

@@ -1,27 +1,55 @@
 <?php
-namespace CmsIr\Banner\Model;
 
-use CmsIr\System\Model\Model;
+namespace CmsIr\File\Entity;
 
-class Banner extends Model
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="CmsIr\File\Entity\GalleryTable")
+ * @ORM\Table(name="cms_gallery")
+ */
+class Gallery
 {
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
     protected $id;
-    protected $status_id;
+
+    /**
+     *  @ORM\ManyToOne(targetEntity="CmsIr\System\Entity\Status")
+     *  @ORM\JoinColumn(name="status_id", referencedColumnName="id")
+     */
+    protected $status;
+
+    /** @ORM\Column(type="string") */
     protected $name;
+
+    /** @ORM\Column(type="text") */
     protected $slug;
+
+    /** @ORM\Column(type="string") */
     protected $url;
-    protected $filename;
-    protected $target;
+
+    /**
+     *  @ORM\OneToMany(targetEntity="CmsIr\File\Entity\File", mappedBy="gallery")
+     **/
+    protected $files;
+
+    public function __construct()
+    {
+        $this->files = new ArrayCollection();
+    }
 
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
-        $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
+        $this->status = (!empty($data['status'])) ? $data['status'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
-        $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
-        $this->target = (!empty($data['target'])) ? $data['target'] : null;
     }
 
     /**
@@ -38,6 +66,22 @@ class Banner extends Model
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
     /**
@@ -91,48 +135,16 @@ class Banner extends Model
     /**
      * @return mixed
      */
-    public function getStatusId()
+    public function getFiles()
     {
-        return $this->status_id;
+        return $this->files;
     }
 
     /**
-     * @param mixed $status_id
+     * @param mixed $files
      */
-    public function setStatusId($status_id)
+    public function setFiles($files)
     {
-        $this->status_id = $status_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFilename()
-    {
-        return $this->filename;
-    }
-
-    /**
-     * @param mixed $filename
-     */
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
-
-    /**
-     * @param mixed $target
-     */
-    public function setTarget($target)
-    {
-        $this->target = $target;
+        $this->files = $files;
     }
 }

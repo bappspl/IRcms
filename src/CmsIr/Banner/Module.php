@@ -41,23 +41,4 @@ class Module
             ),
         );
     }
-
-    public function getServiceConfig()
-    {
-        return array(
-            'factories' => array(
-                'CmsIr\Banner\Model\BannerTable' =>  function($sm) {
-                    $tableGateway = $sm->get('BannerTableGateway');
-                    $table = new BannerTable($tableGateway);
-                    return $table;
-                },
-                'BannerTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Banner());
-                    return new TableGateway('cms_banner', $dbAdapter, null, $resultSetPrototype);
-                },
-            ),
-        );
-    }
 }
