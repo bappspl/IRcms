@@ -42,6 +42,32 @@ $(function () {
         }
     });
 
+    $('.deletePhoto i').on('click', function () {
+
+        var id = 0;
+        var fullPathToImage = $(this).next().attr('src');
+
+        if($(this).parent().is("[id]"))
+        {
+            id = $(this).parent().attr('id');
+        }
+        $cache = $(this);
+        $.ajax({
+            type: "POST",
+            url: "/cms-ir/page/delete-photo",
+            dataType : 'json',
+            data: {
+                id: id,
+                filePath: fullPathToImage
+            },
+            success: function(json)
+            {
+                $cache.parent().remove();
+            }
+        });
+
+    });
+
 
 
     $('#upload-main').uploadifive({
@@ -61,15 +87,14 @@ $(function () {
             }
 
             $('.deletePhoto_main i').on('click', function () {
-                alert('asd');
-                var id = 0;
+                var id = $('#id').val();
                 var fullPathToImage = $(this).next().attr('src');
 
                 if($(this).parent().is("[id]"))
                 {
-                    id = $(this).parent().attr('id');
+                    var name = $(this).parent().attr('id');
                 }
-                $('#filename-main').val('');
+
                 $cache = $(this);
                 $.ajax({
                     type: "POST",
@@ -82,6 +107,7 @@ $(function () {
                     success: function(json)
                     {
                         $cache.parent().remove();
+                        $('#filename-main').val(null);
                     }
                 });
 
@@ -95,16 +121,14 @@ $(function () {
     }
 
     $('.deletePhoto_main i').on('click', function () {
-        alert('asd');
-        var id = 0;
+        var id = $('#id').val();
         var fullPathToImage = $(this).next().attr('src');
 
         if($(this).parent().is("[id]"))
         {
-            id = $(this).parent().attr('id');
+            var name = $(this).parent().attr('id');
         }
 
-        $('#filename-main').val('');
         $cache = $(this);
         $.ajax({
             type: "POST",
@@ -117,6 +141,7 @@ $(function () {
             success: function(json)
             {
                 $cache.parent().remove();
+                $('#filename-main').val(null);
             }
         });
 

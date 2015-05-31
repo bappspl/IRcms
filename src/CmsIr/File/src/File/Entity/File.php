@@ -36,6 +36,12 @@ class File
     protected $gallery;
 
     /**
+    * @ORM\ManyToOne(targetEntity="CmsIr\Page\Entity\Page", inversedBy="entity_id")
+    * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", onDelete="CASCADE")
+    **/
+    protected $page;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -131,5 +137,19 @@ class File
         $this->gallery = $gallery;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
 
+    /**
+     * @param mixed $page
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+    }
 }

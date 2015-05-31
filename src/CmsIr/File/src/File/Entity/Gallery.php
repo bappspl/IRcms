@@ -147,4 +147,5 @@ class Gallery
     {
         $this->files = $files;
     }
+
 }

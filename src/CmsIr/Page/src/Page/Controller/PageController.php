@@ -1,6 +1,7 @@
 <?php
 namespace CmsIr\Page\Controller;
 
+use Doctrine\ORM\EntityManager;
 use CmsIr\File\Model\File;
 use CmsIr\Page\Form\PageForm;
 use CmsIr\Page\Form\PageFormFilter;
@@ -16,17 +17,17 @@ class PageController extends AbstractActionController
 {
     protected $uploadDir = 'public/temp_files/page/';
     protected $destinationUploadDir = 'public/files/page/';
+    protected $entity = 'CmsIr\Page\Entity\Page';
 
     public function listAction()
     {
-       
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name');
 
-            $listData = $this->getPageTable()->getDatatables($columns,$data);
+            $listData = $this->getEm()->getRepository($this->entity)->getDatatables($columns, $data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -49,17 +50,24 @@ class PageController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
 
             $form->setInputFilter(new PageFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $page = new Page();
+            if ($form->isValid())
+            {
+                $page = new \CmsIr\Page\Entity\Page();
 
                 $page->exchangeArray($form->getData());
                 $page->setSlug(Inflector::slugify($page->getName()));
-                $id = $this->getPageTable()->save($page);
+
+                $status = $this->getEm()->find('CmsIr\System\Entity\Status', $page->getStatus());
+                $page->setStatus($status);
+
+                $this->getEm()->persist($page);
+                $this->getEm()->flush();
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -68,13 +76,14 @@ class PageController extends AbstractActionController
                     {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
-                        $postFile = new File();
-                        $postFile->setFilename($file);
-                        $postFile->setEntityId($id);
-                        $postFile->setEntityType('page');
-                        $postFile->setMimeType($mimeType);
+                        $pageFile = new \CmsIr\File\Entity\File();
+                        $pageFile->setFilename($file);
+                        $pageFile->setPage($page);
+                        $pageFile->setEntityType('page');
+                        $pageFile->setMimeType($mimeType);
 
-                        $this->getFileTable()->save($postFile);
+                        $this->getEm()->persist($pageFile);
+                        $this->getEm()->flush();
 
                         rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
                     }
@@ -97,29 +106,41 @@ class PageController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('page_id');
 
-        /* @var $page Page */
-        $page = $this->getPageTable()->getOneBy(array('id' => $id));
+        /* @var $page \CmsIr\Page\Entity\Page */
+        $page = $this->getEm()->find($this->entity, $id);
 
         if(!$page) {
             return $this->redirect()->toRoute('page');
         }
 
-        $pageFiles = $this->getFileTable()->getBy(array('entity_id' => $id, 'entity_type' => 'page'));
+        $pageFiles = $page->getFiles();
 
         $form = new PageForm();
         $form->bind($page);
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-
+        if ($request->isPost())
+        {
             $form->setInputFilter(new PageFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid())
+            {
+                $filename = $page->getFilenameMain();
+
+                if(strlen($filename) == 0)
+                {
+                    $page->setFilenameMain(null);
+                }
 
                 $page->setSlug(Inflector::slugify($page->getName()));
-                $id = $this->getPageTable()->save($page);
+
+                $status = $this->getEm()->find('CmsIr\System\Entity\Status', $page->getStatus());
+                $page->setStatus($status);
+
+                $this->getEm()->persist($page);
+                $this->getEm()->flush();
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -128,13 +149,14 @@ class PageController extends AbstractActionController
                     {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
-                        $postFile = new File();
-                        $postFile->setFilename($file);
-                        $postFile->setEntityId($id);
-                        $postFile->setEntityType('page');
-                        $postFile->setMimeType($mimeType);
+                        $pageFile = new \CmsIr\File\Entity\File();
+                        $pageFile->setFilename($file);
+                        $pageFile->setPage($page);
+                        $pageFile->setEntityType('page');
+                        $pageFile->setMimeType($mimeType);
 
-                        $this->getFileTable()->save($postFile);
+                        $this->getEm()->persist($pageFile);
+                        $this->getEm()->flush();
 
                         rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
                     }
@@ -167,7 +189,21 @@ class PageController extends AbstractActionController
 
             if ($del == 'Tak') {
                 $id = (int) $request->getPost('id');
-                $this->getPageTable()->deletePage($id);
+
+                /* @var $page \CmsIr\Page\Entity\Page */
+                $page = $this->getEm()->find($this->entity, $id);
+
+                $files = $page->getFiles();
+
+                foreach($files as $file)
+                {
+                    $this->getEm()->remove($file);
+                    $this->getEm()->flush();
+                }
+
+                $this->getEm()->remove($page);
+                $this->getEm()->flush();
+
                 $this->flashMessenger()->addMessage('Strona została usunięta poprawnie.');
                 $modal = $request->getPost('modal', false);
                 if($modal == true) {
@@ -247,7 +283,10 @@ class PageController extends AbstractActionController
 
             if(!empty($id))
             {
-                $this->getFileTable()->deleteFile($id);
+                $file = $this->getEm()->find('\CmsIr\File\Entity\File', $id);
+                $this->getEm()->remove($file);
+                $this->getEm()->flush();
+
                 unlink('./public'.$filePath);
 
             } else
@@ -264,33 +303,18 @@ class PageController extends AbstractActionController
     public function deletePhotoMainAction()
     {
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
             $id = $request->getPost('id');
             $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');
 
-            if(!empty($id))
-            {
-                $this->getFileTable()->deleteFile($id);
-                unlink('./public'.$filePath);
-
-            } else
-            {
-                unlink('./public'.$filePath);
-            }
+            unlink('./public'.$filePath);
         }
 
         $jsonObject = Json::encode($params['status'] = 'success', true);
         echo $jsonObject;
         return $this->response;
-    }
-
-    /**
-     * @return \CmsIr\Page\Model\PageTable
-     */
-    public function getPageTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\Page\Model\PageTable');
     }
 
     /**
@@ -302,10 +326,10 @@ class PageController extends AbstractActionController
     }
 
     /**
-     * @return \CmsIr\File\Model\FileTable
+     * @return EntityManager
      */
-    public function getFileTable()
+    public function getEm()
     {
-        return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     }
 }

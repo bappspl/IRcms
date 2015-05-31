@@ -17,8 +17,8 @@ echo $this->form()->openTag($form);
                 <?php echo $this->customFormHelper($form->get('url')) ?>
 
                 <div class="form-group">
-                    <label><?php echo $this->formLabel($form->get('status_id')); ?></label>
-                    <?php echo $this->formSelect($form->get('status_id')); ?>
+                    <label><?php echo $this->formLabel($form->get('status')); ?></label>
+                    <?php echo $this->formSelect($form->get('status')); ?>
                 </div>
 
                 <?php echo $this->customFormHelper($form->get('content')) ?>
