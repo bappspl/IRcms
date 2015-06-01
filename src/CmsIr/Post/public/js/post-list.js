@@ -190,6 +190,7 @@ $(function () {
                             {
                                 $('#'+modal+' .content').hide();
                                 $('#'+modal+' .modal-footer input[type="submit"][value="Tak"]').hide();
+                                $('#'+modal+' .modal-footer input[type="submit"][value="Zapisz"]').hide();
                                 $('#'+modal+' .message').show();
                             }
                         }).modal('show');
