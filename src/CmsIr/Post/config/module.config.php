@@ -12,6 +12,8 @@ return array(
         'template_map' => array(
             'partial/flashmessages-post'  => __DIR__ . '/../view/partial/flashmessages-post.phtml',
             'partial/delete-post-modal'  => __DIR__ . '/../view/partial/delete-post-modal.phtml',
+            'partial/delete-massive-post-modal'  => __DIR__ . '/../view/partial/delete-massive-post-modal.phtml',
+            'partial/status-massive-post-modal'  => __DIR__ . '/../view/partial/status-massive-post-modal.phtml',
             'partial/form/basic-post-data'  => __DIR__ . '/../view/partial/form/basic-post-data.phtml',
             'partial/form/files'  => __DIR__ . '/../view/partial/form/files.phtml',
             'partial/form/actions-post'  => __DIR__ . '/../view/partial/form/actions-post.phtml',

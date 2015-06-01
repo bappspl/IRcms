@@ -85,6 +85,21 @@ return array(
                     ),
                 ),
             ),
+            'change-status' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-status/:post_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Post',
+                        'controller' => 'CmsIr\Post\Controller\Post',
+                        'action'     => 'changeStatus',
+                    ),
+                    'constraints' => array(
+                        'category' => '[a-zA-Z0-9_-]+',
+                        'post_id' =>  '[0-9]+'
+                    ),
+                ),
+            ),
             'upload' => array(
                 'type'    => 'Segment',
                 'options' => array(

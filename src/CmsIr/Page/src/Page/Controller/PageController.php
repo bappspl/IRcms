@@ -58,6 +58,7 @@ class PageController extends AbstractActionController
 
                 $page->exchangeArray($form->getData());
                 $page->setSlug(Inflector::slugify($page->getName()));
+
                 $id = $this->getPageTable()->save($page);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));

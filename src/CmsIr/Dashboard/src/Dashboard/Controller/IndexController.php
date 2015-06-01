@@ -19,8 +19,11 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        $config = $this->getServiceLocator()->get('Config');
+        $piwik = $config['piwik'];
 
         $viewParams = array();
+        $viewParams['piwik'] = $piwik;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;

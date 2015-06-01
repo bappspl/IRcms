@@ -35,7 +35,7 @@ class PostController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name', 'url', 'dateFrom');
+            $columns = array('id', 'name', 'url', 'dateFrom', 'statusId', 'status', 'id');
 
             $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category, $userId);
             $output = array(
@@ -111,36 +111,36 @@ class PostController extends AbstractActionController
                 }
 
                 // Only for DNA
-                if($post->getStatusId() == 1)
-                {
-                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
-                        "Kliknij w poniższy link, aby go przeczytać: <a href='" .
-                        $this->getRequest()->getServer('HTTP_ORIGIN') .
-                        $this->url()->fromRoute('one-news', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
-
-
-                    /** @var $confirmedStatus Status */
-                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
-                    $confirmedStatusId = $confirmedStatus->getId();
-
-                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
-
-                    $subscriberEmails = array();
-                    /** @var $subscriber Subscriber */
-                    foreach($subscribers as $subscriber)
-                    {
-                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
-                    }
-
-                    $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Stowarzyszenia!", $newsletterContent);
-
-                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
-
-                } else
-                {
+//                if($post->getStatusId() == 1)
+//                {
+//                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
+//                        "Kliknij w poniższy link, aby go przeczytać: <a href='" .
+//                        $this->getRequest()->getServer('HTTP_ORIGIN') .
+//                        $this->url()->fromRoute('one-news', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
+//
+//
+//                    /** @var $confirmedStatus Status */
+//                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
+//                    $confirmedStatusId = $confirmedStatus->getId();
+//
+//                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
+//
+//                    $subscriberEmails = array();
+//                    /** @var $subscriber Subscriber */
+//                    foreach($subscribers as $subscriber)
+//                    {
+//                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
+//                    }
+//
+//                    $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Stowarzyszenia!", $newsletterContent);
+//
+//                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
+//
+//                } else
+//                {
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
-
-                }
+//
+//                }
 
                 return $this->redirect()->toRoute('post', array('category' => $category));
             }
@@ -287,27 +287,72 @@ class PostController extends AbstractActionController
             return $this->redirect()->toRoute('post-list', array('category' => $category));
         }
 
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+            if ($del == 'Tak')
+            {
+                $id = $request->getPost('id');
 
-                $postFiles = $this->getFileTable()->getBy(array('entity_type' => 'Post', 'entity_id' => $id));
-
-                if((!empty($postFiles)))
+                if(!is_array($id))
                 {
-                    foreach($postFiles as $file)
+                    $id = array($id);
+                }
+
+                foreach($id as $oneId)
+                {
+                    $postFiles = $this->getFileTable()->getBy(array('entity_type' => 'Post', 'entity_id' => $oneId));
+
+                    if((!empty($postFiles)))
                     {
-                        unlink('./public/files/post/'.$file->getFilename());
-                        $this->getFileTable()->deleteFile($file->getId());
+                        foreach($postFiles as $file)
+                        {
+                            unlink('./public/files/post/'.$file->getFilename());
+                            $this->getFileTable()->deleteFile($file->getId());
+                        }
                     }
                 }
 
                 $this->getPostTable()->deletePost($id);
 
+                //$this->flashMessenger()->addMessage('Post został usunięty poprawnie.');
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
 
-                $this->flashMessenger()->addMessage('Post został usunięty poprawnie.');
+            return $this->redirect()->toRoute('post', array('category' => $category));
+        }
+
+        return array();
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('post_id');
+        $category = (int) $this->params()->fromRoute('category');
+
+        if (!$id) {
+            return $this->redirect()->toRoute('post-list', array('category' => $category));
+        }
+
+        if ($request->isPost())
+        {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz')
+            {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getPostTable()->changeStatusPost($id, $statusId);
+
+                //$this->flashMessenger()->addMessage('Post został zedytowany poprawnie.');
                 $modal = $request->getPost('modal', false);
                 if($modal == true) {
                     $jsonObject = Json::encode($params['status'] = 'success', true);
