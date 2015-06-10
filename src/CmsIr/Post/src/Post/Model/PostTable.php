@@ -68,10 +68,10 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             'status_id'  => $post->getStatusId(),
             'category'  => $post->getCategory(),
             'text'  => $post->getText(),
-            'date_from'  => $post->getDateFrom(),
-            'date_to'  => $post->getDateTo(),
+            'date'  => $post->getDate(),
             'author_id'  => $post->getAuthorId(),
             'filename_main'  => $post->getFilenameMain(),
+            'extra'  => $post->getExtra(),
         );
 
         $id = (int) $post->getId();
@@ -104,11 +104,6 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
                     $tmp[] = $row->$column();
                 }
             }
-
-
-//            $tmp[] = '<a href="'.$category.'/preview/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-//                '<a href="'.$category.'/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-//                '<a href="'.$category.'/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -131,7 +126,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
 
         $where = array();
         if ($data->sSearch != '') {
-            $columnsToSearch = array('id', 'name', 'url', 'date_from', 'status_id');
+            $columnsToSearch = array('id', 'name', 'url', 'date', 'status_id');
             $where = array(
                 new Predicate\PredicateSet(
                     $this->getFilterPredicate($columnsToSearch, $data),

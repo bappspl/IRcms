@@ -12,10 +12,10 @@ class Post
     protected $status_id;
     protected $category;
     protected $text;
-    protected $date_from;
-    protected $date_to;
+    protected $date;
     protected $author_id;
     protected $filename_main;
+    protected $extra;
 
     /*virtual fields */
     protected $files;
@@ -28,10 +28,10 @@ class Post
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->text = (!empty($data['text'])) ? $data['text'] : null;
-        $this->date_from = (!empty($data['date_from'])) ? $data['date_from'] : null;
-        $this->date_to = (!empty($data['date_to'])) ? $data['date_to'] : null;
+        $this->date = (!empty($data['date'])) ? $data['date'] : null;
         $this->author_id = (!empty($data['author_id'])) ? $data['author_id'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
+        $this->extra = (!empty($data['extra'])) ? $data['extra'] : null;
 
         /*virtual fields */
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
@@ -53,6 +53,22 @@ class Post
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    /**
+     * @param mixed $extra
+     */
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
     }
 
     /**
@@ -154,33 +170,17 @@ class Post
     /**
      * @return mixed
      */
-    public function getDateFrom()
+    public function getDate()
     {
-        return $this->date_from;
+        return $this->date;
     }
 
     /**
-     * @param mixed $date_from
+     * @param mixed $date
      */
-    public function setDateFrom($date_from)
+    public function setDate($date)
     {
-        $this->date_from = $date_from;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDateTo()
-    {
-        return $this->date_to;
-    }
-
-    /**
-     * @param mixed $date_to
-     */
-    public function setDateTo($date_to)
-    {
-        $this->date_to = $date_to;
+        $this->date = $date;
     }
 
     /**

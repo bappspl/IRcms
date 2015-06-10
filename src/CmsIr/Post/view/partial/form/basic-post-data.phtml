@@ -17,29 +17,48 @@
 
 </div>
 
-<?php if($category == 'events'): ?>
-
-    <div class="form-group">
-        <div class="form-group has-feedback">
-            <label>Data od:</label>
-            <?php echo $this->formInput($form->get('date_from')->setAttribute('class', 'form-control datetimepicker')); ?>
-        </div>
+<div class="form-group">
+    <div class="form-group has-feedback">
+        <label>Data:</label>
+        <?php echo $this->formInput($form->get('date')->setAttribute('class', 'form-control datetimepicker')); ?>
     </div>
-    <div class="form-group">
-        <div class="form-group has-feedback">
-            <label>Data do:</label>
-            <?php echo $this->formInput($form->get('date_to')->setAttribute('class', 'form-control datetimepicker')); ?>
-        </div>
-    </div>
+</div>
 
-<?php else: ?>
+<?php if(isset($extraFields)): ?>
 
-    <div class="form-group">
-        <div class="form-group has-feedback">
-            <label>Data:</label>
-            <?php echo $this->formInput($form->get('date_from')->setAttribute('class', 'form-control datetimepicker')); ?>
+    <?php foreach($extraFields as $field): ?>
+        <div class="form-group">
+            <div class="form-group has-feedback">
+                <?php
+                    $type = $field['type'];
+                    $attributes = $field['attributes'];
+                    $options = $field['options'];
+                ?>
+                <label><?php echo $options['label']; ?></label>
+                <?php
+                    $attributesString = preg_replace('/^(.*)$/e', ' "$1=\'". $attributes["$1"]."\'" ',array_flip($attributes));
+                    $attributesString = implode(' ' , $attributesString);
+                    switch($type)
+                    {
+                        case 'text':
+                           echo '<input type="text" '.$attributesString.' value="'.$options['value'].'" />';
+                        break;
+                        case 'select':
+                            echo '<select '.$attributesString.'>';
+                                foreach($options['value'] as $key => $value)
+                                {
+                                    echo '<option value="'.$key.'">'.$value.'</option>';
+                                }
+                            echo '</select>';
+                        break;
+                        case 'textarea':
+                            echo '<textarea '.$attributesString.'>'.$options['value'].'</textarea>';
+                        break;
+                    }
+                ?>
+            </div>
         </div>
-    </div>
+    <?php endforeach; ?>
 
 <?php endif; ?>
 
