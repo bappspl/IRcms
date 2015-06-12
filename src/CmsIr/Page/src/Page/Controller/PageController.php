@@ -2,6 +2,8 @@
 namespace CmsIr\Page\Controller;
 
 use CmsIr\File\Model\File;
+use CmsIr\Menu\Model\MenuItem;
+use CmsIr\Menu\Model\MenuNode;
 use CmsIr\Page\Form\PageForm;
 use CmsIr\Page\Form\PageFormFilter;
 use CmsIr\Page\Model\Page;
@@ -80,14 +82,49 @@ class PageController extends AbstractActionController
                     }
                 }
 
+                $add = $request->getPost('add', 'Anuluj');
+
+                if ($add == 'Tak')
+                {
+                    $parentNodeId = $request->getPost('menu');
+
+                    $menuNode = new MenuNode();
+                    $menuNode->setTreeId(1);
+                    $menuNode->setIsVisible(1);
+                    $menuNode->setProviderType('page_provider');
+                    $menuNode->setPosition(0);
+
+                    if ($parentNodeId == 0)
+                    {
+                        $menuNode->setDepth(0);
+                    } elseif ($parentNodeId > 0)
+                    {
+                        $menuNode->setDepth(1);
+                        $menuNode->setParentId($parentNodeId);
+                    }
+
+                    $nodeId = $this->getMenuService()->saveMenuNode($menuNode);
+
+                    $menuItem = new MenuItem();
+                    $menuItem->setNodeId($nodeId);
+                    $menuItem->setLabel($page->getName());
+                    $menuItem->setUrl($page->getUrl());
+                    $menuItem->setPosition(0);
+
+                    $this->getMenuService()->saveMenuItem($menuItem);
+                }
+
                 $this->flashMessenger()->addMessage('Strona została dodana poprawnie.');
 
                 return $this->redirect()->toRoute('page');
             }
         }
 
+        $menuNodes = $this->getMenuService()->findMenuItemsForPage();
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['menuNodes'] = $menuNodes;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -361,5 +398,13 @@ class PageController extends AbstractActionController
     public function getFileTable()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+    }
+
+    /**
+     * @return \CmsIr\Menu\Service\MenuService
+     */
+    public function getMenuService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Menu\Service\MenuService');
     }
 }

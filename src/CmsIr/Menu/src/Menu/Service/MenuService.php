@@ -79,6 +79,31 @@ class MenuService implements ServiceLocatorAwareInterface
         }
     }
 
+    public function findMenuItemsForPage()
+    {
+        $nodes = $this->getMenuNodeTable()->getBy(array('depth' => 0));
+
+        /* @var $node MenuNode */
+        foreach($nodes as $node)
+        {
+            $node->setItems($this->getMenuItemTable()->getOneBy(array('node_id' => $node->getId())));
+        }
+
+        return $nodes;
+    }
+
+    public function saveMenuNode(MenuNode $menuNode)
+    {
+        $id = $this->getMenuNodeTable()->saveMenuNode($menuNode);
+
+        return $id;
+    }
+
+    public function saveMenuItem(MenuItem $menuItem)
+    {
+        $this->getMenuItemTable()->saveMenuItem($menuItem);
+    }
+
     /**
      * @return \CmsIr\Menu\Model\MenuTable
      */
