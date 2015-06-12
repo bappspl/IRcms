@@ -22,10 +22,17 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway = $tableGateway;
     }
 
-    public function deletePage($id)
+    public function deletePage($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
     }
 
     public function getDataToDisplay ($filteredRows, $columns)
@@ -34,16 +41,16 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
         foreach($filteredRows as $row) {
 
             $tmp = array();
-
             foreach($columns as $column){
                 $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
+                if($column == 'getStatus')
+                {
+                    $tmp[] = $this->getLabelToDisplay($row->getStatusId());
+                } else
+                {
+                    $tmp[] = $row->$column();
+                }
             }
-            // dodanie switchera
-            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-
-            $tmp[] = '<a href="page/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                     '<a href="page/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -86,6 +93,19 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
         }
 
         return $id;
+    }
+
+    public function changeStatusPage($ids, $statusId)
+    {
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+        $data = array('status_id'  => $statusId);
+        foreach($ids as $id)
+        {
+            $this->tableGateway->update($data, array('id' => $id));
+        }
     }
 
     /**

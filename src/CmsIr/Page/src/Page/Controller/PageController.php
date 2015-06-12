@@ -23,7 +23,7 @@ class PageController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name');
+            $columns = array('id', 'name', 'statusId', 'status', 'id');
 
             $listData = $this->getPageTable()->getDatatables($columns,$data);
 
@@ -166,7 +166,27 @@ class PageController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
+
+                if(!is_array($id))
+                {
+                    $id = array($id);
+                }
+
+                foreach($id as $oneId)
+                {
+                    $pageFiles = $this->getFileTable()->getBy(array('entity_type' => 'page', 'entity_id' => $oneId));
+
+                    if((!empty($pageFiles)))
+                    {
+                        foreach($pageFiles as $file)
+                        {
+                            unlink('./public/files/page/'.$file->getFilename());
+                            $this->getFileTable()->deleteFile($file->getId());
+                        }
+                    }
+                }
+
                 $this->getPageTable()->deletePage($id);
                 $this->flashMessenger()->addMessage('Strona została usunięta poprawnie.');
                 $modal = $request->getPost('modal', false);
@@ -184,6 +204,40 @@ class PageController extends AbstractActionController
             'id'    => $id,
             'page' => $this->getPageTable()->getOneBy(array('id' => $id))
         );
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('page_id');
+
+        if (!$id) {
+            return $this->redirect()->toRoute('page');
+        }
+
+        if ($request->isPost())
+        {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz')
+            {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getPageTable()->changeStatusPage($id, $statusId);
+
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('page');
+        }
+
+        return array();
     }
 
     public function uploadFilesMainAction ()

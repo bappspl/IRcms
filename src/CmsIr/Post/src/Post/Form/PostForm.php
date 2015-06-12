@@ -58,26 +58,14 @@ class PostForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'date_from',
+            'name' => 'date',
             'attributes' => array(
-                'id' => 'date_from',
+                'id' => 'date',
                 'type'  => 'text',
                 'class'  => 'form-control datetimepicker',
             ),
             'options' => array(
-                'label' => 'Data od',
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'date_to',
-            'attributes' => array(
-                'id' => 'date_to',
-                'type'  => 'text',
-                'class'  => 'form-control datetimepicker',
-            ),
-            'options' => array(
-                'label' => 'Data do',
+                'label' => 'Data',
             ),
         ));
 

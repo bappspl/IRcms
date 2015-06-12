@@ -35,7 +35,7 @@ class PostController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'url', 'dateFrom', 'statusId', 'status', 'id');
+            $columns = array('id', 'name', 'url', 'date', 'statusId', 'status', 'id');
 
             $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category, $userId);
             $output = array(
@@ -83,10 +83,16 @@ class PostController extends AbstractActionController
 
             if ($form->isValid())
             {
+                $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
 
                 $post = new Post();
                 $post->exchangeArray($form->getData());
                 $post->setCategory($category);
+                if(!empty($extraResult))
+                {
+                    $serializedExtraResult = serialize($extraResult);
+                    $post->setExtra($serializedExtraResult);
+                }
 
                 if($userRoleId < 3) $post->setStatusId(2);
                 $id = $this->getPostTable()->save($post);
@@ -149,8 +155,18 @@ class PostController extends AbstractActionController
             $this->emptyTempDirectory();
         }
 
+        $config = $this->getServiceLocator()->get('config');
+        $extraFields = $config['extra_fields'];
+
+        $fields = array();
+        if(array_key_exists($category, $extraFields['post']))
+        {
+            $fields = $extraFields['post'][$category];
+        }
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['extraFields'] = $fields;
         $viewParams['category'] = $category;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
@@ -198,10 +214,15 @@ class PostController extends AbstractActionController
 
             if ($form->isValid())
             {
-
+                $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
                 $post->setCategory($category);
 
                 if($userRoleId < 3) $post->setStatusId(2);
+                if(!empty($extraResult))
+                {
+                    $serializedExtraResult = serialize($extraResult);
+                    $post->setExtra($serializedExtraResult);
+                }
 
                 $id = $this->getPostTable()->save($post);
 
@@ -233,8 +254,50 @@ class PostController extends AbstractActionController
             $this->emptyTempDirectory();
         }
 
+        $config = $this->getServiceLocator()->get('config');
+        $extraFields = $config['extra_fields'];
+
+        $fields = array();
+        if(array_key_exists($category, $extraFields['post']))
+        {
+            $fields = $extraFields['post'][$category];
+        }
+
+        $extra = $post->getExtra();
+        if(!is_null($extra))
+        {
+            $extraAsArray = unserialize($extra);
+            $extraAsArrayKeys = array_keys($extraAsArray);
+
+            $tmp = array();
+            foreach($fields as $field)
+            {
+                $attributes = $field['attributes'];
+                $name = $attributes['name'];
+
+                switch($field['type'])
+                {
+                    case 'text':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                    break;
+                    case 'textarea':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                    break;
+                }
+                $tmp[] = $field;
+            }
+            $fields = $tmp;
+        }
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['extraFields'] = $fields;
         $viewParams['postFiles'] = $postFiles;
         $viewParams['category'] = $category;
         $viewModel = new ViewModel();
@@ -470,6 +533,35 @@ class PostController extends AbstractActionController
                 unlink($this->uploadDir.'/'.$file);
             }
         }
+    }
+
+    private function checkExtraFields($obj, $arr)
+    {
+        if(!is_array($arr))
+        {
+            $arr = (array) $arr;
+            $formKeys = array_keys($arr);
+            $tmp = array();
+            foreach($formKeys as $key => $field)
+            {
+                $tmp[] = substr($field, 3, strlen($field));
+            }
+            $formKeys = $tmp;
+        } else
+        {
+            $formKeys = array_keys($arr);
+        }
+
+        $result = array();
+        foreach($obj as $key => $field)
+        {
+            if(!in_array($key, $formKeys))
+            {
+                $result[$key] = $field;
+            }
+        }
+
+        return $result;
     }
     /**
      * @return \CmsIr\Post\Model\PostTable

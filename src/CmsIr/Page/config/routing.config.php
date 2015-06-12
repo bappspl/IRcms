@@ -118,6 +118,20 @@ return array(
                     ),
                 ),
             ),
+            'change-status' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-status/:page_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Page',
+                        'controller' => 'CmsIr\Page\Controller\Page',
+                        'action'     => 'changeStatus',
+                    ),
+                    'constraints' => array(
+                        'page_id' =>  '[0-9]+'
+                    ),
+                ),
+            ),
         ),
     ),
 );
