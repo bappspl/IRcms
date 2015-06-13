@@ -12,9 +12,10 @@ return array(
         'template_map' => array(
             'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
             'partial/delete-user-modal'  => __DIR__ . '/../view/partial/delete-user-modal.phtml',
+            'partial/delete-massive-users-modal'  => __DIR__ . '/../view/partial/delete-massive-users-modal.phtml',
             'partial/form/basic-data'  => __DIR__ . '/../view/partial/form/basic-data.phtml',
             'partial/form/user-files'  => __DIR__ . '/../view/partial/form/user-files.phtml',
-            'partial/form/actions'  => __DIR__ . '/../view/partial/form/actions.phtml',
+            'partial/form/actions-users'  => __DIR__ . '/../view/partial/form/actions-users.phtml',
         ),
         'template_path_stack' => array(
             'users' => __DIR__ . '/../view'

@@ -33,7 +33,7 @@ class UsersController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array( 'name', 'surname', 'email');
+            $columns = array('id', 'name', 'surname', 'email', 'id');
 
             $listData = $this->getUsersTable()->getDatatables($columns,$data);
             $output = array(
@@ -87,8 +87,50 @@ class UsersController extends AbstractActionController
         $form->get('role')->setValueOptions($tmpArrayRoles);
         $form->bind($user);
 
+        $config = $this->getServiceLocator()->get('config');
+        $extraFields = $config['extra_fields'];
+
+        $fields = array();
+        if($extraFields['users'])
+        {
+            $fields = $extraFields['users'];
+        }
+
+        $extra = $user->getExtra();
+        if(!is_null($extra))
+        {
+            $extraAsArray = unserialize($extra);
+            $extraAsArrayKeys = array_keys($extraAsArray);
+
+            $tmp = array();
+            foreach($fields as $field)
+            {
+                $attributes = $field['attributes'];
+                $name = $attributes['name'];
+
+                switch($field['type'])
+                {
+                    case 'text':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                        break;
+                    case 'textarea':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                        break;
+                }
+                $tmp[] = $field;
+            }
+            $fields = $tmp;
+        }
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['extraFields'] = $fields;
         return new ViewModel($viewParams);
     }
 
@@ -113,17 +155,25 @@ class UsersController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
 
             $form->setInputFilter(new UserFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid())
+            {
+                $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
                 $data = $form->getData();
                 $data = $this->prepareData($data);
 
                 $user = new Users();
                 $user->exchangeArray($data[0]);
+                if(!empty($extraResult))
+                {
+                    $serializedExtraResult = serialize($extraResult);
+                    $user->setExtra($serializedExtraResult);
+                }
                 $this->getUsersTable()->saveUser($user);
                 $this->sendConfirmationEmail($user, $data[1]);
                 $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
@@ -132,8 +182,18 @@ class UsersController extends AbstractActionController
             }
         }
 
+        $config = $this->getServiceLocator()->get('config');
+        $extraFields = $config['extra_fields'];
+
+        $fields = array();
+        if($extraFields['users'])
+        {
+            $fields = $extraFields['users'];
+        }
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['extraFields'] = $fields;
         return new ViewModel($viewParams);
     }
 
@@ -141,8 +201,9 @@ class UsersController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('id');
 
+        /* @var $user Users */
         $user = $this->getUsersTable()->getUser($id);
-        //var_dump($user);die;
+
         if(!$user) {
             return $this->redirect()->toRoute('users');
         }
@@ -176,20 +237,71 @@ class UsersController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
 
             $form->setInputFilter(new UsereditFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid())
+            {
+                $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
+                if(!empty($extraResult))
+                {
+                    $serializedExtraResult = serialize($extraResult);
+                    $user->setExtra($serializedExtraResult);
+                }
                 $this->getUsersTable()->saveUser($user);
 
                 $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');
                 return $this->redirect()->toRoute('users');
             }
         }
+
+        $config = $this->getServiceLocator()->get('config');
+        $extraFields = $config['extra_fields'];
+
+        $fields = array();
+        if($extraFields['users'])
+        {
+            $fields = $extraFields['users'];
+        }
+
+        $extra = $user->getExtra();
+        if(!is_null($extra))
+        {
+            $extraAsArray = unserialize($extra);
+            $extraAsArrayKeys = array_keys($extraAsArray);
+
+            $tmp = array();
+            foreach($fields as $field)
+            {
+                $attributes = $field['attributes'];
+                $name = $attributes['name'];
+
+                switch($field['type'])
+                {
+                    case 'text':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                        break;
+                    case 'textarea':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                        break;
+                }
+                $tmp[] = $field;
+            }
+            $fields = $tmp;
+        }
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['extraFields'] = $fields;
         return new ViewModel($viewParams);
     }
 
@@ -205,7 +317,7 @@ class UsersController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
                 $this->getUsersTable()->deleteUser($id);
                 $this->flashMessenger()->addMessage('Użytkownik został usunięty poprawnie.');
                 $modal = $request->getPost('modal', false);
@@ -246,6 +358,35 @@ class UsersController extends AbstractActionController
 
         }
         return $this->response;
+    }
+
+    private function checkExtraFields($obj, $arr)
+    {
+        if(!is_array($arr))
+        {
+            $arr = (array) $arr;
+            $formKeys = array_keys($arr);
+            $tmp = array();
+            foreach($formKeys as $key => $field)
+            {
+                $tmp[] = substr($field, 3, strlen($field));
+            }
+            $formKeys = $tmp;
+        } else
+        {
+            $formKeys = array_keys($arr);
+        }
+
+        $result = array();
+        foreach($obj as $key => $field)
+        {
+            if(!in_array($key, $formKeys))
+            {
+                $result[$key] = $field;
+            }
+        }
+
+        return $result;
     }
 
     public function generatePassword($l = 8, $c = 0, $n = 0, $s = 0)
