@@ -21,19 +21,19 @@ class PageForm extends Form
         ));
 
         $this->add(array(
-        'type' => 'select',
-        'attributes' => array(
-            'class' => 'form-control',
-            'name' => 'status_id',
-        ),
-        'options' => array(
-            'label' => 'Status',
-            'value_options' => array(
-                '2' => 'Nieaktywna',
-                '1' => 'Aktywna'
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'status_id',
             ),
-        )
-    ));
+            'options' => array(
+                'label' => 'Status',
+                'value_options' => array(
+                    '2' => 'Nieaktywna',
+                    '1' => 'Aktywna'
+                ),
+            )
+        ));
 
         $this->add(array(
             'name' => 'name',
@@ -44,6 +44,18 @@ class PageForm extends Form
             ),
             'options' => array(
                 'label' => 'Nazwa',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'subtitle',
+            'attributes' => array(
+                'id' => 'subtitle',
+                'type'  => 'text',
+                'placeholder' => 'Wprowadź podtytuł'
+            ),
+            'options' => array(
+                'label' => 'Podtytuł',
             ),
         ));
 
