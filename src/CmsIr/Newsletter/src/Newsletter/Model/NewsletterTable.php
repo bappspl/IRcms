@@ -18,10 +18,17 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway = $tableGateway;
     }
 
-    public function deleteNewsletter($id)
+    public function deleteNewsletter($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
     }
 
     public function save(Newsletter $newsletter)
@@ -45,27 +52,17 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
         }
     }
 
-    public function getDataToDisplay ($filteredRows, $columns)
+    public function changeStatusPost($ids, $statusId)
     {
-        $dataArray = array();
-        foreach($filteredRows as $row) {
-
-            $tmp = array();
-            foreach($columns as $column){
-                $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
-            }
-
-            $tmp[] = $this->getGroupsToDisplay($row->getGroups());
-            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-
-            $tmp[] = '<a href="newsletter/send-newsletter/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-facebook" data-toggle="tooltip" title="Wysyłanie wiadomości"><i class="fa fa-paper-plane-o"></i></a> ' .
-                '<a href="newsletter/preview-newsletter/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="newsletter/edit-newsletter/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="newsletter/delete-newsletter/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
-            array_push($dataArray, $tmp);
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
         }
-        return $dataArray;
+        $data = array('status_id'  => $statusId);
+        foreach($ids as $id)
+        {
+            $this->tableGateway->update($data, array('id' => $id));
+        }
     }
 
     public function getLabelToDisplay ($labelValue)
@@ -76,19 +73,6 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
         $currentStatus->getName() == 'Send' ? $name = 'Wysłana' : $name= 'Szkic';
 
         $template = '<span class="label ' . $checked . '">' .$name . '</span>';
-        return $template;
-    }
-
-    public function getGroupsToDisplay ($groups)
-    {
-        $subscriberGroups = unserialize($groups);
-        if(!is_array($subscriberGroups)) $subscriberGroups = array($subscriberGroups);
-        $template = '';
-        foreach($subscriberGroups as $groupId) {
-            $gruopName = $this->getSubscriberGroupTable()->getOneBy(array('id' => $groupId));
-            $template .= '<span class="label label-info">' . $gruopName->getName() . '</span> ';
-        }
-
         return $template;
     }
 

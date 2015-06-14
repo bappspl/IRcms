@@ -28,7 +28,7 @@ class NewsletterController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array( 'subject');
+            $columns = array('id', 'subject', 'groups', 'statusId', 'status', 'id');
 
             $listData = $this->getNewsletterTable()->getDatatables($columns,$data);
             $output = array(
@@ -218,9 +218,48 @@ class NewsletterController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
+                if(!is_array($id))
+                {
+                    $id = array($id);
+                }
                 $this->getNewsletterTable()->deleteNewsletter($id);
-                $this->flashMessenger()->addMessage('Wiadomość została usunięta poprawnie.');
+//                $this->flashMessenger()->addMessage('Wiadomość została usunięta poprawnie.');
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('newsletter');
+        }
+
+        return array();
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('newsletter_id');
+
+        if (!$id) {
+            return $this->redirect()->toRoute('newsletter');
+        }
+
+        if ($request->isPost())
+        {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz')
+            {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getNewsletterTable()->changeStatusPost($id, $statusId);
+
+                //$this->flashMessenger()->addMessage('Post został zedytowany poprawnie.');
                 $modal = $request->getPost('modal', false);
                 if($modal == true) {
                     $jsonObject = Json::encode($params['status'] = 'success', true);

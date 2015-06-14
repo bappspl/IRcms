@@ -268,7 +268,10 @@ class ModelTable implements ServiceLocatorAwareInterface
         $where = array();
         for ( $i=0 ; $i<count($columns) ; $i++ )
         {
-            $where[] = new Predicate\Like($columns[$i], '%'.$data->sSearch.'%');
+            if(strpos($columns[$i], 'status') === false && strpos($columns[$i], 'groups') === false)
+            {
+                $where[] = new Predicate\Like($columns[$i], '%'.$data->sSearch.'%');
+            }
         }
         return $where;
     }
@@ -284,6 +287,10 @@ class ModelTable implements ServiceLocatorAwareInterface
                 if($column == 'getStatus')
                 {
                     $tmp[] = $this->getLabelToDisplay($row->getStatusId());
+                } elseif($column == 'getGroups')
+                {
+                    $tmp[] = $this->getGroupsToDisplay($row->getGroups());
+
                 } else
                 {
                     $tmp[] = $row->$column();
@@ -306,12 +313,33 @@ class ModelTable implements ServiceLocatorAwareInterface
         return $template;
     }
 
+    public function getGroupsToDisplay ($groups)
+    {
+        $subscriberGroups = unserialize($groups);
+        if(!is_array($subscriberGroups)) $subscriberGroups = array($subscriberGroups);
+        $template = '';
+        foreach($subscriberGroups as $groupId) {
+            $gruopName = $this->getSubscriberGroupTable()->getOneBy(array('id' => $groupId));
+            $template .= '<span class="label label-info">' . $gruopName->getName() . '</span> ';
+        }
+
+        return $template;
+    }
+
     /**
      * @return \CmsIr\System\Model\StatusTable
      */
     public function getStatusTable()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Model\StatusTable');
+    }
+
+    /**
+     * @return \CmsIr\Newsletter\Model\SubscriberGroupTable
+     */
+    public function getSubscriberGroupTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Newsletter\Model\SubscriberGroupTable');
     }
 
     /**
