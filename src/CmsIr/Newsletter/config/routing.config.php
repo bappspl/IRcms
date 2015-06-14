@@ -66,6 +66,21 @@ return array(
                     ),
                 ),
             ),
+            'change-status' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-status/:newsletter_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Newsletter',
+                        'controller' => 'CmsIr\Newsletter\Controller\Newsletter',
+                        'action'     => 'changeStatus',
+                    ),
+                    'constraints' => array(
+                        'category' => '[a-zA-Z0-9_-]+',
+                        'newsletter_id' =>  '[0-9]+'
+                    ),
+                ),
+            ),
             'preview' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',
@@ -263,6 +278,21 @@ return array(
 
                             'constraints' => array(
                                 'subscriber_id' => '[0-9]+'
+                            ),
+                        ),
+                    ),
+                    'change-status' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/change-status/:subscriber_id',
+                            'defaults' => array(
+                                'module' => 'CmsIr\Newsletter',
+                                'controller' => 'CmsIr\Newsletter\Controller\Subscriber',
+                                'action'     => 'changeStatus',
+                            ),
+                            'constraints' => array(
+                                'category' => '[a-zA-Z0-9_-]+',
+                                'subscriber_id' =>  '[0-9]+'
                             ),
                         ),
                     ),

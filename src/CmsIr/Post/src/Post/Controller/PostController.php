@@ -117,36 +117,36 @@ class PostController extends AbstractActionController
                 }
 
                 // Only for DNA
-//                if($post->getStatusId() == 1)
-//                {
-//                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
-//                        "Kliknij w poniższy link, aby go przeczytać: <a href='" .
-//                        $this->getRequest()->getServer('HTTP_ORIGIN') .
-//                        $this->url()->fromRoute('one-news', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
-//
-//
-//                    /** @var $confirmedStatus Status */
-//                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
-//                    $confirmedStatusId = $confirmedStatus->getId();
-//
-//                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
-//
-//                    $subscriberEmails = array();
-//                    /** @var $subscriber Subscriber */
-//                    foreach($subscribers as $subscriber)
-//                    {
-//                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
-//                    }
-//
-//                    $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Stowarzyszenia!", $newsletterContent);
-//
-//                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
-//
-//                } else
-//                {
+                if($post->getStatusId() == 1)
+                {
+                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
+                        "Kliknij w poniższy link, aby go przeczytać: <a href='" .
+                        $this->getRequest()->getServer('HTTP_ORIGIN') .
+                        $this->url()->fromRoute('one-news', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
+
+
+                    /** @var $confirmedStatus Status */
+                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
+                    $confirmedStatusId = $confirmedStatus->getId();
+
+                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
+
+                    $subscriberEmails = array();
+                    /** @var $subscriber Subscriber */
+                    foreach($subscribers as $subscriber)
+                    {
+                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
+                    }
+
+                    $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Apteki Grodzkiej!", $newsletterContent);
+
+                    $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
+
+                } else
+                {
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
-//
-//                }
+
+                }
 
                 return $this->redirect()->toRoute('post', array('category' => $category));
             }
@@ -331,8 +331,50 @@ class PostController extends AbstractActionController
         $form->get('author_id')->setValueOptions($arrUsers);
         $form->bind($post);
 
+        $config = $this->getServiceLocator()->get('config');
+        $extraFields = $config['extra_fields'];
+
+        $fields = array();
+        if(array_key_exists($category, $extraFields['post']))
+        {
+            $fields = $extraFields['post'][$category];
+        }
+
+        $extra = $post->getExtra();
+        if(!is_null($extra))
+        {
+            $extraAsArray = unserialize($extra);
+            $extraAsArrayKeys = array_keys($extraAsArray);
+
+            $tmp = array();
+            foreach($fields as $field)
+            {
+                $attributes = $field['attributes'];
+                $name = $attributes['name'];
+
+                switch($field['type'])
+                {
+                    case 'text':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                        break;
+                    case 'textarea':
+                        if(in_array($name, $extraAsArrayKeys))
+                        {
+                            $field['options']['value'] = $extraAsArray[$name];
+                        }
+                        break;
+                }
+                $tmp[] = $field;
+            }
+            $fields = $tmp;
+        }
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['extraFields'] = $fields;
         $viewParams['postFiles'] = $postFiles;
         $viewParams['category'] = $category;
         $viewModel = new ViewModel();
@@ -461,10 +503,9 @@ class PostController extends AbstractActionController
         if ($request->isPost()) {
             $id = (int) $request->getPost('id');
             $filePath = $request->getPost('filePath');
-
             if($id != 0)
             {
-                $this->getPostFileTable()->deletePostFile($id);
+                $this->getFileTable()->deleteFile($id);
                 unlink('./public'.$filePath);
             } else
             {

@@ -18,7 +18,7 @@ class MenuController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name', 'machineName');
+            $columns = array('id', 'name', 'machineName', 'id');
 
             $listData = $this->getMenuService()->getMenuTable()->getDatatables($columns,$data);
 

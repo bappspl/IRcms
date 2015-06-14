@@ -3,9 +3,10 @@
 <!-- BEGIN DATA TABLE -->
 <div class="the-box">
     <div class="table-responsive">
-    <table class="table table-striped table-hover" id="datatable-users">
+    <table class="table table-striped table-hover" id="datatable-users" style="width: 100% !important;">
         <thead class="the-box dark full">
             <tr>
+                <th class="dt-body-center"><input type="checkbox" name="check-all" class="check-all i-grey" data-toggle="tooltip" title="Podgląd" /></th>
                 <th>Imię</th>
                 <th>Nazwisko</th>
                 <th>Email</th>
@@ -22,13 +23,22 @@
 
     </div><!-- /.table-responsive -->
 </div><!-- /.the-box .default -->
+
+<div class="massive-action">
+    <select name="massive-action">
+        <option value="">Masowe działania</option>
+        <option value="delete">Usuń wybrane</option>
+    </select>
+</div>
 <!-- END DATA TABLE -->
 <?php echo $this->partial('partial/delete-user-modal'); ?>
+<?php echo $this->partial('partial/delete-massive-users-modal'); ?>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.responsive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/users.css'); ?>
-
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.responsive.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datatable.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/users-list.js'); ?>

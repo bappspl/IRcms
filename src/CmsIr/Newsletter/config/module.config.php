@@ -23,6 +23,12 @@ return array(
             'partial/form/actions'  => __DIR__ . '/../view/partial/form/actions.phtml',
             'partial/form/actions-subscriber'  => __DIR__ . '/../view/partial/form/actions-subscriber.phtml',
             'partial/form/newsletter-actions'  => __DIR__ . '/../view/partial/form/newsletter-actions.phtml',
+
+            'partial/delete-massive-newsletter-modal'  => __DIR__ . '/../view/partial/delete-massive-newsletter-modal.phtml',
+            'partial/status-massive-newsletter-modal'  => __DIR__ . '/../view/partial/status-massive-newsletter-modal.phtml',
+            'partial/delete-massive-subscriber-modal'  => __DIR__ . '/../view/partial/delete-massive-subscriber-modal.phtml',
+            'partial/status-massive-subscriber-modal'  => __DIR__ . '/../view/partial/status-massive-subscriber-modal.phtml',
+            'partial/delete-massive-subscriber-group-modal'  => __DIR__ . '/../view/partial/delete-massive-subscriber-group-modal.phtml',
         ),
         'template_path_stack' => array(
             'newsletter' => __DIR__ . '/../view'

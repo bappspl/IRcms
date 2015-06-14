@@ -36,22 +36,5 @@ class MenuTable extends ModelTable
         $this->tableGateway->delete(array('id' => $id));
     }
 
-    public function getDataToDisplay ($filteredRows, $columns)
-    {
-        $dataArray = array();
-        foreach($filteredRows as $row) {
-
-            $tmp = array();
-
-            foreach($columns as $column){
-                $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
-            }
-
-            $tmp[] = '<a href="menu/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ';
-            array_push($dataArray, $tmp);
-        }
-        return $dataArray;
-    }
 
 }

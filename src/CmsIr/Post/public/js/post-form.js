@@ -31,7 +31,7 @@ $(function () {
                 $cache = $(this);
                 $.ajax({
                     type: "POST",
-                    url: "/cms-ir/post-list/"+ category +"/delete-photo",
+                    url: "/cms-ir/post-list/"+category+"/delete-photo",
                     dataType : 'json',
                     data: {
                         id: id,
@@ -59,7 +59,7 @@ $(function () {
         $cache = $(this);
         $.ajax({
             type: "POST",
-            url: "/cms-ir/post-list/"+ category +"/delete-photo",
+            url: "/cms-ir/post-list/"+category+"/delete-photo",
             dataType : 'json',
             data: {
                 id: id,
@@ -101,7 +101,7 @@ $(function () {
                 $cache = $(this);
                 $.ajax({
                     type: "POST",
-                    url: "/cms-ir/post-list/"+ category +"/delete-photo-main",
+                    url: "/cms-ir/post-list/"+category+"/delete-photo-main",
                     dataType : 'json',
                     data: {
                         id: id,
@@ -118,7 +118,6 @@ $(function () {
     });
 
     $('.deletePhoto_main i').on('click', function () {
-        alert('asd');
         var id = 0;
         var fullPathToImage = $(this).next().attr('src');
 
@@ -129,7 +128,7 @@ $(function () {
         $cache = $(this);
         $.ajax({
             type: "POST",
-            url: "/cms-ir/post-list/"+ category +"/delete-photo-main",
+            url: "/cms-ir/post-list/"+category+"/delete-photo-main",
             dataType : 'json',
             data: {
                 id: id,
@@ -144,8 +143,9 @@ $(function () {
     });
 
     if($('#filename_main').val().length > 0) {
+
         var filename = $('#filename_main').val();
-        $('.files_main').append('<img src="/files/post/'+filename+'" class="thumb" />')
+        $('.files-main').append('<img src="/files/post/'+filename+'" class="thumb" />')
     }
 
 });

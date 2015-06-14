@@ -26,10 +26,17 @@ class UsersTable extends ModelTable
         return $row;
     }
 
-    public function deleteUser($id)
+    public function deleteUser($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
     }
 
     public function saveUser(Users $user)
@@ -44,6 +51,7 @@ class UsersTable extends ModelTable
             'role'  => $user->getRole(),
             'active'  => 1,
             'filename'  => $user->getFilename(),
+            'extra'  => $user->getExtra(),
         );
 
         $id = (int) $user->getId();
@@ -58,22 +66,5 @@ class UsersTable extends ModelTable
         }
     }
 
-    public function getDataToDisplay ($filteredRows, $columns)
-    {
-        $dataArray = array();
-        foreach($filteredRows as $row) {
-
-            $tmp = array();
-            foreach($columns as $column){
-                $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
-            }
-            $tmp[] = '<a href="users/preview/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="users/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="users/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
-            array_push($dataArray, $tmp);
-        }
-        return $dataArray;
-    }
 
 }

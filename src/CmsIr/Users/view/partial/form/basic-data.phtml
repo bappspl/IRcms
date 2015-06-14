@@ -15,3 +15,40 @@
     <label><?php echo $this->formLabel($form->get('role')); ?></label>
     <?php echo $this->formSelect($form->get('role')); ?>
 </div>
+<?php if(isset($extraFields)): ?>
+
+    <?php foreach($extraFields as $field): ?>
+        <div class="form-group">
+            <div class="form-group has-feedback">
+                <?php
+                $type = $field['type'];
+                $attributes = $field['attributes'];
+                $options = $field['options'];
+                ?>
+                <label><?php echo $options['label']; ?></label>
+                <?php
+                $attributesString = preg_replace('/^(.*)$/e', ' "$1=\'". $attributes["$1"]."\'" ',array_flip($attributes));
+                $attributesString = implode(' ' , $attributesString);
+                switch($type)
+                {
+                    case 'text':
+                        echo '<input type="text" '.$attributesString.' value="'.$options['value'].'" />';
+                        break;
+                    case 'select':
+                        echo '<select '.$attributesString.'>';
+                        foreach($options['value'] as $key => $value)
+                        {
+                            echo '<option value="'.$key.'">'.$value.'</option>';
+                        }
+                        echo '</select>';
+                        break;
+                    case 'textarea':
+                        echo '<textarea '.$attributesString.'>'.$options['value'].'</textarea>';
+                        break;
+                }
+                ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+<?php endif; ?>

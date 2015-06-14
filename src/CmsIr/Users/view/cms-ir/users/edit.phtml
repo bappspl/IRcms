@@ -28,13 +28,14 @@ echo $this->form()->openTag($form);
 <div class="row">
     <div class="col-sm-12">
         <div class="the-box">
-            <?php echo $this->partial('partial/form/actions'); ?>
+            <?php echo $this->partial('partial/form/actions-users'); ?>
         </div>
     </div>
 </div>
 <?php echo $this->form()->closeTag(); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/users.css'); ?>
-
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/users-form.js'); ?>
