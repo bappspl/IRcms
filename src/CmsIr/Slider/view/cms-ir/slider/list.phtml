@@ -2,11 +2,13 @@
 <!-- BEGIN DATA TABLE -->
 <div class="the-box">
     <div class="table-responsive">
-        <table class="table table-striped table-hover" id="datatable-slider">
+        <table class="table table-striped table-hover" id="datatable-slider" style="width: 100% !important;">
             <thead class="the-box dark full">
             <tr>
+                <th class="dt-body-center"><input type="checkbox" name="check-all" class="check-all i-grey" data-toggle="tooltip" title="Podgląd" /></th>
                 <th>Nazwa</th>
                 <th>Nazwa systemowa</th>
+                <th>status_id</th>
                 <th>Status</th>
                 <th>Akcje</th>
             </tr>
@@ -21,8 +23,19 @@
 
     </div><!-- /.table-responsive -->
 </div><!-- /.the-box .default -->
+<div class="massive-action">
+    <select name="massive-action">
+        <option value="">Masowe działania</option>
+        <option value="delete">Usuń wybrane</option>
+        <option value="status">Zmień status</option>
+    </select>
+</div>
+
+
 <!-- END DATA TABLE -->
 <?php echo $this->partial('partial/delete-modal'); ?>
+<?php echo $this->partial('partial/delete-massive-slider-modal'); ?>
+<?php echo $this->partial('partial/status-massive-slider-modal'); ?>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>

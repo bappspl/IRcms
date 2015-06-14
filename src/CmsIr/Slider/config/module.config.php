@@ -13,6 +13,8 @@ return array(
             'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
             'partial/delete-modal'  => __DIR__ . '/../view/partial/delete-modal.phtml',
             'partial/delete-item-modal'  => __DIR__ . '/../view/partial/delete-item-modal.phtml',
+            'partial/delete-massive-slider-modal'  => __DIR__ . '/../view/partial/delete-massive-slider-modal.phtml',
+            'partial/status-massive-slider-modal'  => __DIR__ . '/../view/partial/status-massive-slider-modal.phtml',
         ),
         'template_path_stack' => array(
             'slider' => __DIR__ . '/../view'

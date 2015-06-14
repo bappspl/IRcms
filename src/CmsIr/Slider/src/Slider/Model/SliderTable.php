@@ -33,10 +33,17 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
         return $result;
     }
 
-    public function deleteSlider($id)
+    public function deleteSlider($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
     }
 
     public function getDataToDisplay ($filteredRows, $columns)
@@ -45,17 +52,16 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
         foreach($filteredRows as $row) {
 
             $tmp = array();
-
             foreach($columns as $column){
                 $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
+                if($column == 'getStatus')
+                {
+                    $tmp[] = $this->getLabelToDisplay($row->getStatusId());
+                } else
+                {
+                    $tmp[] = $row->$column();
+                }
             }
-            // dodanie switchera
-            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-
-            $tmp[] = '<a href="slider/items/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Lista"><i class="fa fa-list"></i></a> ' .
-                     '<a href="slider/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                     '<a href="slider/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -89,6 +95,19 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
             } else {
                 throw new \Exception('Slider id does not exist');
             }
+        }
+    }
+
+    public function changeStatusSlider($ids, $statusId)
+    {
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+        $data = array('status_id'  => $statusId);
+        foreach($ids as $id)
+        {
+            $this->tableGateway->update($data, array('id' => $id));
         }
     }
 

@@ -23,7 +23,7 @@ class SliderController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name', 'slug');
+            $columns = array('id', 'name', 'slug', 'statusId', 'status', 'id');
 
             $listData = $this->getSliderTable()->getDatatables($columns,$data);
 
@@ -120,7 +120,13 @@ class SliderController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
+
+                if(!is_array($id))
+                {
+                    $id = array($id);
+                }
+
                 $this->getSliderTable()->deleteSlider($id);
                 $this->flashMessenger()->addMessage('Slider został usunięty poprawnie.');
                 $modal = $request->getPost('modal', false);
@@ -295,6 +301,40 @@ class SliderController extends AbstractActionController
 
         }
         return $this->response;
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('slider_id');
+
+        if (!$id) {
+            return $this->redirect()->toRoute('slider');
+        }
+
+        if ($request->isPost())
+        {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz')
+            {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getSliderTable()->changeStatusSlider($id, $statusId);
+
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('page');
+        }
+
+        return array();
     }
 
     /**

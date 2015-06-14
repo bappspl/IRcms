@@ -31,10 +31,17 @@ class DictionaryTable extends ModelTable
         return $result;
     }
 
-    public function deleteDictionary($id)
+    public function deleteDictionary($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
     }
 
     public function getDataToDisplay ($filteredRows, $columns, $category)
@@ -48,8 +55,6 @@ class DictionaryTable extends ModelTable
                 $tmp[] = $row->$column();
             }
 
-            $tmp[] = '<a href="'.$category.'/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="'.$category.'/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -72,9 +77,10 @@ class DictionaryTable extends ModelTable
 
         $where = array();
         if ($data->sSearch != '') {
+            $columnsToSearch = array('id', 'name');
             $where = array(
                 new Predicate\PredicateSet(
-                    $this->getFilterPredicate($columns, $data),
+                    $this->getFilterPredicate($columnsToSearch, $data),
                     Predicate\PredicateSet::COMBINED_BY_OR
                 ),
             );

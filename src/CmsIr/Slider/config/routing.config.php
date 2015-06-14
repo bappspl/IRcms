@@ -90,6 +90,20 @@ return array(
                     ),
                 ),
             ),
+            'change-status' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-status/:slider_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Slider',
+                        'controller' => 'CmsIr\Slider\Controller\Slider',
+                        'action'     => 'changeStatus',
+                    ),
+                    'constraints' => array(
+                        'slider_id' =>  '[0-9]+'
+                    ),
+                ),
+            ),
             'items' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',

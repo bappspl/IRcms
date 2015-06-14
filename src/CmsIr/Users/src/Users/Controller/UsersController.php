@@ -596,10 +596,7 @@ class UsersController extends AbstractActionController
         $data['filename'] = $user->filename;
         $data['registration_date'] = $user->registration_date;
         $data['registration_token'] = $user->registration_token;
-        $data['position'] = $user->position;
-        $data['facebook'] = $user->facebook;
-        $data['twitter'] = $user->twitter;
-        $data['google'] = $user->google;
+        $data['extra'] = $user->extra;
         $data['active'] = 1;
 
         return $data;
