@@ -85,9 +85,7 @@ class NewsletterController extends AbstractActionController
 
         $this->flashMessenger()->addMessage('Wiadomości zostały wysłane.');
 
-        $jsonObject = Json::encode($params['status'] = 'success', true);
-        echo $jsonObject;
-        return $this->response;
+        return $this->redirect()->toRoute('newsletter');
     }
 
     public function sendEmails($emails, $subject, $content)

@@ -15,10 +15,17 @@ class SubscriberGroupTable extends ModelTable
         $this->tableGateway = $tableGateway;
     }
 
-    public function deleteSubscriberGroup($id)
+    public function deleteSubscriberGroup($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
     }
 
     public function save(SubscriberGroup $subscriberGroup)
@@ -41,22 +48,22 @@ class SubscriberGroupTable extends ModelTable
         }
     }
 
-    public function getDataToDisplay ($filteredRows, $columns)
-    {
-        $dataArray = array();
-        foreach($filteredRows as $row) {
-
-            $tmp = array();
-            foreach($columns as $column){
-                $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
-            }
-
-            $tmp[] = '<a href="subscriber-group/preview-group/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="subscriber-group/edit-group/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="subscriber-group/delete-group/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
-            array_push($dataArray, $tmp);
-        }
-        return $dataArray;
-    }
+//    public function getDataToDisplay ($filteredRows, $columns)
+//    {
+//        $dataArray = array();
+//        foreach($filteredRows as $row) {
+//
+//            $tmp = array();
+//            foreach($columns as $column){
+//                $column = 'get'.ucfirst($column);
+//                $tmp[] = $row->$column();
+//            }
+//
+//            $tmp[] = '<a href="subscriber-group/preview-group/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
+//                '<a href="subscriber-group/edit-group/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+//                '<a href="subscriber-group/delete-group/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+//            array_push($dataArray, $tmp);
+//        }
+//        return $dataArray;
+//    }
 }
