@@ -91,7 +91,7 @@ class PageController extends AbstractActionController
                     $menuNode = new MenuNode();
                     $menuNode->setTreeId(1);
                     $menuNode->setIsVisible(1);
-                    $menuNode->setProviderType('page_provider');
+                    $menuNode->setProviderType('page');
                     $menuNode->setPosition(0);
 
                     if ($parentNodeId == 0)
@@ -108,7 +108,7 @@ class PageController extends AbstractActionController
                     $menuItem = new MenuItem();
                     $menuItem->setNodeId($nodeId);
                     $menuItem->setLabel($page->getName());
-                    $menuItem->setUrl($page->getUrl());
+                    $menuItem->setUrl('/strona/'.$page->getUrl());
                     $menuItem->setPosition(0);
 
                     $this->getMenuService()->saveMenuItem($menuItem);
