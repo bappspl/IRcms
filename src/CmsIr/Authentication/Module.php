@@ -36,11 +36,11 @@ class Module
         return array(
             'factories' => array(
                 'CmsIr\Authentication\Model\UsersTable' =>  function($sm) {
-                    $tableGateway = $sm->get('UsersTableGateway');
+                    $tableGateway = $sm->get('AuthTableGateway');
                     $table = new UsersTable($tableGateway);
                     return $table;
                 },
-                'UsersTableGateway' => function ($sm) {
+                'AuthTableGateway' => function ($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Authentication());

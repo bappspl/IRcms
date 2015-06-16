@@ -407,7 +407,7 @@ class PostController extends AbstractActionController
             $message = new Message();
             $this->getRequest()->getServer();
             $message->addTo($email)
-                ->addFrom('mailer@web-ir.pl')
+                ->addFrom('biuro@crgkoscian.pl')
                 ->setEncoding('UTF-8')
                 ->setSubject($subject)
                 ->setBody($body);

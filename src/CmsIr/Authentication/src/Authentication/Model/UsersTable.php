@@ -74,7 +74,7 @@ class UsersTable
 			'email_confirmed'	    => $auth->email_confirmed,
             'registration_date'     => $auth->registration_date,
             'registration_token'    => $auth->registration_token,
-            'role'                  => 2
+            'role'                  => $auth->role ? $auth->role : 2
         );
 
         $id = (int)$auth->id;
