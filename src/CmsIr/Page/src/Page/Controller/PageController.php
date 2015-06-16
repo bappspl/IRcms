@@ -2,6 +2,8 @@
 namespace CmsIr\Page\Controller;
 
 use CmsIr\File\Model\File;
+use CmsIr\Menu\Model\MenuItem;
+use CmsIr\Menu\Model\MenuNode;
 use CmsIr\Page\Form\PageForm;
 use CmsIr\Page\Form\PageFormFilter;
 use CmsIr\Page\Model\Page;
@@ -23,7 +25,7 @@ class PageController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name');
+            $columns = array('id', 'name', 'statusId', 'status', 'id');
 
             $listData = $this->getPageTable()->getDatatables($columns,$data);
 
@@ -58,6 +60,7 @@ class PageController extends AbstractActionController
 
                 $page->exchangeArray($form->getData());
                 $page->setSlug(Inflector::slugify($page->getName()));
+
                 $id = $this->getPageTable()->save($page);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -79,14 +82,49 @@ class PageController extends AbstractActionController
                     }
                 }
 
+                $add = $request->getPost('add', 'Anuluj');
+
+                if ($add == 'Tak')
+                {
+                    $parentNodeId = $request->getPost('menu');
+
+                    $menuNode = new MenuNode();
+                    $menuNode->setTreeId(1);
+                    $menuNode->setIsVisible(1);
+                    $menuNode->setProviderType('page');
+                    $menuNode->setPosition(0);
+
+                    if ($parentNodeId == 0)
+                    {
+                        $menuNode->setDepth(0);
+                    } elseif ($parentNodeId > 0)
+                    {
+                        $menuNode->setDepth(1);
+                        $menuNode->setParentId($parentNodeId);
+                    }
+
+                    $nodeId = $this->getMenuService()->saveMenuNode($menuNode);
+
+                    $menuItem = new MenuItem();
+                    $menuItem->setNodeId($nodeId);
+                    $menuItem->setLabel($page->getName());
+                    $menuItem->setUrl('/strona/'.$page->getUrl());
+                    $menuItem->setPosition(0);
+
+                    $this->getMenuService()->saveMenuItem($menuItem);
+                }
+
                 $this->flashMessenger()->addMessage('Strona została dodana poprawnie.');
 
                 return $this->redirect()->toRoute('page');
             }
         }
 
+        $menuNodes = $this->getMenuService()->findMenuItemsForPage();
+
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['menuNodes'] = $menuNodes;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -165,7 +203,27 @@ class PageController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
+
+                if(!is_array($id))
+                {
+                    $id = array($id);
+                }
+
+                foreach($id as $oneId)
+                {
+                    $pageFiles = $this->getFileTable()->getBy(array('entity_type' => 'page', 'entity_id' => $oneId));
+
+                    if((!empty($pageFiles)))
+                    {
+                        foreach($pageFiles as $file)
+                        {
+                            unlink('./public/files/page/'.$file->getFilename());
+                            $this->getFileTable()->deleteFile($file->getId());
+                        }
+                    }
+                }
+
                 $this->getPageTable()->deletePage($id);
                 $this->flashMessenger()->addMessage('Strona została usunięta poprawnie.');
                 $modal = $request->getPost('modal', false);
@@ -183,6 +241,40 @@ class PageController extends AbstractActionController
             'id'    => $id,
             'page' => $this->getPageTable()->getOneBy(array('id' => $id))
         );
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('page_id');
+
+        if (!$id) {
+            return $this->redirect()->toRoute('page');
+        }
+
+        if ($request->isPost())
+        {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz')
+            {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getPageTable()->changeStatusPage($id, $statusId);
+
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('page');
+        }
+
+        return array();
     }
 
     public function uploadFilesMainAction ()
@@ -306,5 +398,13 @@ class PageController extends AbstractActionController
     public function getFileTable()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+    }
+
+    /**
+     * @return \CmsIr\Menu\Service\MenuService
+     */
+    public function getMenuService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Menu\Service\MenuService');
     }
 }

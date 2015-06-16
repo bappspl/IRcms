@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="modal fade" id="addMenuItemModal" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Dodawanie strony do menu</h4>
+            </div>
+            <div class="modal-body">
+                <label for="menu">Czy chcesz dodać wpis w menu?</label>
+
+                <select name="menu" id="menu" class="form-control">
+
+                    <option value="0">Utwórz nową opcję</option>
+                    <?php  /* @var $menuNode \CmsIr\Menu\Model\MenuNode */ ?>
+                    <?php foreach($menuNodes as $menuNode): ?>
+
+                        <?php  /* @var $item \CmsIr\Menu\Model\MenuItem */ ?>
+                        <?php $item = $menuNode->getItems() ?>
+
+                        <option value="<?php echo $menuNode->getId() ?>"><?php echo $item->getLabel() ?></option>
+
+                    <?php endforeach ?>
+
+                </select>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="add" value="Nie" class="btn btn-default" />
+                <input type="submit" name="add" value="Tak" class="btn btn-primary" />
+            </div><!-- /.modal-footer -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-doalog -->

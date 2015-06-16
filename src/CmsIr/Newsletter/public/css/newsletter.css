@@ -5,3 +5,6 @@
     max-width: 300px;
     margin: 15px 0;
 }
+.dt-body-action {
+    width: 200px !important;
+}

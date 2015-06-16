@@ -12,6 +12,9 @@ return array(
         'template_map' => array(
             'partial/flashmessages'  => __DIR__ . '/../view/partial/flashmessages.phtml',
             'partial/delete-modal'  => __DIR__ . '/../view/partial/delete-modal.phtml',
+            'partial/delete-massive-page-modal'  => __DIR__ . '/../view/partial/delete-massive-page-modal.phtml',
+            'partial/status-massive-page-modal'  => __DIR__ . '/../view/partial/status-massive-page-modal.phtml',
+            'partial/add-new-menu-item-modal'  => __DIR__ . '/../view/partial/add-new-menu-item-modal.phtml',
         ),
         'template_path_stack' => array(
             'page' => __DIR__ . '/../view'

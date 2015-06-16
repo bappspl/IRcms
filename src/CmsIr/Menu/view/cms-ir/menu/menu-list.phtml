@@ -2,24 +2,33 @@
 <!-- BEGIN DATA TABLE -->
 <div class="the-box">
     <div class="table-responsive">
-        <table class="table table-striped table-hover" id="datatable-menu">
+        <table class="table table-striped table-hover" id="datatable-menu" style="width: 100% !important;">
             <thead class="the-box dark full">
             <tr>
+                <th class="dt-body-center"><input type="checkbox" name="check-all" class="check-all i-grey" data-toggle="tooltip" title="Podgląd" /></th>
                 <th>Nazwa</th>
                 <th>Nazwa systemowa</th>
                 <th>Akcje</th>
             </tr>
             </thead>
         </table>
+
+        <div class="row">
+            <div class="col-sm-12">
+<!--                <a class="btn btn-facebook pull-right" href="--><?php //echo $this->url('place/create'); ?><!--">Dodaj nowy</a>-->
+            </div>
+        </div>
     </div><!-- /.table-responsive -->
 </div><!-- /.the-box .default -->
 <!-- END DATA TABLE -->
 <?php echo $this->partial('partial/delete-node-modal'); ?>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.responsive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/menu.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.min.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.responsive.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datatable.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/menu-list.js'); ?>

@@ -1,0 +1,50 @@
+<legend> <?= $this->translate('Places table', 'sys-ui') ?></legend>
+
+<?php if (!empty($entities)): ?>
+<table class="table table-hover table-partner">
+
+
+    <thead>
+        <tr>
+            <th class="check"></th>
+            <th class="pos">#</th>
+            <th><?php echo $this->translate('Name', 'sys-ui') ?></th>
+            <th><?php echo $this->translate('Country', 'sys-ui') ?></th>
+            <th><?php echo $this->translate('City', 'sys-ui') ?></th>
+            <th class="actions"><?php echo $this->translate('Actions', 'sys-ui') ?></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <?php $index = 1; ?>
+        <?php /* @var $entity \Mooncms\Place\Entity\Place */ ?>
+        <?php foreach ($entities as $entity): ?> 
+            <tr class="" id="<?php echo sprintf('offer-%s', $entity->getId()) ?>" data-entity-id="<?php echo $entity->getId() ?>">
+                <td class="check"><input type="checkbox"></td>
+                <td class="pos"><?php
+                    echo $index;
+                    $index++;
+                    ?></td> 
+                <td><?= $entity->getName() ?></td>
+                <td><?= $entity->getCountry() ?></td>
+                <td><?= $entity->getCity() ?></td>
+                <td class="actions col-sm-2">
+                    <form action="<?php echo $this->url('sys/place/change') ?>" method="post">
+                        <input type="hidden" name="entity_id" value="<?php echo $entity->getId() ?>">
+
+                        <div class="btn-group" data-entity-id="<?php echo $entity->getId() ?>">
+                            <a class="btn btn-info edit" href="<?php echo $this->url('sys/place/edit', array('place_id' => $entity->getId())) ?>" title="<?php echo $this->translate('Edit place', 'sys-ui') ?>"><i class="fa fa-pencil"></i></a>
+                            <button class="btn btn-danger delete"  name="action" value="delete" type="submit"   title="<?= $this->translate('Delete place', 'sys-ui') ?>"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+
+<?php endforeach; ?>
+
+    </tbody>
+
+</table>
+<?php endif; ?>
+

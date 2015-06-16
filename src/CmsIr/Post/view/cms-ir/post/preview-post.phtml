@@ -8,39 +8,65 @@ echo $this->form()->openTag($form);
 
         <div class="the-box">
             <h4 class="small-title">Dane podstawowe</h4>
-            <?php echo $this->formInput($form->get('id')); ?>
-            <?php echo $this->formInput($form->get('filename_main')); ?>
             <div class="form-group">
+                <?php echo $this->formInput($form->get('id')); ?>
+                <?php echo $this->customFormHelper($form->get('filename_main')); ?>
                 <?php echo $this->customFormHelper($form->get('name')->setAttributes(array('disabled' => 'disabled'))); ?>
+
             </div>
             <div class="form-group">
+
                 <?php echo $this->customFormHelper($form->get('url')->setAttributes(array('disabled' => 'disabled'))); ?>
+
             </div>
             <div class="form-group">
+
                 <?php echo $this->customFormHelper($form->get('status_id')->setAttributes(array('disabled' => 'disabled'))); ?>
+
             </div>
 
-            <?php if($category == 'events'): ?>
-
-                <div class="form-group">
-
-                    <?php echo $this->customFormHelper($form->get('date_from')->setAttributes(array('disabled' => 'disabled'))); ?>
-
+            <div class="form-group">
+                <div class="form-group has-feedback">
+                    <label>Data:</label>
+                    <?php echo $this->formInput($form->get('date')->setAttributes(array('disabled' => 'disabled', 'class' => 'form-control datetimepicker'))); ?>
                 </div>
-                <div class="form-group">
+            </div>
 
-                    <?php echo $this->customFormHelper($form->get('date_to')->setAttributes(array('disabled' => 'disabled'))); ?>
+            <?php if(isset($extraFields)): ?>
 
-                </div>
-
-            <?php else: ?>
-
-                <div class="form-group">
-                    <div class="form-group has-feedback">
-                        <label>Data:</label>
-                        <?php echo $this->formInput($form->get('date_from')->setAttributes(array('disabled' => 'disabled'))); ?>
+                <?php foreach($extraFields as $field): ?>
+                    <div class="form-group">
+                        <div class="form-group has-feedback">
+                            <?php
+                            $type = $field['type'];
+                            $attributes = $field['attributes'];
+                            $options = $field['options'];
+                            ?>
+                            <label><?php echo $options['label']; ?></label>
+                            <?php
+                            $attributesString = preg_replace('/^(.*)$/e', ' "$1=\'". $attributes["$1"]."\'" ',array_flip($attributes));
+                            $attributesString = implode(' ' , $attributesString);
+                            switch($type)
+                            {
+                                case 'text':
+                                    echo '<input type="text" '.$attributesString.' value="'.$options['value'].'" disabled="disabled" />';
+                                    break;
+                                case 'select':
+                                    echo '<select '.$attributesString.' disabled="disabled">';
+                                    foreach($options['value'] as $key => $value)
+                                    {
+                                        echo '<option value="'.$key.'">'.$value.'</option>';
+                                    }
+                                    echo '</select>';
+                                    break;
+                                case 'textarea':
+                                    echo '<textarea '.$attributesString.' disabled="disabled">'.$options['value'].'</textarea>';
+                                    break;
+                            }
+                            ?>
+                        </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
 
             <?php endif; ?>
 
@@ -52,6 +78,7 @@ echo $this->form()->openTag($form);
 
             <div class="form-group">
                 <label><?php echo $this->formLabel($form->get('text')); ?></label>
+
                 <?php echo $this->formTextarea($form->get('text')->setAttributes(array('disabled' => 'disabled'))); ?>
             </div>
         </div>
@@ -64,7 +91,7 @@ echo $this->form()->openTag($form);
                 <div class="the-box">
                     <h4 class="small-title">Zdjęcie główne</h4>
                     <div class="form-group">
-                        <div class="files_main">
+                        <div class="files-main">
                         </div>
                     </div>
                 </div>

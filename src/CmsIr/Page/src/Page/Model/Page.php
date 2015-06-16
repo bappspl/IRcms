@@ -8,6 +8,7 @@ class Page extends Model
 {
     protected $id;
     protected $name;
+    protected $subtitle;
     protected $slug;
     protected $status_id;
     protected $content;
@@ -23,6 +24,7 @@ class Page extends Model
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
+        $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null;
     }
 
     /**
@@ -135,5 +137,21 @@ class Page extends Model
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubtitle()
+    {
+        return $this->subtitle;
+    }
+
+    /**
+     * @param mixed $subtitle
+     */
+    public function setSubtitle($subtitle)
+    {
+        $this->subtitle = $subtitle;
     }
 }

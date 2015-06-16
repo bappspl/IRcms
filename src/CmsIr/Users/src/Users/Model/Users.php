@@ -13,6 +13,7 @@ class Users
     protected $surname;
     protected $password;
     protected $filename;
+    protected $extra;
 
     protected $email;
     protected $role;
@@ -29,6 +30,7 @@ class Users
         $this->surname = (!empty($data['surname'])) ? $data['surname'] : null;
         $this->password = (!empty($data['password'])) ? $data['password'] : null;
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
+        $this->extra = (!empty($data['extra'])) ? $data['extra'] : null;
 
         $this->email = (!empty($data['email'])) ? $data['email'] : null;
         $this->role = (!empty($data['role'])) ? $data['role'] : null;
@@ -55,6 +57,22 @@ class Users
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    /**
+     * @param mixed $extra
+     */
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
     }
 
     /**

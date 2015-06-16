@@ -14,6 +14,7 @@
             <h4 class="small-title">Dane podstawowe</h4>
 
             <?php echo $this->customFormHelper($form->get('name')) ?>
+            <?php echo $this->customFormHelper($form->get('subtitle')) ?>
             <?php echo $this->customFormHelper($form->get('url')) ?>
 
             <div class="form-group">
@@ -70,11 +71,13 @@
         <div class="the-box">
             <div class="input-group col-sm-12 text-right">
                 <a class="btn btn-default" href="<?php echo $this->url('page'); ?>">Anuluj</a> &nbsp
-                <?php echo $this->formInput($form->get('submit')); ?>
+                <a class="btn btn-primary pull-right" href="#" id="add-to-menu">Zapisz</a> &nbsp
             </div>
         </div>
     </div>
 </div>
+
+<?php echo $this->partial('partial/add-new-menu-item-modal') ?>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
@@ -84,4 +87,5 @@
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/page-form.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/page.js'); ?>
 

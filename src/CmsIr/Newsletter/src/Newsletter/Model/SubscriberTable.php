@@ -18,10 +18,30 @@ class SubscriberTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway = $tableGateway;
     }
 
-    public function deleteSubscriber($id)
+    public function deleteSubscriber($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
+    }
+
+    public function changeStatusPost($ids, $statusId)
+    {
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+        $data = array('status_id'  => $statusId);
+        foreach($ids as $id)
+        {
+            $this->tableGateway->update($data, array('id' => $id));
+        }
     }
 
     public function getBySubscriberGroupId($id)
@@ -72,27 +92,27 @@ class SubscriberTable extends ModelTable implements ServiceLocatorAwareInterface
         }
     }
 
-    public function getDataToDisplay ($filteredRows, $columns)
-    {
-        $dataArray = array();
-        foreach($filteredRows as $row) {
-
-            $tmp = array();
-            foreach($columns as $column){
-                $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
-            }
-
-            $tmp[] = $this->getGroupsToDisplay($row->getGroups());
-            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-
-            $tmp[] = '<a href="subscriber-list/preview-subscriber/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="subscriber-list/edit-subscriber/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="subscriber-group/delete-group/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
-            array_push($dataArray, $tmp);
-        }
-        return $dataArray;
-    }
+//    public function getDataToDisplay ($filteredRows, $columns)
+//    {
+//        $dataArray = array();
+//        foreach($filteredRows as $row) {
+//
+//            $tmp = array();
+//            foreach($columns as $column){
+//                $column = 'get'.ucfirst($column);
+//                $tmp[] = $row->$column();
+//            }
+//
+//            $tmp[] = $this->getGroupsToDisplay($row->getGroups());
+//            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
+//
+//            $tmp[] = '<a href="subscriber-list/preview-subscriber/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
+//                '<a href="subscriber-list/edit-subscriber/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+//                '<a href="subscriber-group/delete-group/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+//            array_push($dataArray, $tmp);
+//        }
+//        return $dataArray;
+//    }
 
     public function getLabelToDisplay ($labelValue)
     {
@@ -105,18 +125,18 @@ class SubscriberTable extends ModelTable implements ServiceLocatorAwareInterface
         return $template;
     }
 
-    public function getGroupsToDisplay ($groups)
-    {
-        $subscriberGroups = unserialize($groups);
-
-        $template = '';
-        foreach($subscriberGroups as $groupId) {
-            $gruopName = $this->getSubscriberGroupTable()->getOneBy(array('id' => $groupId));
-            $template .= '<span class="label label-info">' . $gruopName->getName() . '</span> ';
-        }
-
-        return $template;
-    }
+//    public function getGroupsToDisplay ($groups)
+//    {
+//        $subscriberGroups = unserialize($groups);
+//
+//        $template = '';
+//        foreach($subscriberGroups as $groupId) {
+//            $gruopName = $this->getSubscriberGroupTable()->getOneBy(array('id' => $groupId));
+//            $template .= '<span class="label label-info">' . $gruopName->getName() . '</span> ';
+//        }
+//
+//        return $template;
+//    }
 
     /**
      * @return \CmsIr\System\Model\StatusTable

@@ -34,10 +34,30 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         return $row;
     }
 
-    public function deletePost($id)
+    public function deletePost($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id)
+        {
+            $this->tableGateway->delete(array('id' => $id));
+        }
+    }
+
+    public function changeStatusPost($ids, $statusId)
+    {
+        if(!is_array($ids))
+        {
+            $ids = array($ids);
+        }
+        $data = array('status_id'  => $statusId);
+        foreach($ids as $id)
+        {
+            $this->tableGateway->update($data, array('id' => $id));
+        }
     }
 
     public function save(Post $post)
@@ -48,10 +68,10 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             'status_id'  => $post->getStatusId(),
             'category'  => $post->getCategory(),
             'text'  => $post->getText(),
-            'date_from'  => $post->getDateFrom(),
-            'date_to'  => $post->getDateTo(),
+            'date'  => $post->getDate(),
             'author_id'  => $post->getAuthorId(),
             'filename_main'  => $post->getFilenameMain(),
+            'extra'  => $post->getExtra(),
         );
 
         $id = (int) $post->getId();
@@ -76,13 +96,14 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             $tmp = array();
             foreach($columns as $column){
                 $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
+                if($column == 'getStatus')
+                {
+                    $tmp[] = $this->getLabelToDisplay($row->getStatusId());
+                } else
+                {
+                    $tmp[] = $row->$column();
+                }
             }
-            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-
-            $tmp[] = '<a href="'.$category.'/preview/'.$row->getId().'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' .
-                '<a href="'.$category.'/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="'.$category.'/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -105,9 +126,10 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
 
         $where = array();
         if ($data->sSearch != '') {
+            $columnsToSearch = array('id', 'name', 'url', 'date', 'status_id');
             $where = array(
                 new Predicate\PredicateSet(
-                    $this->getFilterPredicate($columns, $data),
+                    $this->getFilterPredicate($columnsToSearch, $data),
                     Predicate\PredicateSet::COMBINED_BY_OR
                 ),
             );

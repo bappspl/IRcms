@@ -24,7 +24,7 @@ class DictionaryController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name');
+            $columns = array('id', 'name', 'id');
 
             $listData = $this->getDictionaryTable()->getDictionaryDatatables($columns, $data, $category);
 
@@ -137,7 +137,12 @@ class DictionaryController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
+
+                if(!is_array($id))
+                {
+                    $id = array($id);
+                }
 
                 $this->getDictionaryTable()->deleteDictionary($id);
                 $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');

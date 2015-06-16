@@ -203,6 +203,7 @@ class IndexController extends AbstractActionController
         $this->getRequest()->getServer();  //Server vars
         $message->addTo($usr_email)
             ->addFrom('biuro@crgkoscian.pl')
+
             ->setSubject('Twoje haslo zostalo zmienione!')
             ->setBody("Twoje hasło na stronie  " .
                 $this->getRequest()->getServer('HTTP_ORIGIN') .

@@ -29,7 +29,7 @@ class SubscriberController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('email');
+            $columns = array('id', 'email', 'groups', 'statusId', 'status', 'id');
 
             $listData = $this->getSubscriberTable()->getDatatables($columns,$data);
             $output = array(
@@ -82,7 +82,7 @@ class SubscriberController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Subskrybent został dodany poprawnie.');
 
-                return $this->redirect()->toRoute('subscriber-list');
+                return $this->redirect()->toRoute('newsletter/subscriber-list');
             }
         }
 
@@ -113,7 +113,7 @@ class SubscriberController extends AbstractActionController
         $subscriber = $this->getSubscriberTable()->getOneBy(array('id' => $id));
 
         if(!$subscriber) {
-            return $this->redirect()->toRoute('subscriber-list');
+            return $this->redirect()->toRoute('newsletter/subscriber-list');
         }
 
         $form = new SubscriberForm();
@@ -155,7 +155,7 @@ class SubscriberController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Subskrybent został zedytowany poprawnie.');
 
-                return $this->redirect()->toRoute('subscriber-list');
+                return $this->redirect()->toRoute('newsletter/subscriber-list');
             }
         }
 
@@ -172,7 +172,7 @@ class SubscriberController extends AbstractActionController
         $subscriber = $this->getSubscriberTable()->getOneBy(array('id' => $id));
 
         if(!$subscriber) {
-            return $this->redirect()->toRoute('subscriber-list');
+            return $this->redirect()->toRoute('newsletter/subscriber-list');
         }
 
         $form = new SubscriberForm();
@@ -214,16 +214,20 @@ class SubscriberController extends AbstractActionController
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('subscriber_id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('subscriber-list');
+            return $this->redirect()->toRoute('newsletter/subscriber-list');
         }
 
         if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
+                if(!is_array($id))
+                {
+                    $id = array($id);
+                }
                 $this->getSubscriberTable()->deleteSubscriber($id);
-                $this->flashMessenger()->addMessage('Subskrybent został usunięty poprawnie.');
+                //$this->flashMessenger()->addMessage('Subskrybent został usunięty poprawnie.');
                 $modal = $request->getPost('modal', false);
                 if($modal == true) {
                     $jsonObject = Json::encode($params['status'] = 'success', true);
@@ -232,7 +236,42 @@ class SubscriberController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('subscriber-list');
+            return $this->redirect()->toRoute('newsletter/subscriber-list');
+        }
+
+        return array();
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('subscriber_id');
+
+        if (!$id) {
+            return $this->redirect()->toRoute('newsletter/subscriber-list');
+        }
+
+        if ($request->isPost())
+        {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz')
+            {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getSubscriberTable()->changeStatusPost($id, $statusId);
+
+                //$this->flashMessenger()->addMessage('Post został zedytowany poprawnie.');
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('newsletter/subscriber-list');
         }
 
         return array();
@@ -244,7 +283,7 @@ class SubscriberController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array( 'name', 'slug');
+            $columns = array('id','name', 'slug', 'id');
 
             $listData = $this->getSubscriberGroupTable()->getDatatables($columns,$data);
             $output = array(
@@ -279,7 +318,7 @@ class SubscriberController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Grupa subskrybentów została dodana poprawnie.');
 
-                return $this->redirect()->toRoute('subscriber-group');
+                return $this->redirect()->toRoute('newsletter/subscriber-group');
             }
         }
 
@@ -296,7 +335,7 @@ class SubscriberController extends AbstractActionController
 
         $subscriberGroup = $this->getSubscriberGroupTable()->getOneBy(array('id' => $id));
         if(!$subscriberGroup) {
-            return $this->redirect()->toRoute('subscriber-group');
+            return $this->redirect()->toRoute('newsletter/subscriber-group');
         }
 
         $form = new SubscriberGroupForm();
@@ -312,7 +351,7 @@ class SubscriberController extends AbstractActionController
                 $this->getSubscriberGroupTable()->save($subscriberGroup);
                 $this->flashMessenger()->addMessage('Grupa subskrybentów została zedytowana poprawnie.');
 
-                return $this->redirect()->toRoute('subscriber-group');
+                return $this->redirect()->toRoute('newsletter/subscriber-group');
             }
         }
 
@@ -330,7 +369,7 @@ class SubscriberController extends AbstractActionController
         $subscriberGroup = $this->getSubscriberGroupTable()->getOneBy(array('id' => $id));
 
         if(!$subscriberGroup) {
-            return $this->redirect()->toRoute('subscriber-group');
+            return $this->redirect()->toRoute('newsletter/subscriber-group');
         }
 
         $form = new SubscriberGroupForm();
@@ -348,15 +387,18 @@ class SubscriberController extends AbstractActionController
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('subscriber_group_id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('subscriber-group');
+            return $this->redirect()->toRoute('newsletter/subscriber-group');
         }
 
         if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
-
+                $id = $request->getPost('id');
+                if(!is_array($id))
+                {
+                    $id = array($id);
+                }
                 $connectedUsers = $this->getSubscriberTable()->getBySubscriberGroupId($id);
 
                 if($connectedUsers)
@@ -368,7 +410,7 @@ class SubscriberController extends AbstractActionController
                 }
 
                 $this->getSubscriberGroupTable()->deleteSubscriberGroup($id);
-                $this->flashMessenger()->addMessage('Grupa subskrybentów została usunięta poprawnie.');
+                //$this->flashMessenger()->addMessage('Grupa subskrybentów została usunięta poprawnie.');
                 $modal = $request->getPost('modal', false);
                 if($modal == true) {
                     $jsonObject = Json::encode($params['status'] = 'success', true);
@@ -377,7 +419,7 @@ class SubscriberController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('subscriber-group');
+            return $this->redirect()->toRoute('newsletter/subscriber-group');
         }
 
         return array();
