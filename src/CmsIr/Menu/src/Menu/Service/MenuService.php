@@ -24,28 +24,53 @@ class MenuService implements ServiceLocatorAwareInterface
         $menuNodes = $this->getMenuNodeTable()->getBy(array('tree_id' => $treeId), array('position' => 'ASC'));
 
         $nodesArray = array();
-        foreach($menuNodes as $node) {
+        foreach($menuNodes as $node)
+        {
 
             /* @var $node MenuNode */
             /* @var $nodesItem MenuItem */
             $nodeId = $node->getId();
             $parentId = $node->getParentId();
+            $providerType = $node->getProviderType();
             if(is_null($parentId))
             {
                 $nodesNode = $this->getMenuNodeTable()->getBy(array('parent_id' => $nodeId), array('position' => 'ASC'));
-                if(empty($nodesNode)) {
+                if(empty($nodesNode))
+                {
                     $nodesItem = $this->getMenuItemTable()->getOneBy(array('node_id' => $nodeId));
                     $node->setItems($nodesItem);
-                } else {
+
+                    if($providerType === 'page')
+                    {
+                        $url = substr($nodesItem->getUrl(), 8);
+                        $pageId = $this->getPageTable()->getOneBy(array('name' => $nodesItem->getLabel(), 'url' => $url));
+                        $node->setSettings($pageId->getId());
+                    }
+                } else
+                {
                     foreach($nodesNode as $nodeNode)
                     {
                         /* @var $nodeNode MenuNode */
                         $nodeNodeId = $nodeNode->getId();
+                        $providerTypeNode = $nodeNode->getProviderType();
                         $nodesItem = $this->getMenuItemTable()->getOneBy(array('node_id' => $nodeNodeId));
                         $nodeNode->setItems($nodesItem);
+                        if($providerTypeNode === 'page')
+                        {
+                            $url = substr($nodesItem->getUrl(), 8);
+                            $pageId = $this->getPageTable()->getOneBy(array('name' => $nodesItem->getLabel(), 'url' => $url));
+                            $nodeNode->setSettings($pageId->getId());
+                        }
                     }
-                    $nodesNode[] = $this->getMenuItemTable()->getOneBy(array('id' => $nodeId));
+                    $result = $this->getMenuItemTable()->getOneBy(array('id' => $nodeId));
+                    $nodesNode[] = $result;
                     $node->setItems($nodesNode);
+                    if($providerType === 'page')
+                    {
+                        $url = substr($result->getUrl(), 8);
+                        $pageId = $this->getPageTable()->getOneBy(array('name' => $result->getLabel(), 'url' => $url));
+                        $node->setSettings($pageId->getId());
+                    }
 
                 }
                 $nodesArray[] = $node;
@@ -102,6 +127,14 @@ class MenuService implements ServiceLocatorAwareInterface
     public function saveMenuItem(MenuItem $menuItem)
     {
         $this->getMenuItemTable()->saveMenuItem($menuItem);
+    }
+
+    /**
+     * @return \CmsIr\Page\Model\PageTable
+     */
+    public function getPageTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Page\Model\PageTable');
     }
 
     /**

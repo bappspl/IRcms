@@ -188,7 +188,7 @@ class IndexController extends AbstractActionController
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($auth->email)
-            ->addFrom('website@dnastudio.pl')
+            ->addFrom('biuro@crgkoscian.pl')
             ->setSubject('Prosimy o potwierdzenie rejestracji!')
             ->setBody("W celu potwierdzenia rejestracji kliknij w link => " .
                 $this->getRequest()->getServer('HTTP_ORIGIN') .
@@ -202,7 +202,8 @@ class IndexController extends AbstractActionController
         $message = new Message();
         $this->getRequest()->getServer();  //Server vars
         $message->addTo($usr_email)
-            ->addFrom('website@dnastudio.pl')
+            ->addFrom('biuro@crgkoscian.pl')
+
             ->setSubject('Twoje haslo zostalo zmienione!')
             ->setBody("Twoje hasło na stronie  " .
                 $this->getRequest()->getServer('HTTP_ORIGIN') .

@@ -517,7 +517,7 @@ class UsersController extends AbstractActionController
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($user->getEmail())
-            ->addFrom('mailer@web-ir.pl')
+            ->addFrom('biuro@crgkoscian.pl')
             ->setSubject('Rejestracja w serwisie: ' . $this->appName)
             ->setBody($body);
         $message->setEncoding('utf-8');

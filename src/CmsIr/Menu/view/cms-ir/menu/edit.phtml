@@ -14,7 +14,7 @@
                             <?php if(is_array($item->getItems())) : ?>
                                 <?php
                                     $subItems = $item->getItems();
-
+                                    $settings = $item->getSettings();
                                     $fistItem = end($subItems);
                                     $label = $fistItem->getLabel();
                                     $url = $fistItem->getUrl();
@@ -26,6 +26,9 @@
                                 <div class="dd3-content">
                                     <span class="label"><?php echo $label; ?></span> <span class="url"><?php echo $url; ?></span> <span class="subtitle"><?php echo $subtitle; ?></span>
                                     <div class="pull-right">
+                                        <?php if(!is_null($settings)): ?>
+                                            <a href="<?php echo $this->url('page/edit', array('page_id' => $settings)); ?>" class="btn btn-facebook" data-toggle="tooltip" title="Edycja strony"><i class="fa fa-file-text-o"></i></a>
+                                        <?php endif; ?>
                                         <a href="#" class="btn btn-primary" data-toggle="tooltip" title="Edycja" id="<?php echo $item->getProviderType(); ?>"><i class="fa fa-pencil"></i></a>
                                         <a href="#" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>
                                     </div>
@@ -34,6 +37,8 @@
                                         <?php foreach($subItems as $subItem): ?>
                                             <?php
                                                 $subItemNode = $subItem->getItems();
+                                                $settings = $subItem->getSettings();
+
                                                 $label = $subItemNode->getLabel();
                                                 $url = $subItemNode->getUrl();
                                                 $id = $subItemNode->getId();
@@ -44,6 +49,9 @@
                                                 <div class="dd3-content">
                                                     <span class="label"><?php echo $label; ?></span> <span class="url"><?php echo $url; ?></span> <span class="subtitle"><?php echo $subtitle; ?></span>
                                                     <div class="pull-right">
+                                                        <?php if(!is_null($settings)): ?>
+                                                            <a href="<?php echo $this->url('page/edit', array('page_id' => $settings)); ?>" class="btn btn-facebook" data-toggle="tooltip" title="Edycja strony"><i class="fa fa-file-text-o"></i></a>
+                                                        <?php endif; ?>
                                                         <a href="#" class="btn btn-primary"  data-toggle="tooltip" title="Edycja" id="<?php echo $subItem->getProviderType(); ?>"><i class="fa fa-pencil"></i></a>
                                                         <a href="#" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>
                                                     </div>
@@ -55,6 +63,8 @@
                             <?php else : ?>
                                 <?php
                                     $subItem = $item->getItems();
+                                    $settings = $item->getSettings();
+
                                     $label = $subItem->getLabel();
                                     $url = $subItem->getUrl();
                                     $id = $subItem->getId();
@@ -64,6 +74,9 @@
                                 <div class="dd3-content">
                                     <span class="label"><?php echo $label; ?></span> <span class="url"><?php echo $url; ?></span> <span class="subtitle"><?php echo $subtitle; ?></span>
                                     <div class="pull-right">
+                                        <?php if(!is_null($settings)): ?>
+                                            <a href="<?php echo $this->url('page/edit', array('page_id' => $settings)); ?>" class="btn btn-facebook" data-toggle="tooltip" title="Edycja strony"><i class="fa fa-file-text-o"></i></a>
+                                        <?php endif; ?>
                                         <a href="#" class="btn btn-primary"  data-toggle="tooltip" title="Edycja" id="<?php echo $item->getProviderType(); ?>"><i class="fa fa-pencil"></i></a>
                                         <a href="#" class="btn btn-danger"  data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>
                                     </div>
