@@ -1,0 +1,32 @@
+<?php echo $this->partial('partial/flashmessages'); ?>
+
+
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<?php echo $this->formInput($form->get('id')); ?>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="the-box">
+
+            <h4 class="small-title">Dane podstawowe</h4>
+
+            <?php echo $this->customFormHelper($form->get('host')); ?>
+            <?php echo $this->customFormHelper($form->get('username')); ?>
+            <?php echo $this->customFormHelper($form->get('password')); ?>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <div class="input-group col-sm-12 text-right">
+                <a class="btn btn-default" href="<?php echo $this->url('mail-config'); ?>">Anuluj</a> &nbsp
+                <?php echo $this->formInput($form->get('submit')); ?>
+            </div>
+        </div>
+    </div>
+</div>

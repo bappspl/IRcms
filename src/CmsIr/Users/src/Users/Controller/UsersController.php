@@ -505,7 +505,8 @@ class UsersController extends AbstractActionController
 
     public function sendConfirmationEmail(Users $user, $password)
     {
-        $transport = $this->getServiceLocator()->get('mail.transport');
+        $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
+        $from = $this->getServiceLocator()->get('mail.transport')->findFromMail();
 
         $content = "Utworzono konto dla ciebie w serwisie " . $this->appName . "<br> Twoje hasło to: " .  $password;
 
@@ -517,7 +518,7 @@ class UsersController extends AbstractActionController
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($user->getEmail())
-            ->addFrom('biuro@crgkoscian.pl')
+            ->addFrom($from)
             ->setSubject('Rejestracja w serwisie: ' . $this->appName)
             ->setBody($body);
         $message->setEncoding('utf-8');

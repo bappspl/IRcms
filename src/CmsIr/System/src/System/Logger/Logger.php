@@ -27,11 +27,13 @@ class Logger implements ServiceLocatorAwareInterface
 
         if($loggerMail === true)
         {
-            $transport = $this->getServiceLocator()->get('mail.transport');
+            $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
+            $from = $this->getServiceLocator()->get('mail.transport')->findFromMail();
+
             $message = new Message();
             $this->getServiceLocator()->get('Request')->getServer();
             $message->addTo('logger@web-ir.pl')
-                ->addFrom('mailer@web-ir.pl')
+                ->addFrom($from)
                 ->setSubject($appName)
                 ->setBody($exception);
             $message->setEncoding('UTF-8');

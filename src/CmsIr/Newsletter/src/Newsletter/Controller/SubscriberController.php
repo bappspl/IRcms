@@ -95,11 +95,13 @@ class SubscriberController extends AbstractActionController
 
     public function sendConfirmationEmail($email, $confirmationCode)
     {
-        $transport = $this->getServiceLocator()->get('mail.transport');
+        $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
+        $from = $this->getServiceLocator()->get('mail.transport')->findFromMail();
+
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($email)
-            ->addFrom('biuro@crgkoscian.pl')
+            ->addFrom($from)
             ->setSubject('Prosimy o potwierdzenie subskrypcji!')
             ->setBody("W celu potwierdzenia subskrypcji kliknij w link => " .
                 $this->getRequest()->getServer('HTTP_ORIGIN') .

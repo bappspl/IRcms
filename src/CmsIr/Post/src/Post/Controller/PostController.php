@@ -543,7 +543,8 @@ class PostController extends AbstractActionController
 
     public function sendEmails($emails, $subject, $content)
     {
-        $transport = $this->getServiceLocator()->get('mail.transport');
+        $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
+        $from = $this->getServiceLocator()->get('mail.transport')->findFromMail();
 
         $html = new MimePart($content);
         $html->type = "text/html";
@@ -556,7 +557,7 @@ class PostController extends AbstractActionController
             $message = new Message();
             $this->getRequest()->getServer();
             $message->addTo($email)
-                ->addFrom('biuro@crgkoscian.pl')
+                ->addFrom($from)
                 ->setEncoding('UTF-8')
                 ->setSubject($subject)
                 ->setBody($body);

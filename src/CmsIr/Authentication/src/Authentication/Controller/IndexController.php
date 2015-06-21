@@ -184,11 +184,13 @@ class IndexController extends AbstractActionController
 
     public function sendConfirmationEmail($auth)
     {
-        $transport = $this->getServiceLocator()->get('mail.transport');
+        $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
+        $from = $this->getServiceLocator()->get('mail.transport')->findFromMail();
+
         $message = new Message();
         $this->getRequest()->getServer();
         $message->addTo($auth->email)
-            ->addFrom('biuro@crgkoscian.pl')
+            ->addFrom($from)
             ->setSubject('Prosimy o potwierdzenie rejestracji!')
             ->setBody("W celu potwierdzenia rejestracji kliknij w link => " .
                 $this->getRequest()->getServer('HTTP_ORIGIN') .
@@ -198,11 +200,13 @@ class IndexController extends AbstractActionController
 
     public function sendPasswordByEmail($usr_email, $password)
     {
-        $transport = $this->getServiceLocator()->get('mail.transport');
+        $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
+        $from = $this->getServiceLocator()->get('mail.transport')->findFromMail();
+
         $message = new Message();
         $this->getRequest()->getServer();  //Server vars
         $message->addTo($usr_email)
-            ->addFrom('biuro@crgkoscian.pl')
+            ->addFrom($from)
 
             ->setSubject('Twoje haslo zostalo zmienione!')
             ->setBody("Twoje hasło na stronie  " .

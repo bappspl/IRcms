@@ -2,6 +2,8 @@
 namespace CmsIr\System\Controller;
 
 use PHPThumb\GD;
+use CmsIr\System\Form\MailConfigForm;
+use CmsIr\System\Form\MailConfigFormFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -11,6 +13,42 @@ use Zend\Db\Sql\Predicate;
 class SystemController extends AbstractActionController
 {
     protected $pathToEditorFiles = 'public/files/editor/';
+
+    public function mailConfigAction()
+    {
+        $id = 1;
+
+        $config = $this->getMailConfigTable()->getOneBy(array('id' => $id));
+
+//        if(!$config) {
+//            return $this->redirect()->toRoute('settings');
+//        }
+
+        $form = new MailConfigForm();
+        $form->bind($config);
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $form->setInputFilter(new MailConfigFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $this->getMailConfigTable()->save($config);
+
+                $this->flashMessenger()->addMessage('Ustawienia zostały edytowane poprawnie.');
+
+                return $this->redirect()->toRoute('mail-config');
+            }
+        }
+
+        $viewParams = array();
+        $viewParams['form'] = $form;
+        $viewModel = new ViewModel();
+        $viewModel->setVariables($viewParams);
+        return $viewModel;
+    }
 
     public function saveEditorImagesAction()
     {
@@ -83,5 +121,13 @@ class SystemController extends AbstractActionController
             file_put_contents($changeArray['path'], $newFile);
         }
         exit();
+    }
+
+    /**
+     * @return \CmsIr\System\Model\MailConfigTable
+     */
+    public function getMailConfigTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\MailConfigTable');
     }
 }

@@ -38,4 +38,15 @@ return array(
             ),
         ),
     ),
+    'mail-config' => array(
+        'type'    => 'Segment',
+        'options' => array(
+            'route'    => '/cms-ir/mail-config',
+            'defaults' => array(
+                'module' => 'CmsIr\System',
+                'controller' => 'CmsIr\System\Controller\System',
+                'action'     => 'mailConfig',
+            ),
+        ),
+    ),
 );
