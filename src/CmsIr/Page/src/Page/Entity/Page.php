@@ -22,7 +22,7 @@ class Page
     protected $name;
 
     /** @ORM\Column(type="string") */
-    protected $slug;
+    protected $subtitle;
 
     /** @ORM\Column(type="string") */
     protected $url;
@@ -37,27 +37,19 @@ class Page
     protected $content;
 
     /** @ORM\Column(type="string") */
-    protected $filename_main;
+    protected $filename;
 
-    /**
-     *  @ORM\OneToMany(targetEntity="CmsIr\File\Entity\File", mappedBy="page")
-     **/
     protected $files;
-
-    public function __construct()
-    {
-        $this->files = new ArrayCollection();
-    }
 
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->status = (!empty($data['status'])) ? $data['status'] : null;
         $this->content = (!empty($data['content'])) ? $data['content'] : null; ;
-        $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null; ;
+        $this->filename = (!empty($data['filename'])) ? $data['filename'] : null; ;
         $this->url = (!empty($data['url'])) ? $data['url'] : null; ;
+        $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null; ;
     }
 
     /**
@@ -95,17 +87,33 @@ class Page
     /**
      * @return mixed
      */
-    public function getSlug()
+    public function getSubtitle()
     {
-        return $this->slug;
+        return $this->subtitle;
     }
 
     /**
-     * @param mixed $slug
+     * @param mixed $subtitle
      */
-    public function setSlug($slug)
+    public function setSubtitle($subtitle)
     {
-        $this->slug = $slug;
+        $this->subtitle = $subtitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 
     /**
@@ -143,6 +151,22 @@ class Page
     /**
      * @return mixed
      */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param mixed $filename
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFiles()
     {
         return $this->files;
@@ -156,35 +180,4 @@ class Page
         $this->files = $files;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFilenameMain()
-    {
-        return $this->filename_main;
-    }
-
-    /**
-     * @param mixed $filename_main
-     */
-    public function setFilenameMain($filename_main)
-    {
-        $this->filename_main = $filename_main;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param mixed $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace CmsIr\Slider\Controller;
 
+use Doctrine\ORM\EntityManager;
 use CmsIr\Slider\Form\SliderForm;
 use CmsIr\Slider\Form\SliderFormFilter;
 use CmsIr\Slider\Form\SliderItemFilter;
@@ -16,6 +17,7 @@ use Zend\Json\Json;
 class SliderController extends AbstractActionController
 {
     protected $uploadDir = 'public/files/slider/';
+    protected $entity = 'CmsIr\Slider\Entity\Slider';
 
     public function listAction()
     {
@@ -25,7 +27,7 @@ class SliderController extends AbstractActionController
             $data = $this->getRequest()->getPost();
             $columns = array('name', 'slug');
 
-            $listData = $this->getSliderTable()->getDatatables($columns,$data);
+            $listData = $this->getEm()->getRepository($this->entity)->getDatatables($columns, $data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -319,5 +321,13 @@ class SliderController extends AbstractActionController
     public function getSliderItemTable()
     {
         return $this->getServiceLocator()->get('CmsIr\Slider\Model\SliderItemTable');
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEm()
+    {
+        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     }
 }

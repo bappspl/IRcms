@@ -1,51 +1,58 @@
 <?php
 namespace CmsIr\Page\Form;
 
+use CmsIr\System\Entity\Status;
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 class PageForm extends Form
 {
-    public function __construct($name = null)
+    public function __construct($statuses)
     {
         parent::__construct('Page');
         $this->setAttribute('method', 'post');
         $this->setHydrator(new ClassMethods());
 
-        $this->add(array(
-            'name' => 'id',
-            'attributes' => array(
-                'type'  => 'hidden',
-                'id' => 'id'
-            ),
-        ));
+        $id = new Element\Hidden('id');
+        $id->setAttribute('id', 'id');
+        $this->add($id);
 
-        $this->add(array(
-        'type' => 'select',
-        'attributes' => array(
-            'class' => 'form-control',
-            'name' => 'status',
-        ),
-        'options' => array(
-            'label' => 'Status',
-            'value_options' => array(
-                '2' => 'Nieaktywna',
-                '1' => 'Aktywna'
-            ),
-        )
-    ));
+        $statusesToForm = array();
 
-        $this->add(array(
-            'name' => 'name',
-            'attributes' => array(
-                'id' => 'name',
-                'type'  => 'text',
-                'placeholder' => 'Wprowadź nazwę'
-            ),
-            'options' => array(
-                'label' => 'Nazwa',
-            ),
+        /* @var $s Status */
+        foreach($statuses as $s)
+        {
+            $name = $s->getSlug();
+
+            switch ($name)
+            {
+                case 'active':
+                    $name = 'Aktywna';
+                    break;
+                case 'inactive':
+                    $name = 'Nieaktywna';
+                    break;
+            }
+
+            $statusesToForm[$s->getId()] = $name;
+        }
+
+        $status = new Element\Select('status');
+        $status->setAttributes(array(
+            'class' => 'form-control'
         ));
+        $status->setLabel('Status');
+        $status->setValueOptions($statusesToForm);
+        $this->add($status);
+
+        $name = new Element\Text('name');
+        $name->setAttributes(array(
+            'id' => 'name',
+            'placeholder' => 'Wprowadź nazwę'
+        ));
+        $name->setLabel('Nazwa');
+        $this->add($name);
 
         $this->add(array(
             'name' => 'url',
@@ -83,18 +90,18 @@ class PageForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'filename',
+            'name' => 'files',
             'attributes' => array(
                 'type'  => 'hidden',
-                'id' => 'filename'
+                'id' => 'files'
             ),
         ));
 
         $this->add(array(
-            'name' => 'filename_main',
+            'name' => 'filename',
             'attributes' => array(
                 'type'  => 'hidden',
-                'id' => 'filename-main'
+                'id' => 'filename'
             ),
         ));
 

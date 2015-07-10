@@ -131,14 +131,13 @@ class FormInput extends ZendFormInput
                     ->setMessageCloseString('</small>')
                     ->render($element);
 
-                $options = $element->getOptions();
-                $options = reset($options);
+                $label = $element->getLabel();
 
                 return sprintf(
                     '<div class="form-group ' . (count($element->getMessages()) > 0 ? 'has-error' : '') . ' has-feedback">
                     <label> %s </label><input %s class="form-control" %s
                     ' . (count($element->getMessages()) > 0 ? '<span class="glyphicon glyphicon-remove form-control-feedback"></span>' : '') . '%s</div>',
-                    $options,
+                    $label,
                     $this->createAttributesString($attributes),
                     $this->getInlineClosingBracket(),
                     $errorMessage

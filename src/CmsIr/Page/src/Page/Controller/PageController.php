@@ -2,12 +2,9 @@
 namespace CmsIr\Page\Controller;
 
 use Doctrine\ORM\EntityManager;
-use CmsIr\File\Model\File;
 use CmsIr\Page\Form\PageForm;
 use CmsIr\Page\Form\PageFormFilter;
-use CmsIr\Page\Model\Page;
 use CmsIr\System\Util\Inflector;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -22,10 +19,10 @@ class PageController extends AbstractActionController
     public function listAction()
     {
         $request = $this->getRequest();
-        if ($request->isPost()) {
-
+        if ($request->isPost())
+        {
             $data = $this->getRequest()->getPost();
-            $columns = array('name');
+            $columns = array('id', 'name', 'statusId', 'status', 'id');
 
             $listData = $this->getEm()->getRepository($this->entity)->getDatatables($columns, $data);
 
@@ -46,7 +43,9 @@ class PageController extends AbstractActionController
 
     public function createAction()
     {
-        $form = new PageForm();
+        $statuses = $this->getEm()->getRepository('CmsIr\System\Entity\Status')->findBy(array('slug' => array('active', 'inactive')), array('id' =>  'DESC'));
+
+        $form = new PageForm($statuses);
 
         $request = $this->getRequest();
 
@@ -61,7 +60,11 @@ class PageController extends AbstractActionController
                 $page = new \CmsIr\Page\Entity\Page();
 
                 $page->exchangeArray($form->getData());
-                $page->setSlug(Inflector::slugify($page->getName()));
+
+                if($page->getUrl() === null)
+                {
+                    $page->setUrl(Inflector::slugify($page->getName()));
+                }
 
                 $status = $this->getEm()->find('CmsIr\System\Entity\Status', $page->getStatus());
                 $page->setStatus($status);
@@ -109,7 +112,8 @@ class PageController extends AbstractActionController
         /* @var $page \CmsIr\Page\Entity\Page */
         $page = $this->getEm()->find($this->entity, $id);
 
-        if(!$page) {
+        if(!$page)
+        {
             return $this->redirect()->toRoute('page');
         }
 
@@ -127,14 +131,17 @@ class PageController extends AbstractActionController
 
             if ($form->isValid())
             {
-                $filename = $page->getFilenameMain();
+                $filename = $page->getFilename();
 
                 if(strlen($filename) == 0)
                 {
-                    $page->setFilenameMain(null);
+                    $page->setFilename(null);
                 }
 
-                $page->setSlug(Inflector::slugify($page->getName()));
+                if($page->getUrl() === null)
+                {
+                    $page->setUrl(Inflector::slugify($page->getName()));
+                }
 
                 $status = $this->getEm()->find('CmsIr\System\Entity\Status', $page->getStatus());
                 $page->setStatus($status);
@@ -180,7 +187,9 @@ class PageController extends AbstractActionController
     {
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('page_id', 0);
-        if (!$id) {
+
+        if (!$id)
+        {
             return $this->redirect()->toRoute('page');
         }
 
@@ -217,8 +226,7 @@ class PageController extends AbstractActionController
         }
 
         return array(
-            'id'    => $id,
-            'page' => $this->getPageTable()->getOneBy(array('id' => $id))
+            'id'    => $id
         );
     }
 
@@ -276,7 +284,8 @@ class PageController extends AbstractActionController
     public function deletePhotoAction()
     {
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        if ($request->isPost())
+        {
             $id = $request->getPost('id');
             $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');

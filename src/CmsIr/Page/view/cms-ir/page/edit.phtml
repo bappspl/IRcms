@@ -4,8 +4,8 @@ $form->prepare();
 echo $this->form()->openTag($form);
 ?>
 
-<?php echo $this->customFormHelper($form->get('filename_main')); ?>
 <?php echo $this->customFormHelper($form->get('filename')); ?>
+<?php echo $this->customFormHelper($form->get('files')); ?>
 
     <div class="row">
         <div class="col-sm-6">
@@ -57,7 +57,7 @@ echo $this->form()->openTag($form);
                             <div id="queue"></div>
                             <div class="files">
                                 <?php if(!empty($pageFiles)): ?>
-                                    <?php /* @var $file \CmsIr\File\Model\File */ ?>
+                                    <?php /* @var $file \CmsIr\File\Entity\File */ ?>
                                     <?php foreach($pageFiles as $file): ?>
                                         <div id="<?php echo $file->getId() ?>" class="deletePhoto">
                                             <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i>

@@ -2,15 +2,15 @@ $(function () {
     $('#upload').uploadifive({
         'auto'             : false,
         'formData'         : {
-            'files': $('#filename').val()
+            'files': $('#files').val()
         },
         'method'   : 'post',
         'multi'         : true,
         'queueID'          : 'queue',
         'uploadScript'     : '/cms-ir/page/upload',
         'onUploadComplete' : function(file, data) {
-            $('#filename').val(data);
-            if($('#filename').val().length > 0) {
+            $('#files').val(data);
+            if($('#files').val().length > 0) {
                 $('.files').append('<div class="deletePhoto">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/temp_files/page/'+data+'" class="thumb" /> </div>')
             }
 
@@ -73,15 +73,15 @@ $(function () {
     $('#upload-main').uploadifive({
         'auto'             : false,
         'formData'         : {
-            'files': $('#filename-main').val()
+            'files': $('#filename').val()
         },
         'method'   : 'post',
         'multi'         : true,
         'queueID'          : 'queue-main',
         'uploadScript'     : '/cms-ir/page/upload-main',
         'onUploadComplete' : function(file, data) {
-            $('#filename-main').val(data);
-            if($('#filename-main').val().length > 0) {
+            $('#filename').val(data);
+            if($('#filename').val().length > 0) {
                 $('.files-main img').remove();
                 $('.files-main').append('<div class="deletePhoto_main">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/files/page/'+data+'" class="thumb" /> </div>')
             }
@@ -107,7 +107,7 @@ $(function () {
                     success: function(json)
                     {
                         $cache.parent().remove();
-                        $('#filename-main').val(null);
+                        $('#filename').val(null);
                     }
                 });
 
@@ -115,7 +115,7 @@ $(function () {
         }
     });
 
-    if($('#filename-main').val().length > 0) {
+    if($('#filename').val().length > 0) {
         var filename = $('#filename-main').val();
         $('.files-main').append('<div class="deletePhoto_main">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/files/page/'+filename+'" class="thumb" /> </div>')
     }
@@ -141,7 +141,7 @@ $(function () {
             success: function(json)
             {
                 $cache.parent().remove();
-                $('#filename-main').val(null);
+                $('#filename').val(null);
             }
         });
 

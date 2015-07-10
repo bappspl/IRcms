@@ -1,13 +1,12 @@
 <?php
 
-namespace CmsIr\Page\Entity;
+namespace CmsIr\Slider\Entity;
 
-use CmsIr\System\Entity\Status;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\Expr\Join;
 
-class PageTable extends EntityRepository
+class SliderTable extends EntityRepository
 {
     public function getDataToDisplay ($filteredRows, $columns)
     {
@@ -15,20 +14,17 @@ class PageTable extends EntityRepository
         foreach($filteredRows as $row)
         {
             $tmp = array();
+
             foreach($columns as $column)
             {
                 $column = 'get'.ucfirst($column);
-                if($column == 'getStatus')
-                {
-                    $tmp[] = $this->getLabelToDisplay($row->getStatus()->getId(0));
-                } elseif($column == 'getStatusId')
-                {
-                    $tmp[] = $this->getLabelToDisplay($row->getStatus()->getId());
-                } else
-                {
-                    $tmp[] = $row->$column();
-                }
+                $tmp[] = $row->$column();
             }
+
+            $tmp[] = $this->getLabelToDisplay($row->getStatus()->getName());
+
+            $tmp[] = '<a href="slider/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
+                '<a href="slider/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -36,11 +32,8 @@ class PageTable extends EntityRepository
 
     public function getLabelToDisplay ($labelValue)
     {
-        /* @var $status Status */
-        $status = $this->_em->getRepository('CmsIr\System\Entity\Status')->findOneBy(array('id' => $labelValue));
-
-        $status->getName() == 'Active' ? $checked = 'label-primary' : $checked = 'label-default';
-        $status->getName() == 'Active' ? $name = 'Aktywna' : $name= 'Nieaktywna';
+        $labelValue == 'Active' ? $checked = 'label-primary' : $checked = 'label-default';
+        $labelValue == 'Active' ? $name = 'Aktywna' : $name= 'Nieaktywna';
 
         $template = '<span class="label ' . $checked . '">' .$name . '</span>';
         return $template;
@@ -60,29 +53,21 @@ class PageTable extends EntityRepository
             $sorting = $this->getSortingColumnDir($columns, $data);
         }
 
-        if($sorting[0] == 'status_id')
-        {
-            $sorting[0] = 'status';
-        }
-
         $qb = $this->_em->createQueryBuilder();
 
-        $qb->select('page');
-        $qb->orderBy('page.' . $sorting[0], $sorting[1]);
+        $qb->select('slider');
+        $qb->orderBy('slider.' . $sorting[0], $sorting[1]);
         $qb->setFirstResult($trueOffset);
         $qb->setMaxResults($trueLimit);
-        $qb->from('CmsIr\Page\Entity\Page','page');
-        $qb->innerJoin('CmsIr\System\Entity\Status', 'status', 'WITH', 'page.status = status.id');
+        $qb->from('CmsIr\Slider\Entity\Slider','slider');
+        $qb->innerJoin('CmsIr\System\Entity\Status', 'status', 'WITH', 'slider.status = status.id');
 
         if ($data->sSearch != '')
         {
             for ( $i=0 ; $i<count($columns) ; $i++ )
             {
-                if(strpos($columns[$i], 'status') === false && strpos($columns[$i], 'groups') === false)
-                {
-                    $qb->orWhere($qb->expr()->like('page.' . $columns[$i], '?' . $i));
-                    $qb->setParameter($i, '%' . $data->sSearch . '%');
-                }
+                $qb->orWhere($qb->expr()->like('slider.' . $columns[$i], '?' . $i));
+                $qb->setParameter($i, '%'.$data->sSearch.'%');
             }
 
             $displayFlag = true;
@@ -124,8 +109,8 @@ class PageTable extends EntityRepository
     public function countRows()
     {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('count(page.id)');
-        $qb->from('CmsIr\Page\Entity\Page','page');
+        $qb->select('count(slider.id)');
+        $qb->from('CmsIr\Slider\Entity\Slider','slider');
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;
