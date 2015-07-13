@@ -1,0 +1,21 @@
+<?php $metaForm = $this->metaHelper()->getMetaForm($this->entity); ?>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="the-box">
+            <h4 class="small-title">Tagi meta <i class="fa fa-question-circle" data-toggle="popover" title="Wykorzystanie meta tagów w wyszukiwarkach:" data-content="<img src='<?php echo $this->basePath(); ?>/img/meta.png' />"></i></h4>
+            <?php echo $this->customFormHelper($metaForm->get('title')); ?>
+            <?php echo $this->customFormHelper($metaForm->get('keywords')); ?>
+            <?php echo $this->customFormHelper($metaForm->get('description')); ?>
+        </div>
+    </div>
+</div>
+
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/meta.css'); ?>
+
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            html: true
+        })
+    })
+</script>

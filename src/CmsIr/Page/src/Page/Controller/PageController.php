@@ -26,10 +26,7 @@ class PageController extends AbstractActionController
 
     public function listAction()
     {
-
-        $options = $this->getMailConfigTable()->generateMailConfigArray();
-        var_dump($options);die;
-
+        //$options = $this->getMailConfigTable()->generateMailConfigArray();
         $request = $this->getRequest();
         if ($request->isPost()) {
 
@@ -66,11 +63,11 @@ class PageController extends AbstractActionController
 
             if ($form->isValid()) {
                 $page = new Page();
-
                 $page->exchangeArray($form->getData());
                 $page->setSlug(Inflector::slugify($page->getName()));
 
                 $id = $this->getPageTable()->save($page);
+                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -166,6 +163,7 @@ class PageController extends AbstractActionController
 
                 $page->setSlug(Inflector::slugify($page->getName()));
                 $id = $this->getPageTable()->save($page);
+                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -193,6 +191,7 @@ class PageController extends AbstractActionController
         }
 
         $viewParams = array();
+        $viewParams['page'] = $page;
         $viewParams['form'] = $form;
         $viewParams['pageFiles'] = $pageFiles;
         $viewModel = new ViewModel();
@@ -415,5 +414,13 @@ class PageController extends AbstractActionController
     public function getMenuService()
     {
         return $this->getServiceLocator()->get('CmsIr\Menu\Service\MenuService');
+    }
+
+    /**
+     * @return \CmsIr\Meta\Service\MetaService
+     */
+    public function getMetaService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
     }
 }

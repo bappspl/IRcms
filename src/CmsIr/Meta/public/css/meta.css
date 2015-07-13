@@ -1,0 +1,7 @@
+.popover {
+    max-width: 100% !important;
+    top: -50px !important;
+}
+.fa-question-circle {
+    cursor: pointer;
+}
