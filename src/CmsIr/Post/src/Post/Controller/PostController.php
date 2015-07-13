@@ -122,7 +122,7 @@ class PostController extends AbstractActionController
                     $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
                         "Kliknij w poniższy link, aby go przeczytać: <a href='" .
                         $this->getRequest()->getServer('HTTP_ORIGIN') .
-                        $this->url()->fromRoute('one-news', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
+                        $this->url()->fromRoute('viewNews', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
 
 
                     /** @var $confirmedStatus Status */
