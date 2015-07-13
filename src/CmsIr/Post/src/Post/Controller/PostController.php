@@ -96,6 +96,7 @@ class PostController extends AbstractActionController
 
                 if($userRoleId < 3) $post->setStatusId(2);
                 $id = $this->getPostTable()->save($post);
+                $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -225,6 +226,7 @@ class PostController extends AbstractActionController
                 }
 
                 $id = $this->getPostTable()->save($post);
+                $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory))
@@ -297,6 +299,7 @@ class PostController extends AbstractActionController
 
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['post'] = $post;
         $viewParams['extraFields'] = $fields;
         $viewParams['postFiles'] = $postFiles;
         $viewParams['category'] = $category;
@@ -651,5 +654,13 @@ class PostController extends AbstractActionController
     public function getSubscriberTable()
     {
         return $this->getServiceLocator()->get('CmsIr\Newsletter\Model\SubscriberTable');
+    }
+
+    /**
+     * @return \CmsIr\Meta\Service\MetaService
+     */
+    public function getMetaService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
     }
 }

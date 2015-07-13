@@ -24,8 +24,8 @@ class MetaHelper extends AbstractHelper implements ServiceLocatorAwareInterface
             $entityId = $entity->getId();
 
             /* @var $meta Meta */
-            $meta = $this->getMetaTable()->getOneBy(array('entity_type' => $entityType, 'entity_id' => $entityId));
-            $form->bind($meta);
+//            $meta = $this->getMetaTable()->getOneBy(array('entity_type' => $entityType, 'entity_id' => $entityId));
+//            $form->bind($meta);
         }
         return $form;
     }

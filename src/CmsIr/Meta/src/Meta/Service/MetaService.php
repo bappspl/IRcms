@@ -30,7 +30,6 @@ class MetaService implements ServiceLocatorAwareInterface
             $meta->setEntityId($entityId);
             $meta->setEntityType($entityType);
         }
-
         $this->getMetaTable()->save($meta);
     }
     /**
