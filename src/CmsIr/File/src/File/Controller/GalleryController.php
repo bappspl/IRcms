@@ -20,6 +20,7 @@ class GalleryController extends AbstractActionController
 
     public function listAction()
     {
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 

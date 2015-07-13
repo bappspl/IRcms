@@ -46,12 +46,6 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new Authentication());
                     return new TableGateway('cms_users', $dbAdapter, null, $resultSetPrototype);
                 },
-                'mail.transport' => function (ServiceManager $serviceManager) {
-                    $config = $serviceManager->get('Config');
-                    $transport = new Smtp();
-                    $transport->setOptions(new SmtpOptions($config['mail']['transport']['options']));
-                    return $transport;
-                },
             ),
         );
     }		

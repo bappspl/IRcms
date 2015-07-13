@@ -14,6 +14,9 @@ return array(
         'abstract_factories' => array(
             'Zend\Form\FormAbstractServiceFactory',
         ),
+        'factories' => array(
+            'CmsIr\Place\Service\PlaceService' => 'CmsIr\Place\Service\Factory\PlaceService'
+        ),
     ),
     'view_manager' => array(
         'template_map' => array(

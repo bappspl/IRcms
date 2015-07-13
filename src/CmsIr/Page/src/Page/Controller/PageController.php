@@ -19,8 +19,17 @@ class PageController extends AbstractActionController
     protected $uploadDir = 'public/temp_files/page/';
     protected $destinationUploadDir = 'public/files/page/';
 
+    public function getMailConfigTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\MailConfigTable');
+    }
+
     public function listAction()
     {
+
+        $options = $this->getMailConfigTable()->generateMailConfigArray();
+        var_dump($options);die;
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 

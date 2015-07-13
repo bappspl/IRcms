@@ -1,6 +1,8 @@
 <?php
 namespace CmsIr\System;
 
+use CmsIr\System\Model\MailConfig;
+use CmsIr\System\Model\MailConfigTable;
 use CmsIr\System\Model\Menu;
 use CmsIr\System\Model\MenuTable;
 use CmsIr\System\Model\Status;
@@ -75,6 +77,17 @@ class Module
                         $resultSetPrototype = new ResultSet();
                         $resultSetPrototype->setArrayObjectPrototype(new Menu());
                         return new TableGateway('cms_backend_menu', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\System\Model\MailConfigTable' =>  function($sm) {
+                    $tableGateway = $sm->get('MailConfigTableGateway');
+                    $table = new MailConfigTable($tableGateway);
+                    return $table;
+                },
+                'MailConfigTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new MailConfig());
+                    return new TableGateway('cms_mail_config', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Navigation' => 'CmsIr\System\Navigation\MyNavigationFactory'
             ),
