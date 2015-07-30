@@ -46,9 +46,9 @@ class MetaTable extends ModelTable
         return $id;
     }
 
-    public function deleteMeta($id)
+    public function deleteMeta($entityId, $entityType)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        $id  = (int) $entityId;
+        $this->tableGateway->delete(array('entity_id' => $entityId, 'entity_type' => $entityType));
     }
 }

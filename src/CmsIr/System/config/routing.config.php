@@ -49,4 +49,32 @@ return array(
             ),
         ),
     ),
+    'log-event' => array(
+        'type'    => 'Segment',
+        'may_terminate' => true,
+        'options' => array(
+            'route'    => '/cms-ir/log-event',
+            'defaults' => array(
+                'module' => 'CmsIr\System',
+                'controller' => 'CmsIr\System\Controller\System',
+                'action'     => 'logEvent',
+            ),
+        ),
+        'child_routes' => array(
+            'change-status' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-status/:id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\System',
+                        'controller' => 'CmsIr\System\Controller\System',
+                        'action'     => 'changeStatus',
+                    ),
+                    'constraints' => array(
+                        'id' =>  '[0-9]+'
+                    ),
+                ),
+            ),
+        ),
+    )
 );

@@ -26,6 +26,21 @@ class UsersTable extends ModelTable
         return $row;
     }
 
+    public function findByName($name)
+    {
+        $where = new \Zend\Db\Sql\Where();
+        $where->addPredicate(
+            new \Zend\Db\Sql\Predicate\Like('email', $name.'@%')
+        );
+
+        $select = $this->tableGateway->getSql()->select();
+        $select->where($where);
+
+        $resultSet = $this->tableGateway->selectWith($select);
+        $entity = $resultSet->current();
+        return $entity;
+    }
+
     public function deleteUser($ids)
     {
         if(!is_array($ids))

@@ -10,6 +10,7 @@ return array(
     ),
     'view_manager' => array(
         'template_map' => array(
+            'partial/status-massive-log-event-modal'  => __DIR__ . '/../view/partial/status-massive-log-event-modal.phtml',
         ),
         'template_path_stack' => array(
             'system' => __DIR__ . '/../view'

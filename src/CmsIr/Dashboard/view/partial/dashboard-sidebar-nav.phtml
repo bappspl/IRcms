@@ -12,12 +12,14 @@
                 <?php /* @var $page Zend\Navigation\Page\Mvc */ ?>
                 <?php $hasChildren = $page->hasPages() ?>
                 <?php if( ! $hasChildren): ?>
-                    <li <?php if($page->isActive()) echo 'class="selected"'?> id="<?php echo $page->getId(); ?>">
-                        <a class="nav-header" href="<?php echo $page->getHref() ?>">
-                            <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
-                            <?php echo $this->translate($page->getLabel()) ?>
-                        </a>
-                    </li>
+                    <?php if($page->visibleInPrimary == true): ?>
+                        <li <?php if($page->isActive()) echo 'class="selected"'?> id="<?php echo $page->getId(); ?>">
+                            <a class="nav-header" href="<?php echo $page->getHref() ?>">
+                                <i class="<?php echo $page->getClass(); ?> icon-sidebar"></i>
+                                <?php echo $this->translate($page->getLabel()) ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 <?php else: ?>
 
                     <?php $flag = 0; ?>

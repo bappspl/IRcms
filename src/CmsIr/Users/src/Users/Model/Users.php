@@ -22,6 +22,7 @@ class Users
     protected $registration_date;
     protected $registration_token;
     protected $email_confirmed;
+    protected $host;
 
     public function exchangeArray($data) 
     {
@@ -39,7 +40,8 @@ class Users
         $this->registration_date = (!empty($data['registration_date'])) ? $data['registration_date'] : null;
         $this->registration_token = (!empty($data['registration_token'])) ? $data['registration_token'] : null;
         $this->email_confirmed = (isset($data['email_confirmed'])) ? $data['email_confirmed'] : null;
-    }	
+        $this->host = (isset($data['host'])) ? $data['host'] : null;
+    }
 
     public function getArrayCopy()
     {
@@ -57,6 +59,22 @@ class Users
     public function getInputFilter()
     {
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param mixed $host
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
     }
 
     /**

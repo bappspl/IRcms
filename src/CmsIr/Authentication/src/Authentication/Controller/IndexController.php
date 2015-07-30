@@ -59,7 +59,6 @@ class IndexController extends AbstractActionController
 
                 $auth = new AuthenticationService();
                 $result = $auth->authenticate($authAdapter);
-
                 switch ($result->getCode()) {
                     case Result::FAILURE_IDENTITY_NOT_FOUND:
                         $messages = 'Nie istnieje taki użytkownik';
@@ -75,6 +74,7 @@ class IndexController extends AbstractActionController
                             null,
                             'password'
                         ));
+
                         $time = 1209600; // 14 days
                         if ($data['rememberme']) {
                             $sessionManager = new \Zend\Session\SessionManager();

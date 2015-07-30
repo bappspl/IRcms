@@ -54,7 +54,53 @@
                 </div>
             </form>
             <!-- End nav search form -->
+            <ul class="nav navbar-nav navbar-left">
+                <!-- Begin nav notification -->
+                <li class="dropdown">
+                    <a href="#fakelink" class="dropdown-toggle" data-toggle="dropdown">
+                        <?php if($unreadEvents > 0): ?>
+                            <span class="badge badge-danger icon-count"><?php echo $unreadEvents; ?></span>
+                        <?php endif; ?>
+                        <i class="fa fa-bell"></i>
+                    </a>
+                    <ul class="dropdown-menu square with-triangle">
+                        <li>
+                            <div class="nav-dropdown-heading">
+                                Ostatnie działania
+                            </div><!-- /.nav-dropdown-heading -->
+                            <div class="nav-dropdown-content scroll-nav-dropdown">
+                                <ul>
+                                    <?php foreach($latestEvents as $event): ?>
+                                        <?php
+                                            $cssClass = strtolower($event->getAction());
+                                            if($event->getViewed() == 0)
+                                            {
+                                                $cssClass .= ' unread';
+                                            }
 
+                                            $file = '/img/avatar.jpg';
+                                            if($event->getFilename())
+                                            {
+                                                $file = '/files/users/'.$event->getFilename();
+                                            }
+                                        ?>
+                                        <li class="<?php echo $cssClass; ?>">
+                                            <a href="#">
+                                                <img src="<?php echo $file; ?>" class="absolute-left-content img-circle" alt="Avatar">
+                                                <strong><?php echo $event->getUser(); ?></strong> <?php echo $event->getWhat(); ?>
+                                                <span class="small-caps">"<?php echo $event->getDescription(); ?>"</span>
+                                                <span class="small-caps"><?php echo $event->getDate(); ?></span>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div><!-- /.nav-dropdown-content scroll-nav-dropdown -->
+                            <button class="btn btn-primary btn-square btn-block" onclick="window.location.href='<?php echo $this->url('log-event'); ?>'">Zobacz wszystkie działania</button>
+                        </li>
+                    </ul>
+                </li>
+                <!-- End nav notification -->
+            </ul>
         </div><!-- /.navbar-collapse -->
     <!-- End Collapse menu nav -->
     </div><!-- /.top-nav-content -->

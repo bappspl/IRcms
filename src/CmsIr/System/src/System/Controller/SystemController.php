@@ -14,6 +14,62 @@ class SystemController extends AbstractActionController
 {
     protected $pathToEditorFiles = 'public/files/editor/';
 
+    public function logEventAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $data = $this->getRequest()->getPost();
+            $columns = array('id', 'entityType', 'user', 'what', 'action', 'description', 'date', 'viewed');
+
+            $listData = $this->getLogEventTable()->getDatatables($columns, $data);
+            $output = array(
+                "sEcho" => $this->getRequest()->getPost('sEcho'),
+                "iTotalRecords" => $listData['iTotalRecords'],
+                "iTotalDisplayRecords" => $listData['iTotalDisplayRecords'],
+                "aaData" => $listData['aaData']
+            );
+
+            $jsonObject = Json::encode($output, true);
+            echo $jsonObject;
+            return $this->response;
+        }
+
+        $viewParams = array();
+        $viewModel = new ViewModel();
+        $viewModel->setVariables($viewParams);
+        return  $viewModel;
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost())
+        {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz')
+            {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getLogEventTable()->changeStatusLogEvent($id, $statusId);
+
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('log-event');
+        }
+
+        return array();
+    }
+
     public function mailConfigAction()
     {
         $id = 1;
@@ -129,5 +185,13 @@ class SystemController extends AbstractActionController
     public function getMailConfigTable()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Model\MailConfigTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Model\LogEventTable
+     */
+    public function getLogEventTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\LogEventTable');
     }
 }

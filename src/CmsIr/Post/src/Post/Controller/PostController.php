@@ -423,6 +423,7 @@ class PostController extends AbstractActionController
                 }
 
                 $this->getPostTable()->deletePost($id);
+                $this->getMetaService()->getMetaTable()->deleteMeta($id, 'Post');
 
                 //$this->flashMessenger()->addMessage('Post został usunięty poprawnie.');
                 $modal = $request->getPost('modal', false);

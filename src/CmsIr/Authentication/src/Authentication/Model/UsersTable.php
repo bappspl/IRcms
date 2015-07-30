@@ -115,4 +115,5 @@ class UsersTable
             return false;
         }
     }
+
 }

@@ -38,7 +38,7 @@
 <body class="tooltips">
 
     <!-- Dashboard Top Navigation -->
-    <?php echo $this->partial('partial/top-nav', array('loggedUser' => $this->loggedUser)); ?>
+    <?php echo $this->partial('partial/top-nav', array('loggedUser' => $this->loggedUser, 'unreadEvents' => $this->unreadEvents, 'latestEvents' => $this->latestEvents)); ?>
 
     <!-- Dashboard Sidebar Navigation -->
     <?php echo $this->navigation('navigation')
