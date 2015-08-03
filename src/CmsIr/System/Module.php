@@ -1,6 +1,10 @@
 <?php
 namespace CmsIr\System;
 
+use CmsIr\System\Model\Block;
+use CmsIr\System\Model\BlockTable;
+use CmsIr\System\Model\Language;
+use CmsIr\System\Model\LanguageTable;
 use CmsIr\System\Model\LogEvent;
 use CmsIr\System\Model\LogEventTable;
 use CmsIr\System\Model\MailConfig;
@@ -101,6 +105,28 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new LogEvent());
                     return new TableGateway('cms_log_event', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\System\Model\LanguageTable' =>  function($sm) {
+                    $tableGateway = $sm->get('LanguageTableGateway');
+                    $table = new LanguageTable($tableGateway);
+                    return $table;
+                },
+                'LanguageTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Language());
+                    return new TableGateway('cms_language', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\System\Model\BlockTable' =>  function($sm) {
+                    $tableGateway = $sm->get('BlockTableGateway');
+                    $table = new BlockTable($tableGateway);
+                    return $table;
+                },
+                'BlockTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Block());
+                    return new TableGateway('cms_language', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Navigation' => 'CmsIr\System\Navigation\MyNavigationFactory'
             ),
