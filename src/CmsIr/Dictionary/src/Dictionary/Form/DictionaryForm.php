@@ -6,7 +6,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 class DictionaryForm extends Form
 {
-    public function __construct($name = null)
+    public function __construct($categories)
     {
         parent::__construct('Dictionary');
         $this->setAttribute('method', 'post');
@@ -38,6 +38,18 @@ class DictionaryForm extends Form
             'options' => array(
                 'label' => 'Nazwa',
             ),
+        ));
+
+        $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'category_id',
+            ),
+            'options' => array(
+                'label' => 'Kategoria',
+                'value_options' => $categories
+            )
         ));
 
         $this->add(array(

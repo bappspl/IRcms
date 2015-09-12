@@ -9,55 +9,64 @@ echo $this->form()->openTag($form);
 <div class="row">
     <div class="col-sm-6">
 
-        <div class="the-box">
-            <h4 class="small-title">Dane podstawowe</h4>
-            <?php echo $this->partial('partial/form/basic-post-data'); ?>
-
-        </div>
-
-    </div>
-
-    <div class="col-sm-6">
         <div class="row">
             <div class="col-sm-12">
                 <div class="the-box">
-                    <h4 class="small-title">Zdjęcie główne</h4>
+                    <h4 class="small-title">Dane podstawowe</h4>
 
-                    <div class="form-group">
-                        <?php echo $this->customFormHelper($form->get('upload_main')); ?>
-                        <a href="javascript:$('#upload-main').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
-                        <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
-                        <div id="queue-main"></div>
-                        <div class="files-main"></div>
-                    </div>
+                    <?php echo $this->partial('partial/form/basic-post-data'); ?>
+
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="the-box">
-                    <h4 class="small-title">Galeria zdjęć</h4>
+        <?php echo $this->languageHelper('partial/language-' . $category) ?>
 
-                    <div class="form-group">
+    </div>
 
-                        <?php echo $this->customFormHelper($form->get('upload')); ?>
+    <?php if($category == 'news'): ?>
 
-                        <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
-                        <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="the-box">
+                        <h4 class="small-title">Zdjęcie główne</h4>
 
-                        <div id="queue"></div>
-                        <div class="files"></div>
+                        <div class="form-group">
+                            <?php echo $this->customFormHelper($form->get('upload_main')); ?>
+                            <a href="javascript:$('#upload-main').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
+                            <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
+                            <div id="queue-main"></div>
+                            <div class="files-main"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="the-box">
+                        <h4 class="small-title">Galeria zdjęć</h4>
+
+                        <div class="form-group">
+
+                            <?php echo $this->customFormHelper($form->get('upload')); ?>
+
+                            <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
+                            <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>
+
+                            <div id="queue"></div>
+                            <div class="files"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-    </div>
+    <?php endif ?>
 
 </div>
-
-<?php echo $this->languageHelper('partial/language-post') ?>
 
 <?php echo $this->partial('partial/meta-form', array('entity' => null)); ?>
 
@@ -68,6 +77,7 @@ echo $this->form()->openTag($form);
         </div>
     </div>
 </div>
+
 <?php echo $this->form()->closeTag(); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap-datetimepicker.min.css'); ?>

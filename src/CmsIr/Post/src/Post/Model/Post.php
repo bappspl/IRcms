@@ -23,6 +23,9 @@ class Post
     protected $url;
     protected $author;
 
+    // opinions
+    protected $client;
+
     public function exchangeArray($data) 
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
@@ -41,6 +44,8 @@ class Post
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
         $this->author = (!empty($data['author'])) ? $data['author'] : null;
+
+        $this->client = (!empty($data['client'])) ? $data['client'] : null;
     }
 
     public function getArrayCopy()
@@ -283,5 +288,21 @@ class Post
     public function setAuthor($author)
     {
         $this->author = $author;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param mixed $client
+     */
+    public function setClient($client)
+    {
+        $this->client = $client;
     }
 }

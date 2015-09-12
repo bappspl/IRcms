@@ -79,6 +79,7 @@ class PostForm extends Form
                 'label' => 'Autor',
                 'value_options' => array(
                 ),
+                'disable_inarray_validator' => true,
             )
         ));
 

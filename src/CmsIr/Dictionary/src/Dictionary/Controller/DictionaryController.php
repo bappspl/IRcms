@@ -49,8 +49,10 @@ class DictionaryController extends AbstractActionController
 
     public function createAction()
     {
+        $categories = $this->getCategoryService()->findAsAssocArray();
+
         $category = $this->params()->fromRoute('category');
-        $form = new DictionaryForm();
+        $form = new DictionaryForm($categories);
 
         $request = $this->getRequest();
 
@@ -90,6 +92,8 @@ class DictionaryController extends AbstractActionController
 
     public function editAction()
     {
+        $categories = $this->getCategoryService()->findAsAssocArray();
+
         $id = $this->params()->fromRoute('dictionary_id');
         $category = $this->params()->fromRoute('category');
 
@@ -102,7 +106,7 @@ class DictionaryController extends AbstractActionController
 
         $blocks = $this->getBlockService()->getBlocks($dictionary, 'Dictionary');
 
-        $form = new DictionaryForm();
+        $form = new DictionaryForm($categories);
         $form->bind($dictionary);
 
         $request = $this->getRequest();
@@ -276,5 +280,13 @@ class DictionaryController extends AbstractActionController
     public function getBlockService()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
+    }
+
+    /**
+     * @return \CmsIr\Category\Service\CategoryService
+     */
+    public function getCategoryService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Category\Service\CategoryService');
     }
 }

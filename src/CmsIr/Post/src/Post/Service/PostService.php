@@ -14,9 +14,9 @@ class PostService implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
 
-    public function findLastPostsByLangIdWithBlocks($langId, $dateFormat, $counter = null)
+    public function findLastPostsByLangIdWithBlocks($langId, $category, $dateFormat, $counter = null)
     {
-        $posts = $this->getPostTable()->getBy(array('status_id' => 1), 'id DESC', $counter);
+        $posts = $this->getPostTable()->getBy(array('status_id' => 1, 'category' => $category), 'id DESC', $counter);
 
         /* @var $post Post */
         foreach ($posts as $post)
@@ -40,12 +40,18 @@ class PostService implements ServiceLocatorAwareInterface
                     case 'content':
                         $post->setContent($block->getValue());
                         break;
+                    case 'client':
+                        $post->setClient($block->getValue());
+                        break;
                 }
             }
 
-            /* @var $user Users */
-            $user = $this->getUsersTable()->getOneBy(array('id' => $post->getAuthorId()));
-            $post->setAuthor($user->getName() . ' ' . $user->getSurname());
+            if($post->getAuthorId())
+            {
+                /* @var $user Users */
+                $user = $this->getUsersTable()->getOneBy(array('id' => $post->getAuthorId()));
+                $post->setAuthor($user->getName() . ' ' . $user->getSurname());
+            }
 
             $date = $post->getDate();
             $date = new \DateTime($date);

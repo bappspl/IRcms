@@ -33,5 +33,10 @@ class DictionaryFormFilter extends InputFilter
             'required'   => false,
         ));
 
+        $this->add(array(
+            'name'       => 'category_id',
+            'required'   => false,
+        ));
+
 	}
 }

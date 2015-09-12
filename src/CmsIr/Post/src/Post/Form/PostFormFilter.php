@@ -33,6 +33,11 @@ class PostFormFilter extends InputFilter
             'required' => false,
         ));
 
+        $this->add(array(
+            'name'       => 'author_id',
+            'required' => false,
+        ));
+
 //        $this->add(array(
 //            'name'       => 'url',
 //            'required' => true,

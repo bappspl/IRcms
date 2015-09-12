@@ -15,6 +15,11 @@
             <h4 class="small-title">Dane podstawowe</h4>
             <?php echo $this->customFormHelper($form->get('name')) ?>
 
+            <div class="form-group">
+                <label><?php echo $this->formLabel($form->get('category_id')); ?></label>
+                <?php echo $this->formSelect($form->get('category_id')); ?>
+            </div>
+
         </div>
     </div>
     <div class="col-sm-6">

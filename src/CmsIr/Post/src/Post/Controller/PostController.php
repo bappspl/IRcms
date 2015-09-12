@@ -118,12 +118,12 @@ class PostController extends AbstractActionController
                 }
 
                 // Only for DNA
-                if($post->getStatusId() == 1)
+                if($post->getStatusId() == 1 && $category == 'news')
                 {
                     $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
                         "Kliknij w poniższy link, aby go przeczytać: <a href='" .
                         $this->getRequest()->getServer('HTTP_ORIGIN') .
-                        $this->url()->fromRoute('viewNews', array('slug' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
+                        $this->url()->fromRoute('view-news', array('url' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
 
 
                     /** @var $confirmedStatus Status */
