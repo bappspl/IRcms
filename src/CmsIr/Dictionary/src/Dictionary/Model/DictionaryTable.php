@@ -116,6 +116,7 @@ class DictionaryTable extends ModelTable
             'category' => $dictionary->getCategory(),
             'website_id' => $dictionary->getWebsiteId(),
             'filename' => $dictionary->getFilename(),
+            'category_id' => $dictionary->getCategoryId(),
         );
 
         $id = (int) $dictionary->getId();

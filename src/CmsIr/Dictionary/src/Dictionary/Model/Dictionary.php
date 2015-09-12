@@ -10,6 +10,7 @@ class Dictionary extends Model
     protected $category;
     protected $websiteId;
     protected $filename;
+    protected $categoryId;
 
     // virtual columns
     protected $blocks;
@@ -21,6 +22,7 @@ class Dictionary extends Model
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
         $this->websiteId = (!empty($data['website_id'])) ? $data['website_id'] : null;
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
+        $this->categoryId = (!empty($data['category_id'])) ? $data['category_id'] : null;
     }
 
     /**
@@ -118,4 +120,21 @@ class Dictionary extends Model
     {
         $this->blocks = $blocks;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @param mixed $categoryId
+     */
+    public function setCategoryId($categoryId)
+    {
+        $this->categoryId = $categoryId;
+    }
+
 }
