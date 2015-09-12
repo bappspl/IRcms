@@ -8,12 +8,22 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <div class="the-box">
+        <div class="row">
+            <div class="col-sm-12">
 
-            <h4 class="small-title">Dane podstawowe</h4>
-            <?php echo $this->customFormHelper($form->get('name')) ?>
+                <div class="the-box">
 
+                    <h4 class="small-title">Dane podstawowe</h4>
+                    <?php echo $this->customFormHelper($form->get('name')) ?>
+
+
+                </div>
+            </div>
         </div>
+
+        <?php echo $this->languageHelper('partial/language-category') ?>
+
+
     </div>
     <div class="col-sm-6">
 
@@ -31,7 +41,6 @@
     </div>
 </div>
 
-<?php echo $this->languageHelper('partial/language-category') ?>
 
 <div class="row">
     <div class="col-sm-12">
