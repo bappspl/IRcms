@@ -3,6 +3,7 @@
 namespace CmsIr\Category\Service;
 
 use CmsIr\Category\Model\Category;
+use CmsIr\System\Model\Block;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -23,6 +24,36 @@ class CategoryService implements ServiceLocatorAwareInterface
         }
 
         return $categoryArray;
+    }
+
+    public function findAllWithBlocks($langId)
+    {
+        $categories = $this->getCategoryTable()->getAll();
+
+        /* @var $category Category */
+        foreach($categories as $category)
+        {
+            $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Category', 'language_id' => $langId, 'entity_id' => $category->getId()));
+            $category->setBlocks($blocks);
+
+            /* @var $block Block */
+            foreach($blocks as $block)
+            {
+                $fieldName = $block->getName();
+
+                switch ($fieldName)
+                {
+                    case 'title':
+                        $category->setTitle($block->getValue());
+                        break;
+                    case 'content':
+                        $category->setContent($block->getValue());
+                        break;
+                }
+            }
+        }
+
+        return $categories;
     }
 
     /**
