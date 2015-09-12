@@ -17,6 +17,7 @@ return array(
             'partial/form/basic-post-data'  => __DIR__ . '/../view/partial/form/basic-post-data.phtml',
             'partial/form/files'  => __DIR__ . '/../view/partial/form/files.phtml',
             'partial/form/actions-post'  => __DIR__ . '/../view/partial/form/actions-post.phtml',
+            'partial/language-post'  => __DIR__ . '/../view/partial/language.phtml',
         ),
         'template_path_stack' => array(
             'post' => __DIR__ . '/../view'

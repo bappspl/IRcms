@@ -118,6 +118,7 @@ class DictionaryTable extends ModelTable
         $id = (int) $dictionary->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
+            $id = $this->tableGateway->lastInsertValue;
         } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
@@ -125,6 +126,8 @@ class DictionaryTable extends ModelTable
                 throw new \Exception('Dictionary id does not exist');
             }
         }
+
+        return $id;
     }
 
 }

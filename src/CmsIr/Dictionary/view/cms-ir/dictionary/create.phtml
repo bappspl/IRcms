@@ -33,6 +33,8 @@
     </div>
 </div>
 
+<?php echo $this->languageHelper('partial/language-dictionary') ?>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="the-box">
@@ -44,7 +46,11 @@
     </div>
 </div>
 
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/dictionary.css'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/dictionary-form.js'); ?>

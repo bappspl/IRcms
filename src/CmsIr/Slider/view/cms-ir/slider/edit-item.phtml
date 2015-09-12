@@ -18,12 +18,6 @@ echo $this->form()->openTag($form);
 
             <?php echo $this->customFormHelper($form->get('name')) ?>
 
-            <?php echo $this->customFormHelper($form->get('title')) ?>
-
-            <?php echo $this->customFormHelper($form->get('description')) ?>
-
-            <?php echo $this->customFormHelper($form->get('url')) ?>
-
         </div>
     </div>
     <div class="col-sm-6">
@@ -41,6 +35,9 @@ echo $this->form()->openTag($form);
 
     </div>
 </div>
+
+<?php //echo $this->languageHelper('partial/language-slider-item', $blocks) ?>
+
 <div class="row">
     <div class="col-sm-12">
         <div class="the-box">
@@ -52,7 +49,10 @@ echo $this->form()->openTag($form);
     </div>
 </div>
 
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/summernote.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/uploadifive.css'); ?>
+
+<?php $this->headScript()->appendFile($this->basePath().'/js/summernote.min.js'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.uploadifive.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/slider-item-form.js'); ?>

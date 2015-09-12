@@ -71,12 +71,8 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $data = array(
             'name' => $page->getName(),
-            'slug'  => $page->getSlug(),
             'status_id'  => $page->getStatusId(),
-            'content'  => $page->getContent(),
             'filename_main'  => $page->getFilenameMain(),
-            'url'  => $page->getUrl(),
-            'subtitle'  => $page->getSubtitle(),
         );
 
         $id = (int) $page->getId();

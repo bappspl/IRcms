@@ -23,4 +23,18 @@ class LanguageTable extends ModelTable
         $this->tableGateway = $tableGateway;
     }
 
+    public function getAsAssocArray()
+    {
+        $languages = $this->getAll();
+        $langArray = array();
+
+        /* @var $lang \CmsIr\System\Model\Language */
+        foreach($languages as $lang)
+        {
+            $langArray[$lang->getId()] = $lang->getUrlShortcut();
+        }
+
+        return $langArray;
+    }
+
 }

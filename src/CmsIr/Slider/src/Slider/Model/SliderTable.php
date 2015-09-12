@@ -89,6 +89,7 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
         $id = (int) $slider->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
+            $id = $this->tableGateway->lastInsertValue;
         } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
@@ -96,6 +97,8 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
                 throw new \Exception('Slider id does not exist');
             }
         }
+
+        return $id;
     }
 
     public function changeStatusSlider($ids, $statusId)

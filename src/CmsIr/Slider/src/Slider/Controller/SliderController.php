@@ -57,7 +57,7 @@ class SliderController extends AbstractActionController
                 $slider = new Slider();
 
                 $slider->exchangeArray($form->getData());
-                $this->getSliderTable()->save($slider);
+                $id = $this->getSliderTable()->save($slider);
 
                 $this->flashMessenger()->addMessage('Slider został dodany poprawnie.');
 
@@ -182,7 +182,9 @@ class SliderController extends AbstractActionController
                 $sliderItem->exchangeArray($form->getData());
 
                 $sliderItem->setSliderId($sliderId);
-                $this->getSliderItemTable()->save($sliderItem);
+                $id = $this->getSliderItemTable()->save($sliderItem);
+
+                $this->getBlockService()->saveBlocks($id, 'SliderItem', $request->getPost()->toArray(), 'title');
 
                 $this->flashMessenger()->addMessage('Slide został dodany poprawnie.');
 
@@ -208,6 +210,8 @@ class SliderController extends AbstractActionController
 
         $sliderItem = $this->getSliderItemTable()->getOneBy(array('id' => $itemId));
 
+        $blocks = $this->getBlockService()->getBlocks($sliderItem, 'SliderItem');
+
         $form = new SliderItemForm();
         $form->bind($sliderItem);
 
@@ -221,6 +225,8 @@ class SliderController extends AbstractActionController
             if ($form->isValid()) {
                 $this->getSliderItemTable()->save($sliderItem);
 
+                $this->getBlockService()->saveBlocks($itemId, 'SliderItem', $request->getPost()->toArray(), 'title');
+
                 $this->flashMessenger()->addMessage('Slide został edytowany poprawnie.');
 
                 return $this->redirect()->toRoute('slider/items', array('slider_id' => $sliderId));
@@ -229,6 +235,7 @@ class SliderController extends AbstractActionController
 
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['blocks'] = $blocks;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -359,5 +366,13 @@ class SliderController extends AbstractActionController
     public function getSliderItemTable()
     {
         return $this->getServiceLocator()->get('CmsIr\Slider\Model\SliderItemTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Service\BlockService
+     */
+    public function getBlockService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
     }
 }

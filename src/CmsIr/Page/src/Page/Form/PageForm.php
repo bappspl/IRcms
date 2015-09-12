@@ -48,6 +48,18 @@ class PageForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'title',
+            'attributes' => array(
+                'id' => 'title',
+                'type'  => 'text',
+                'placeholder' => 'Wprowadź tytuł'
+            ),
+            'options' => array(
+                'label' => 'Tytuł',
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'subtitle',
             'attributes' => array(
                 'id' => 'subtitle',
@@ -60,9 +72,9 @@ class PageForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'url',
+            'name' => 'pl-url',
             'attributes' => array(
-                'id' => 'url',
+                'id' => 'pl-url',
                 'type'  => 'text',
                 'placeholder' => 'Wprowadź Url'
             ),

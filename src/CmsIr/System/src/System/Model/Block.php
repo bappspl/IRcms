@@ -8,11 +8,12 @@ class Block
     protected $entity_id;
     protected $entity_type;
     protected $language_id;
-    protected $content;
+    protected $value;
     protected $created;
     protected $user_created;
     protected $modified;
     protected $user_modified;
+    protected $name;
 
     public function exchangeArray($data)
     {
@@ -20,11 +21,12 @@ class Block
         $this->entity_id   = (!empty($data['entity_id'])) ? $data['entity_id'] : null;
         $this->entity_type   = (!empty($data['entity_type'])) ? $data['entity_type'] : null;
         $this->language_id   = (!empty($data['language_id'])) ? $data['language_id'] : null;
-        $this->content   = (!empty($data['content'])) ? $data['content'] : null;
+        $this->value   = (!empty($data['value'])) ? $data['value'] : null;
         $this->created   = (!empty($data['created'])) ? $data['created'] : null;
         $this->user_created   = (!empty($data['user_created'])) ? $data['user_created'] : null;
         $this->modified   = (!empty($data['modified'])) ? $data['modified'] : null;
         $this->user_modified   = (!empty($data['user_modified'])) ? $data['user_modified'] : null;
+        $this->name   = (!empty($data['name'])) ? $data['name'] : null;
     }
 
     /**
@@ -94,17 +96,17 @@ class Block
     /**
      * @return mixed
      */
-    public function getContent()
+    public function getValue()
     {
-        return $this->content;
+        return $this->value;
     }
 
     /**
-     * @param mixed $content
+     * @param mixed $value
      */
-    public function setContent($content)
+    public function setValue($value)
     {
-        $this->content = $content;
+        $this->value = $value;
     }
 
     /**
@@ -169,5 +171,21 @@ class Block
     public function setUserModified($user_modified)
     {
         $this->user_modified = $user_modified;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

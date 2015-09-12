@@ -35,7 +35,8 @@ $(function () {
                     "targets": [ 5 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
                         if ( type === 'display' ) {
-                            return  '<a href="slider/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
+                            return  '<a href="slider/items/' + data + '" class="btn btn-info" data-toggle="tooltip" title="Lista"><i class="fa fa-list"></i></a> ' +
+                            '<a href="slider/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
                                 '<a href="slider/delete/'+data+'" id="'+data+'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
                         }
                         return data;

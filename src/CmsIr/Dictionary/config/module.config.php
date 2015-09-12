@@ -12,7 +12,8 @@ return array(
         'template_map' => array(
             'partial/flashmessages-dictionary'  => __DIR__ . '/../view/partial/flashmessages-dictionary.phtml',
             'partial/delete-dictionary-modal'  => __DIR__ . '/../view/partial/delete-dictionary-modal.phtml',
-            'partial/delete-massive-dictionary-modal'  => __DIR__ . '/../view/partial/delete-massive-dictionary-modal.phtml'
+            'partial/delete-massive-dictionary-modal'  => __DIR__ . '/../view/partial/delete-massive-dictionary-modal.phtml',
+            'partial/language-dictionary'  => __DIR__ . '/../view/partial/language.phtml',
         ),
         'template_path_stack' => array(
             'dictionary' => __DIR__ . '/../view'

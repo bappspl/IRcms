@@ -35,23 +35,24 @@ class SliderItemTable extends ModelTable
             'status_id'  => (int) $slider->getStatusId(),
             'filename'  => $slider->getFilename(),
             'position'  => $slider->getPosition(),
-            'title'  => $slider->getTitle(),
-            'description'  => $slider->getDescription(),
-            'url'  => $slider->getUrl(),
         );
 
         $id = (int) $slider->getId();
         if ($id == 0)
         {
-            //var_dump($data);die;
             $this->tableGateway->insert($data);
-        } else {
+            $id = $this->tableGateway->lastInsertValue;
+        } else
+        {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
-            } else {
+            } else
+            {
                 throw new \Exception('Slider item id does not exist');
             }
         }
+
+        return $id;
     }
 
     public function saveItems($data)
@@ -60,11 +61,12 @@ class SliderItemTable extends ModelTable
         foreach($data as $sliderItem)
         {
             $id = $sliderItem['id'];
-            if ($id) {
-
+            if ($id)
+            {
                 $dataItem = array('position' => $i);
                 $this->tableGateway->update($dataItem, array('id' => $id));
-            } else {
+            } else
+            {
                 throw new \Exception('Item id does not exist');
             }
 

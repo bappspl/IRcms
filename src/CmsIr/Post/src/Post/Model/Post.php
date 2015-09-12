@@ -8,26 +8,27 @@ class Post
 {
     protected $id;
     protected $name;
-    protected $url;
     protected $status_id;
     protected $category;
-    protected $text;
     protected $date;
     protected $author_id;
     protected $filename_main;
-    protected $extra;
 
     /*virtual fields */
     protected $files;
+    protected $blocks;
+    protected $extra;
+    protected $title;
+    protected $content;
+    protected $url;
+    protected $author;
 
     public function exchangeArray($data) 
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->url = (!empty($data['url'])) ? $data['url'] : Inflector::slugify($this->name);
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
-        $this->text = (!empty($data['text'])) ? $data['text'] : null;
         $this->date = (!empty($data['date'])) ? $data['date'] : null;
         $this->author_id = (!empty($data['author_id'])) ? $data['author_id'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
@@ -35,6 +36,11 @@ class Post
 
         /*virtual fields */
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
+        $this->blocks = (!empty($data['blocks'])) ? $data['blocks'] : null;
+        $this->title = (!empty($data['title'])) ? $data['title'] : null;
+        $this->content = (!empty($data['content'])) ? $data['content'] : null;
+        $this->url = (!empty($data['url'])) ? $data['url'] : null;
+        $this->author = (!empty($data['author'])) ? $data['author'] : null;
     }
 
     public function getArrayCopy()
@@ -53,22 +59,6 @@ class Post
     public function getInputFilter()
     {
 
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExtra()
-    {
-        return $this->extra;
-    }
-
-    /**
-     * @param mixed $extra
-     */
-    public function setExtra($extra)
-    {
-        $this->extra = $extra;
     }
 
     /**
@@ -106,22 +96,6 @@ class Post
     /**
      * @return mixed
      */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param mixed $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getStatusId()
     {
         return $this->status_id;
@@ -149,22 +123,6 @@ class Post
     public function setCategory($category)
     {
         $this->category = $category;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * @param mixed $text
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
     }
 
     /**
@@ -218,6 +176,22 @@ class Post
     /**
      * @return mixed
      */
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    /**
+     * @param mixed $extra
+     */
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFiles()
     {
         return $this->files;
@@ -231,5 +205,83 @@ class Post
         $this->files = $files;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
 
+    /**
+     * @param mixed $blocks
+     */
+    public function setBlocks($blocks)
+    {
+        $this->blocks = $blocks;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
 }

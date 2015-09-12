@@ -44,9 +44,8 @@ class MenuController extends AbstractActionController
         $menu = $this->getMenuService()->getMenuByTreeId($treeId);
 
         /* @var $activeStatus Status */
-        $activeStatus = $this->getStatusTable()->getOneBy(array('slug' => 'active'));
-        $activeStatusId = $activeStatus->getId();
-        $existingPages = $this->getPageTable()->getBy(array('status_id' => $activeStatusId));
+
+        $existingPages = $this->getPageService()->findAllActiveWithBlocksByLanguageUrlShortcut('pl');
 
         $viewParams = array();
         $viewParams['menu'] = $menu;
@@ -199,6 +198,14 @@ class MenuController extends AbstractActionController
     public function getStatusTable()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Model\StatusTable');
+    }
+
+    /**
+     * @return \CmsIr\Page\Service\PageService
+     */
+    public function getPageService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Page\Service\PageService');
     }
 
 }

@@ -35,7 +35,7 @@ class PostController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'url', 'date', 'statusId', 'status', 'id');
+            $columns = array('id', 'name', 'date', 'statusId', 'status', 'id');
 
             $listData = $this->getPostTable()->getPostDatatables($columns, $data, $category, $userId);
             $output = array(
@@ -141,10 +141,13 @@ class PostController extends AbstractActionController
 
                     $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Apteki Grodzkiej!", $newsletterContent);
 
+                    $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
+
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
 
                 } else
                 {
+                    $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
 
                 }
@@ -186,6 +189,7 @@ class PostController extends AbstractActionController
          */
         $post = $this->getPostTable()->getOneBy(array('id' => $id));
         $postFiles = $this->getFileTable()->getBy(array('entity_id' => $id, 'entity_type' => 'Post'));
+        $blocks = $this->getBlockService()->getBlocks($post, 'Post');
 
         if(!$post) {
             return $this->redirect()->toRoute('post', array('category' => $category));
@@ -247,6 +251,8 @@ class PostController extends AbstractActionController
                     }
                 }
 
+                $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
+
                 $this->flashMessenger()->addMessage('Wpis został zedytowany poprawnie.');
 
                 return $this->redirect()->toRoute('post', array('category' => $category));
@@ -303,6 +309,7 @@ class PostController extends AbstractActionController
         $viewParams['extraFields'] = $fields;
         $viewParams['postFiles'] = $postFiles;
         $viewParams['category'] = $category;
+        $viewParams['blocks'] = $blocks;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -663,5 +670,13 @@ class PostController extends AbstractActionController
     public function getMetaService()
     {
         return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
+    }
+
+    /**
+     * @return \CmsIr\System\Service\BlockService
+     */
+    public function getBlockService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
     }
 }

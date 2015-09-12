@@ -8,39 +8,28 @@ class Page extends Model
 {
     protected $id;
     protected $name;
-    protected $subtitle;
-    protected $slug;
     protected $status_id;
-    protected $content;
     protected $filename_main;
+
+    // virtual
+    protected $blocks;
+    protected $files;
     protected $url;
+    protected $title;
+    protected $content;
+    protected $subtitle;
 
     public function exchangeArray($data) 
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
-        $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
+        $this->files = (!empty($data['files'])) ? $data['files'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
+        $this->title = (!empty($data['title'])) ? $data['title'] : null;
+        $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * @param mixed $content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
     }
 
     /**
@@ -78,22 +67,6 @@ class Page extends Model
     /**
      * @return mixed
      */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param mixed $slug
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getStatusId()
     {
         return $this->status_id;
@@ -126,6 +99,38 @@ class Page extends Model
     /**
      * @return mixed
      */
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
+    /**
+     * @param mixed $blocks
+     */
+    public function setBlocks($blocks)
+    {
+        $this->blocks = $blocks;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files)
+    {
+        $this->files = $files;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getUrl()
     {
         return $this->url;
@@ -137,6 +142,38 @@ class Page extends Model
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
 
     /**

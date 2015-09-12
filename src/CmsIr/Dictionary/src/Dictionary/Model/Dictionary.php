@@ -11,6 +11,9 @@ class Dictionary extends Model
     protected $websiteId;
     protected $filename;
 
+    // virtual columns
+    protected $blocks;
+
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
@@ -100,4 +103,19 @@ class Dictionary extends Model
         $this->filename = $filename;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
+    /**
+     * @param mixed $blocks
+     */
+    public function setBlocks($blocks)
+    {
+        $this->blocks = $blocks;
+    }
 }

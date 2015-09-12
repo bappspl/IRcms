@@ -9,12 +9,12 @@ class SliderItem extends Model
     protected $id;
     protected $slider_id;
     protected $name;
-    protected $title;
-    protected $description;
+//    protected $title;
+//    protected $description;
     protected $filename;
     protected $status_id;
     protected $position;
-    protected $url;
+//    protected $url;
 
     //virtual
 
@@ -25,28 +25,9 @@ class SliderItem extends Model
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->slider_id = (!empty($data['slider_id'])) ? $data['slider_id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->title = (!empty($data['title'])) ? $data['title'] : null;
-        $this->description = (!empty($data['description'])) ? $data['description'] : null;
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
-        $this->url = (!empty($data['url'])) ? $data['url'] : 0;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFilename()
-    {
-        return $this->filename;
-    }
-
-    /**
-     * @param mixed $filename
-     */
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
     }
 
     /**
@@ -68,38 +49,6 @@ class SliderItem extends Model
     /**
      * @return mixed
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param mixed $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSliderId()
     {
         return $this->slider_id;
@@ -116,17 +65,33 @@ class SliderItem extends Model
     /**
      * @return mixed
      */
-    public function getStatus()
+    public function getName()
     {
-        return $this->status;
+        return $this->name;
     }
 
     /**
-     * @param mixed $status
+     * @param mixed $name
      */
-    public function setStatus($status)
+    public function setName($name)
     {
-        $this->status = $status;
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param mixed $filename
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
     }
 
     /**
@@ -148,48 +113,32 @@ class SliderItem extends Model
     /**
      * @return mixed
      */
-    public function getDescription()
+    public function getPosition()
     {
-        return $this->description;
+        return $this->position;
     }
 
     /**
-     * @param mixed $description
+     * @param mixed $position
      */
-    public function setDescription($description)
+    public function setPosition($position)
     {
-        $this->description = $description;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param mixed $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
+        $this->position = $position;
     }
 
     /**
      * @return mixed
      */
-    public function getUrl()
+    public function getStatus()
     {
-        return $this->url;
+        return $this->status;
     }
 
     /**
-     * @param mixed $url
+     * @param mixed $status
      */
-    public function setUrl($url)
+    public function setStatus($status)
     {
-        $this->url = $url;
+        $this->status = $status;
     }
 }

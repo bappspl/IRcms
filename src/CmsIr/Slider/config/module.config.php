@@ -15,6 +15,7 @@ return array(
             'partial/delete-item-modal'  => __DIR__ . '/../view/partial/delete-item-modal.phtml',
             'partial/delete-massive-slider-modal'  => __DIR__ . '/../view/partial/delete-massive-slider-modal.phtml',
             'partial/status-massive-slider-modal'  => __DIR__ . '/../view/partial/status-massive-slider-modal.phtml',
+            'partial/language-slider-item'  => __DIR__ . '/../view/partial/language.phtml',
         ),
         'template_path_stack' => array(
             'slider' => __DIR__ . '/../view'

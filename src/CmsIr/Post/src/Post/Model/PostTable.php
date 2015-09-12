@@ -64,10 +64,8 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $data = array(
             'name' => $post->getName(),
-            'url'  => $post->getUrl(),
             'status_id'  => $post->getStatusId(),
             'category'  => $post->getCategory(),
-            'text'  => $post->getText(),
             'date'  => $post->getDate(),
             'author_id'  => $post->getAuthorId(),
             'filename_main'  => $post->getFilenameMain(),
@@ -126,7 +124,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
 
         $where = array();
         if ($data->sSearch != '') {
-            $columnsToSearch = array('id', 'name', 'url', 'date', 'status_id');
+            $columnsToSearch = array('id', 'name', 'date', 'status_id');
             $where = array(
                 new Predicate\PredicateSet(
                     $this->getFilterPredicate($columnsToSearch, $data),

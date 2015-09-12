@@ -20,6 +20,7 @@ class MyNavigation extends DefaultNavigationFactory
                     'route' => $row['route'],
                     'class' => $row['class'],
                     'id' => $row['access'],
+                    'visibleInPrimary' => $row['visible_in_primary'],
                 );
 
                 $pages = $serviceLocator->get('menu')->getByParentId($row['id']);

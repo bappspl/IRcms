@@ -64,6 +64,8 @@ echo $this->form()->openTag($form);
 
 </div>
 
+<?php echo $this->languageHelper('partial/language-post', $blocks) ?>
+
 <?php echo $this->partial('partial/meta-form', array('entity' => $post)); ?>
 
 <div class="row">

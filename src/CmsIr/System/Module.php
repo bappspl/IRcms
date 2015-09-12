@@ -126,7 +126,7 @@ class Module
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Block());
-                    return new TableGateway('cms_language', $dbAdapter, null, $resultSetPrototype);
+                    return new TableGateway('cms_block', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Navigation' => 'CmsIr\System\Navigation\MyNavigationFactory'
             ),

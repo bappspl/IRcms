@@ -16,10 +16,21 @@
                             <select name="page" id="page" class="form-control">
                                 <?php /* @var $page \CmsIr\Page\Model\Page */ ?>
                                 <?php foreach($existingPages as $page): ?>
-                                    <?php
-                                        $pageName = $page->getName();
-                                        $pageSlug = $page->getSlug();
-                                    ?>
+
+                                    <?php $blocks = $page->getBlocks() ?>
+                                    <?php $pageName = $page->getName(); ?>
+
+                                    <?php /* @var $block \CmsIr\System\Model\Block */ ?>
+                                    <?php foreach($blocks as $block): ?>
+
+                                        <?php if($block->getName() == 'url'): ?>
+
+                                            <?php $pageSlug = $block->getValue() ?>
+
+                                        <?php endif ?>
+
+                                    <?php endforeach ?>
+
                                     <option value="/strona/<?php echo $pageSlug; ?>"><?php echo $pageName; ?></option>
                                 <?php endforeach; ?>
                             </select>

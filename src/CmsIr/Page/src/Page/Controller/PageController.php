@@ -7,6 +7,7 @@ use CmsIr\Menu\Model\MenuNode;
 use CmsIr\Page\Form\PageForm;
 use CmsIr\Page\Form\PageFormFilter;
 use CmsIr\Page\Model\Page;
+use CmsIr\System\Model\Block;
 use CmsIr\System\Util\Inflector;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -56,15 +57,14 @@ class PageController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-
+        if ($request->isPost())
+        {
             $form->setInputFilter(new PageFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
                 $page = new Page();
                 $page->exchangeArray($form->getData());
-                $page->setSlug(Inflector::slugify($page->getName()));
 
                 $id = $this->getPageTable()->save($page);
                 $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
@@ -90,6 +90,8 @@ class PageController extends AbstractActionController
 
                 $add = $request->getPost('add', 'Anuluj');
 
+                $this->getBlockService()->saveBlocks($id, 'Page', $request->getPost()->toArray(), 'title');
+
                 if ($add == 'Tak')
                 {
                     $parentNodeId = $request->getPost('menu');
@@ -97,7 +99,7 @@ class PageController extends AbstractActionController
                     $menuNode = new MenuNode();
                     $menuNode->setTreeId(1);
                     $menuNode->setIsVisible(1);
-                    $menuNode->setProviderType('page');
+                    $menuNode->setProviderType('Page');
                     $menuNode->setPosition(0);
 
                     if ($parentNodeId == 0)
@@ -114,11 +116,16 @@ class PageController extends AbstractActionController
                     $menuItem = new MenuItem();
                     $menuItem->setNodeId($nodeId);
                     $menuItem->setLabel($page->getName());
-                    $menuItem->setUrl('/strona/'.$page->getUrl());
+
+                    /* @var $pageBlock Block */
+                    $pageBlock = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'language_id' => 1, 'name' => 'url'));
+
+                    $menuItem->setUrl('/strona/' . $pageBlock->getValue());
                     $menuItem->setPosition(0);
 
                     $this->getMenuService()->saveMenuItem($menuItem);
                 }
+
 
                 $this->flashMessenger()->addMessage('Strona została dodana poprawnie.');
 
@@ -143,25 +150,27 @@ class PageController extends AbstractActionController
         /* @var $page Page */
         $page = $this->getPageTable()->getOneBy(array('id' => $id));
 
-        if(!$page) {
+        if(!$page)
+        {
             return $this->redirect()->toRoute('page');
         }
 
         $pageFiles = $this->getFileTable()->getBy(array('entity_id' => $id, 'entity_type' => 'page'));
+
+        $blocks = $this->getBlockService()->getBlocks($page, 'Page');
 
         $form = new PageForm();
         $form->bind($page);
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-
+        if ($request->isPost())
+        {
             $form->setInputFilter(new PageFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-
-                $page->setSlug(Inflector::slugify($page->getName()));
+            if ($form->isValid())
+            {
                 $id = $this->getPageTable()->save($page);
                 $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
@@ -175,7 +184,7 @@ class PageController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('page');
+                        $postFile->setEntityType('Page');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -183,6 +192,8 @@ class PageController extends AbstractActionController
                         rename($this->uploadDir.'/'.$file, $this->destinationUploadDir.'/'.$file);
                     }
                 }
+
+                $this->getBlockService()->saveBlocks($id, 'Page', $request->getPost()->toArray(), 'title');
 
                 $this->flashMessenger()->addMessage('Strona została edytowana poprawnie.');
 
@@ -194,6 +205,7 @@ class PageController extends AbstractActionController
         $viewParams['page'] = $page;
         $viewParams['form'] = $form;
         $viewParams['pageFiles'] = $pageFiles;
+        $viewParams['blocks'] = $blocks;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -212,6 +224,19 @@ class PageController extends AbstractActionController
 
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
+
+                /* @var $page Page */
+                $page = $this->getPageTable()->getOneBy(array('id' => $id));
+                $url = $page->getUrl();
+                $menuItem = $this->getMenuItemTable()->getOneBy(array('url' => '/strona/' . $url));
+
+                /* @var $menuItem MenuItem */
+                if($menuItem)
+                {
+                    $menuNodeId = $menuItem->getNodeId();
+                    $this->getMenuItemTable()->deleteMenuItemByNodeId($menuNodeId);
+                    $this->getMenuNodeTable()->deleteMenuNode($menuNodeId);
+                }
 
                 if(!is_array($id))
                 {
@@ -409,6 +434,22 @@ class PageController extends AbstractActionController
     }
 
     /**
+     * @return \CmsIr\Menu\Model\MenuItemTable
+     */
+    public function getMenuItemTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Menu\Model\MenuItemTable');
+    }
+
+    /**
+     * @return \CmsIr\Menu\Model\MenuNodeTable
+     */
+    public function getMenuNodeTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Menu\Model\MenuNodeTable');
+    }
+
+    /**
      * @return \CmsIr\Menu\Service\MenuService
      */
     public function getMenuService()
@@ -422,5 +463,21 @@ class PageController extends AbstractActionController
     public function getMetaService()
     {
         return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
+    }
+
+    /**
+     * @return \CmsIr\System\Service\BlockService
+     */
+    public function getBlockService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
+    }
+
+    /**
+     * @return \CmsIr\System\Model\BlockTable
+     */
+    public function getBlockTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\BlockTable');
     }
 }

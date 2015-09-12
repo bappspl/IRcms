@@ -25,6 +25,8 @@ return array(
             'CmsIr\System\Service\StatusService' => 'CmsIr\System\Service\Factory\StatusService',
             'CmsIr\System\Logger\Logger' => 'CmsIr\System\Logger\Factory\Logger',
             'mail.transport' => 'CmsIr\System\Service\Factory\MailConfigService',
+            'CmsIr\System\Service\LanguageService' => 'CmsIr\System\Service\Factory\LanguageService',
+            'CmsIr\System\Service\BlockService' => 'CmsIr\System\Service\Factory\BlockService',
         ),
     ),
     'strategies' => array(
@@ -40,6 +42,7 @@ return array(
     'view_helpers' => array(
         'invokables'=> array(
             'customFormHelper' => 'CmsIr\System\View\Helper\FormInput',
+            'languageHelper' => 'CmsIr\System\View\Helper\Language',
         ),
     ),
     'change-access' => array(

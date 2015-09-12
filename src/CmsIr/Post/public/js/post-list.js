@@ -18,7 +18,7 @@ $(function () {
             "paginate":true,
             "sortable": true,
             "searchable": true,
-            "order": [[ 3, "desc" ]],
+            "order": [[ 1, "desc" ]],
             "columnDefs": [
                 {
                     "targets": [ 0 ],
@@ -31,9 +31,9 @@ $(function () {
                     "className": "dt-body-center",
                     "sortable": false
                 },
-                { "orderData": 4, "targets": [ 5 ] },
+                { "orderData": 3, "targets": [ 4 ] },
                 {
-                    "targets": [ 6 ],
+                    "targets": [ 5 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
                         if ( type === 'display' ) {
                             return  '<a href="'+category+'/preview/'+data+'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' +
@@ -50,7 +50,7 @@ $(function () {
                     "targets": [ -1 ]
                 },
                 {
-                    "targets": [ 4 ],
+                    "targets": [ 3 ],
                     "visible": false,
                     "className": "never"
                 }

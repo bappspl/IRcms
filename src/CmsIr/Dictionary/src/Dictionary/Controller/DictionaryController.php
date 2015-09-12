@@ -14,7 +14,7 @@ use Zend\Json\Json;
 
 class DictionaryController extends AbstractActionController
 {
-    protected $uploadDir = 'public/files/dictionary/';
+    protected $destinationUploadDir = 'public/files/dictionary/';
 
     public function listAction()
     {
@@ -67,10 +67,12 @@ class DictionaryController extends AbstractActionController
                 $name = $form->getData();
                 $name = $name['name'];
 
-                $this->createPostCategoryMenuItem($name);
+//                $this->createPostCategoryMenuItem($name);
 
                 $dictionary->setCategory($category);
-                $this->getDictionaryTable()->save($dictionary);
+                $id = $this->getDictionaryTable()->save($dictionary);
+
+                $this->getBlockService()->saveBlocks($id, 'Dictionary', $request->getPost()->toArray(), 'title');
 
                 $this->flashMessenger()->addMessage('Element słownika została dodana poprawnie.');
 
@@ -93,23 +95,27 @@ class DictionaryController extends AbstractActionController
 
         $dictionary = $this->getDictionaryTable()->getOneBy(array('id' => $id));
 
-        if(!$dictionary) {
+        if(!$dictionary)
+        {
             return $this->redirect()->toRoute('dictionary', array('category' => $category));
         }
+
+        $blocks = $this->getBlockService()->getBlocks($dictionary, 'Dictionary');
 
         $form = new DictionaryForm();
         $form->bind($dictionary);
 
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-
+        if ($request->isPost())
+        {
             $form->setInputFilter(new DictionaryFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-
+            if ($form->isValid())
+            {
                 $this->getDictionaryTable()->save($dictionary);
+                $this->getBlockService()->saveBlocks($id, 'Dictionary', $request->getPost()->toArray(), 'title');
 
                 $this->flashMessenger()->addMessage('Element słownika została edytowana poprawnie.');
 
@@ -120,6 +126,7 @@ class DictionaryController extends AbstractActionController
         $viewParams = array();
         $viewParams['form'] = $form;
         $viewParams['category'] = $category;
+        $viewParams['blocks'] = $blocks;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -166,20 +173,23 @@ class DictionaryController extends AbstractActionController
 
     public function uploadAction ()
     {
-        if (!empty($_FILES)) {
+        if (!empty($_FILES))
+        {
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
-
             $file = explode('.', $targetFile);
+
             $fileName = $file[0];
             $fileExt = $file[1];
 
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
+            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile))
+            {
                 echo $targetFile;
-            } else {
+            } else
+            {
                 echo 0;
             }
 
@@ -228,6 +238,22 @@ class DictionaryController extends AbstractActionController
         $this->getMenuTable()->save($backendMenuItem3);
     }
 
+    public function deletePhotoAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id');
+            $name = $request->getPost('name');
+            $filePath = $request->getPost('filePath');
+
+            unlink('./public'.$filePath);
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
     /**
      * @return \CmsIr\Dictionary\Model\DictionaryTable
      */
@@ -242,5 +268,13 @@ class DictionaryController extends AbstractActionController
     public function getMenuTable()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Model\MenuTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Service\BlockService
+     */
+    public function getBlockService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
     }
 }
