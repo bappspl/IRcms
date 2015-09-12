@@ -134,7 +134,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
             <!-- Search -->
             <li>
-                <a href="#" class="mn-has-sub"><i class="fa fa-search"></i> Szukaj</a>
+                <a href="#" class="mn-has-sub"><i class="fa fa-search"></i>'.$this->translate('Szukaj').'</a>
 
                 <ul class="mn-sub">
 
@@ -142,10 +142,10 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                         <div class="mn-wrap">
                             <form method="post" class="form">
                                 <div class="search-wrap">
-                                    <button class="search-button animate" type="submit" title="Szuakj">
+                                    <button class="search-button animate" type="submit" title="'.$this->translate('Szukaj').'">
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    <input type="text" class="form-control search-field" placeholder="Szukaj...">
+                                    <input type="text" class="form-control search-field" placeholder="'.$this->translate('Szukaj').'">
                                 </div>
                             </form>
                         </div>
