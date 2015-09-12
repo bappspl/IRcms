@@ -47,6 +47,7 @@ class DictionaryForm extends Form
                 'name' => 'category_id',
             ),
             'options' => array(
+                'empty_option' => 'Wybierz kategorię',
                 'label' => 'Kategoria',
                 'value_options' => $categories
             )
