@@ -64,7 +64,7 @@ class DictionaryTable extends ModelTable
     {
         $displayFlag = false;
 
-        $allRows = $this->getAll();
+        $allRows = $this->getBy(array('category' => $category));
         $countAllRows = count($allRows);
 
         $trueOffset = (int) $data->iDisplayStart;
@@ -84,7 +84,10 @@ class DictionaryTable extends ModelTable
                     Predicate\PredicateSet::COMBINED_BY_OR
                 ),
             );
+            $where['category'] = $category;
             $displayFlag = true;
+        } else {
+            $where['category'] = $category;
         }
 
         $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
@@ -110,7 +113,7 @@ class DictionaryTable extends ModelTable
     {
         $data = array(
             'name' => $dictionary->getName(),
-            'category' => Inflector::slugify($dictionary->getName()),
+            'category' => $dictionary->getCategory(),
             'website_id' => $dictionary->getWebsiteId(),
             'filename' => $dictionary->getFilename(),
         );

@@ -72,6 +72,7 @@ class DictionaryController extends AbstractActionController
 //                $this->createPostCategoryMenuItem($name);
 
                 $dictionary->setCategory($category);
+
                 $id = $this->getDictionaryTable()->save($dictionary);
 
                 $this->getBlockService()->saveBlocks($id, 'Dictionary', $request->getPost()->toArray(), 'title');
