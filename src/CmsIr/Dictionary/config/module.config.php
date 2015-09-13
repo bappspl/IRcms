@@ -20,6 +20,14 @@ return array(
         ),
         'display_exceptions' => true,
     ),
+    'service_manager' => array(
+        'abstract_factories' => array(
+            'Zend\Form\FormAbstractServiceFactory',
+        ),
+        'factories' => array(
+            'CmsIr\Dictionary\Service\DictionaryService' => 'CmsIr\Dictionary\Service\Factory\DictionaryService',
+        ),
+    ),
     'asset_manager' => array(
         'resolver_configs' => array(
             'paths' => array(
