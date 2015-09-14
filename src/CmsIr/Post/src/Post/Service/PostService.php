@@ -78,6 +78,8 @@ class PostService implements ServiceLocatorAwareInterface
         $post = $this->getPostTable()->getOneBy(array('id' => $postBlock->getEntityId(), 'status_id' => 1, 'category' => $category));
 
 
+
+
         $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Post', 'language_id' => $langId, 'entity_id' => $post->getId()));
         $post->setBlocks($blocks);
 

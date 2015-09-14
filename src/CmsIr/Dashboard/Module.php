@@ -24,17 +24,17 @@ class Module
         $events = $this->getLogEventTable($sm)->getBy(array(), array('date' => 'desc'), 10);
 
         /* @var $event LogEvent */
-        foreach($events as $event)
-        {
-            $user = $event->getUser();
-            $username = explode('@', $user);
-            $name = $username[0];
-
-            $cmsUser = $this->getUsersTable($sm)->findByName($name);
-
-            $event->setUser($cmsUser->getName() . ' ' . $cmsUser->getSurname());
-            $event->setFilename($cmsUser->getFilename());
-        }
+//        foreach($events as $event)
+//        {
+//            $user = $event->getUser();
+//            $username = explode('@', $user);
+//            $name = $username[0];
+//
+//            $cmsUser = $this->getUsersTable($sm)->findByName($name);
+//
+//            $event->setUser($cmsUser->getName() . ' ' . $cmsUser->getSurname());
+//            $event->setFilename($cmsUser->getFilename());
+//        }
 
         $unreadEvents = $this->getLogEventTable($sm)->getByAndCount(array('viewed' => 0));
 
@@ -53,7 +53,7 @@ class Module
     public function init(ModuleManager $moduleManager)
     {
         $events = $moduleManager->getEventManager();
-        $events->attach(ModuleEvent::EVENT_MERGE_CONFIG, array($this, 'onMergeConfig'));
+//        $events->attach(ModuleEvent::EVENT_MERGE_CONFIG, array($this, 'onMergeConfig'));
     }
 
     public function onMergeConfig(ModuleEvent $e)

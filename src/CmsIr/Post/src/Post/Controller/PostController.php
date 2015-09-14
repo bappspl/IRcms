@@ -120,26 +120,26 @@ class PostController extends AbstractActionController
                 // Only for DNA
                 if($post->getStatusId() == 1 && $category == 'news')
                 {
-                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
-                        "Kliknij w poniższy link, aby go przeczytać: <a href='" .
-                        $this->getRequest()->getServer('HTTP_ORIGIN') .
-                        $this->url()->fromRoute('view-news', array('url' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
-
-
-                    /** @var $confirmedStatus Status */
-                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
-                    $confirmedStatusId = $confirmedStatus->getId();
-
-                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
-
-                    $subscriberEmails = array();
-                    /** @var $subscriber Subscriber */
-                    foreach($subscribers as $subscriber)
-                    {
-                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
-                    }
-
-                    $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Apteki Grodzkiej!", $newsletterContent);
+//                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
+//                        "Kliknij w poniższy link, aby go przeczytać: <a href='" .
+//                        $this->getRequest()->getServer('HTTP_ORIGIN') .
+//                        $this->url()->fromRoute('view-news', array('url' => $post->getUrl())) . "'>" . $post->getName() . "</a>";
+//
+//
+//                    /** @var $confirmedStatus Status */
+//                    $confirmedStatus = $this->getStatusTable()->getOneBy(array('slug' => 'confirmed'));
+//                    $confirmedStatusId = $confirmedStatus->getId();
+//
+//                    $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
+//
+//                    $subscriberEmails = array();
+//                    /** @var $subscriber Subscriber */
+//                    foreach($subscribers as $subscriber)
+//                    {
+//                        $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
+//                    }
+//
+//                    $this->sendEmails($subscriberEmails, "Nowy artykul na stronie Apteki Grodzkiej!", $newsletterContent);
 
                     $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
 
