@@ -7,20 +7,22 @@ class Category extends Model
 {
     protected $id;
     protected $name;
-    protected $filename;
+    protected $filename_main;
 
     // virtual columns
     protected $blocks;
     protected $title;
     protected $content;
+    protected $files;
 
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
-        $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
+        $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
         $this->title = (!empty($data['title'])) ? $data['title'] : null;
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
+        $this->files = (!empty($data['files'])) ? $data['files'] : null;
     }
 
     /**
@@ -58,17 +60,17 @@ class Category extends Model
     /**
      * @return mixed
      */
-    public function getFilename()
+    public function getFilenameMain()
     {
-        return $this->filename;
+        return $this->filename_main;
     }
 
     /**
-     * @param mixed $filename
+     * @param mixed $filename_main
      */
-    public function setFilename($filename)
+    public function setFilenameMain($filename_main)
     {
-        $this->filename = $filename;
+        $this->filename_main = $filename_main;
     }
 
     /**
@@ -117,5 +119,21 @@ class Category extends Model
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files)
+    {
+        $this->files = $files;
     }
 }

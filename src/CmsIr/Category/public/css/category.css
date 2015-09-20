@@ -4,12 +4,12 @@
 .thumb {
     max-width: 300px;
 }
-.deletePhoto {
+.deletePhoto, .deletePhoto_main {
     position: relative;
     width: 300px;
     margin: 15px 0;
 }
-.deletePhoto i {
+.deletePhoto i, .deletePhoto_main i {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -19,6 +19,10 @@
     opacity: 0.7;
     transition: all 0.3s;
 }
-.deletePhoto i:hover {
+.deletePhoto i:hover, .deletePhoto_main i:hover {
     opacity: 1;
+}
+
+.files-main{
+    margin-top: 15px;
 }

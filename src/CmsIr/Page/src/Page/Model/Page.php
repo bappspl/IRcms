@@ -10,6 +10,7 @@ class Page extends Model
     protected $name;
     protected $status_id;
     protected $filename_main;
+    protected $filename_background;
 
     // virtual
     protected $blocks;
@@ -25,6 +26,7 @@ class Page extends Model
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
+        $this->filename_background = (!empty($data['filename_background'])) ? $data['filename_background'] : null;
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
         $this->title = (!empty($data['title'])) ? $data['title'] : null;
@@ -190,5 +192,21 @@ class Page extends Model
     public function setSubtitle($subtitle)
     {
         $this->subtitle = $subtitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilenameBackground()
+    {
+        return $this->filename_background;
+    }
+
+    /**
+     * @param mixed $filename_background
+     */
+    public function setFilenameBackground($filename_background)
+    {
+        $this->filename_background = $filename_background;
     }
 }

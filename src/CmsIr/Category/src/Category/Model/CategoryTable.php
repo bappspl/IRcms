@@ -110,7 +110,7 @@ class CategoryTable extends ModelTable
     {
         $data = array(
             'name' => $category->getName(),
-            'filename' => $category->getFilename(),
+            'filename_main' => $category->getFilenameMain(),
         );
 
         $id = (int) $category->getId();

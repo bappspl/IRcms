@@ -119,7 +119,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                 } else
                 {
                     $label = $this->translate($subItem->getLabel());
-                    $url = '/' . $lang . '/' . $subItem->getUrl();
+                    $url = '/' . $lang . $subItem->getUrl();
                 }
 
                 $subtitle = $subItem->getSubtitle();

@@ -5,6 +5,7 @@ echo $this->form()->openTag($form);
 ?>
 
 <?php echo $this->customFormHelper($form->get('filename_main')); ?>
+<?php echo $this->customFormHelper($form->get('filename_background')); ?>
 
 <div class="row">
     <div class="col-sm-6">
@@ -38,6 +39,21 @@ echo $this->form()->openTag($form);
                             <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
                             <div id="queue-main"></div>
                             <div class="files-main"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="the-box">
+                        <h4 class="small-title">Zdjęcie w tle</h4>
+
+                        <div class="form-group">
+                            <?php echo $this->customFormHelper($form->get('upload_background')); ?>
+                            <a href="javascript:$('#upload-background').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
+                            <div id="queue-background"></div>
+                            <div class="files-background"></div>
                         </div>
                     </div>
                 </div>

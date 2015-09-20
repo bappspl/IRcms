@@ -122,6 +122,14 @@ class PostForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'filename_background',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'filename-background'
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'upload',
             'attributes' => array(
                 'type'  => 'file',
@@ -138,6 +146,18 @@ class PostForm extends Form
             'attributes' => array(
                 'type'  => 'file',
                 'id' => 'upload-main',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Upload',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'upload_background',
+            'attributes' => array(
+                'type'  => 'file',
+                'id' => 'upload-background',
                 'class' => 'form-control'
             ),
             'options' => array(

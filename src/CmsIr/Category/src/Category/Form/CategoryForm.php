@@ -21,14 +21,6 @@ class CategoryForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'filename',
-            'attributes' => array(
-                'type'  => 'hidden',
-                'id' => 'filename'
-            ),
-        ));
-
-        $this->add(array(
             'name' => 'name',
             'attributes' => array(
                 'id' => 'name',
@@ -55,6 +47,46 @@ class CategoryForm extends Form
             'attributes' => array(
                 'type'  => 'file',
                 'id' => 'upload',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Upload',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'filename',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'filename'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'filename_main',
+            'attributes' => array(
+                'type'  => 'hidden',
+                'id' => 'filename-main'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'upload',
+            'attributes' => array(
+                'type'  => 'file',
+                'id' => 'upload',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Upload',
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'upload_main',
+            'attributes' => array(
+                'type'  => 'file',
+                'id' => 'upload-main',
                 'class' => 'form-control'
             ),
             'options' => array(

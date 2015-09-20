@@ -51,6 +51,9 @@ class CategoryService implements ServiceLocatorAwareInterface
                         break;
                 }
             }
+
+            $files = $this->getFileTable()->getBy(array('entity_type' => 'Category', 'entity_id' => $category->getId()));
+            $category->setFiles($files);
         }
 
         return $categories;
@@ -78,6 +81,14 @@ class CategoryService implements ServiceLocatorAwareInterface
     public function getBlockTable()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Model\BlockTable');
+    }
+
+    /**
+     * @return \CmsIr\File\Model\FileTable
+     */
+    public function getFileTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
     }
 
     /**

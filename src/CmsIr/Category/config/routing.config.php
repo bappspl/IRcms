@@ -75,7 +75,20 @@ return array(
                     'defaults' => array(
                         'module' => 'CmsIr\Category',
                         'controller' => 'CmsIr\Category\Controller\Category',
-                        'action'     => 'upload',
+                        'action'     => 'uploadFiles',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
+            'upload-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Category',
+                        'controller' => 'CmsIr\Category\Controller\Category',
+                        'action'     => 'uploadFilesMain',
                     ),
                     'constraints' => array(
                     ),
@@ -89,6 +102,19 @@ return array(
                         'module' => 'CmsIr\Category',
                         'controller' => 'CmsIr\Category\Controller\Category',
                         'action'     => 'deletePhoto',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
+            'delete-photo-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/delete-photo-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Category',
+                        'controller' => 'CmsIr\Category\Controller\Category',
+                        'action'     => 'deletePhotoMain',
                     ),
                     'constraints' => array(
                     ),

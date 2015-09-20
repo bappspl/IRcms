@@ -184,7 +184,7 @@ class SliderController extends AbstractActionController
                 $sliderItem->setSliderId($sliderId);
                 $id = $this->getSliderItemTable()->save($sliderItem);
 
-                $this->getBlockService()->saveBlocks($id, 'SliderItem', $request->getPost()->toArray(), 'title');
+                $this->getBlockService()->saveBlocks($id, 'SliderItem', $request->getPost()->toArray());
 
                 $this->flashMessenger()->addMessage('Slide został dodany poprawnie.');
 
@@ -225,7 +225,7 @@ class SliderController extends AbstractActionController
             if ($form->isValid()) {
                 $this->getSliderItemTable()->save($sliderItem);
 
-                $this->getBlockService()->saveBlocks($itemId, 'SliderItem', $request->getPost()->toArray(), 'title');
+                $this->getBlockService()->saveBlocks($itemId, 'SliderItem', $request->getPost()->toArray());
 
                 $this->flashMessenger()->addMessage('Slide został edytowany poprawnie.');
 

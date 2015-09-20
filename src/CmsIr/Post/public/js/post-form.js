@@ -148,4 +148,80 @@ $(function () {
         $('.files-main').append('<img src="/files/post/'+filename+'" class="thumb" />')
     }
 
+    $('#upload-background').uploadifive({
+        'auto'             : false,
+        'formData'         : {
+            'files': $('#filename-background').val()
+        },
+        'method'   : 'post',
+        'multi'         : true,
+        'queueID'          : 'queue-background',
+        'uploadScript'     :  '/cms-ir/post-list/'+ category +'/upload-main',
+        'onUploadComplete' : function(file, data) {
+            $('#filename-background').val(data);
+            if($('#filename-background').val().length > 0) {
+                $('.files-background img').remove();
+                $('.files-background').append('<div class="deletePhoto_background">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/files/post/'+data+'" class="thumb" /> </div>')
+            }
+
+            $('.deletePhoto_background i').on('click', function () {
+                var id = 0;
+                var fullPathToImage = $(this).next().attr('src');
+
+                if($(this).parent().is("[id]"))
+                {
+                    id = $(this).parent().attr('id');
+                }
+                $('#filename-background').val('');
+                $cache = $(this);
+                $.ajax({
+                    type: "POST",
+                    url: "/cms-ir/post-list/"+category+"/delete-photo-main",
+                    dataType : 'json',
+                    data: {
+                        id: id,
+                        filePath: fullPathToImage
+                    },
+                    success: function(json)
+                    {
+                        $cache.parent().remove();
+                    }
+                });
+
+            });
+        }
+    });
+
+    if($('#filename-background').val().length > 0) {
+        var filenameBackground = $('#filename-background').val();
+        $('.files-background').append('<div class="deletePhoto_background">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i> <img src="/files/post/'+filenameBackground+'" class="thumb" /> </div>')
+    }
+
+    $('.deletePhoto_background i').on('click', function () {
+        var id = 0;
+        var fullPathToImage = $(this).next().attr('src');
+
+        if($(this).parent().is("[id]"))
+        {
+            id = $(this).parent().attr('id');
+        }
+
+        $('#filename-background').val('');
+        $cache = $(this);
+        $.ajax({
+            type: "POST",
+            url: "/cms-ir/post-list/"+category+"/delete-photo-main",
+            dataType : 'json',
+            data: {
+                id: id,
+                filePath: fullPathToImage
+            },
+            success: function(json)
+            {
+                $cache.parent().remove();
+            }
+        });
+
+    });
+
 });

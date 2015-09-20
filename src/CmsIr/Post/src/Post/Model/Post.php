@@ -13,6 +13,7 @@ class Post
     protected $date;
     protected $author_id;
     protected $filename_main;
+    protected $filename_background;
 
     /*virtual fields */
     protected $files;
@@ -36,6 +37,7 @@ class Post
         $this->author_id = (!empty($data['author_id'])) ? $data['author_id'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
         $this->extra = (!empty($data['extra'])) ? $data['extra'] : null;
+        $this->filename_background = (!empty($data['filename_background'])) ? $data['filename_background'] : null;
 
         /*virtual fields */
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
@@ -304,5 +306,21 @@ class Post
     public function setClient($client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilenameBackground()
+    {
+        return $this->filename_background;
+    }
+
+    /**
+     * @param mixed $filename_background
+     */
+    public function setFilenameBackground($filename_background)
+    {
+        $this->filename_background = $filename_background;
     }
 }

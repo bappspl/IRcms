@@ -9,7 +9,6 @@ class SliderItem extends Model
     protected $id;
     protected $slider_id;
     protected $name;
-//    protected $title;
 //    protected $description;
     protected $filename;
     protected $status_id;
@@ -19,6 +18,8 @@ class SliderItem extends Model
     //virtual
 
     protected $status;
+    protected $title;
+    protected $subtitle;
 
     public function exchangeArray($data) 
     {
@@ -28,6 +29,8 @@ class SliderItem extends Model
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
+        $this->title = (!empty($data['title'])) ? $data['title'] : null;
+        $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null;
     }
 
     /**
@@ -140,5 +143,37 @@ class SliderItem extends Model
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubtitle()
+    {
+        return $this->subtitle;
+    }
+
+    /**
+     * @param mixed $subtitle
+     */
+    public function setSubtitle($subtitle)
+    {
+        $this->subtitle = $subtitle;
     }
 }
