@@ -16,8 +16,7 @@ class MetaController extends AbstractActionController
     public function listAction()
     {
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('name');
@@ -47,25 +46,21 @@ class MetaController extends AbstractActionController
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('meta_id', 0);
 
-        if (!$id)
-        {
+        if (!$id) {
             return $this->redirect()->toRoute('meta');
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Tak')
-            {
+            if ($del == 'Tak') {
                 $id = (int) $request->getPost('id');
 
                 $this->getMetaTable()->deleteBanner($id);
                 $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
 
                 $modal = $request->getPost('modal', false);
-                if($modal == true)
-                {
+                if($modal == true) {
                     $jsonObject = Json::encode($params['status'] = $id, true);
                     echo $jsonObject;
                     return $this->response;

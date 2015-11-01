@@ -37,17 +37,14 @@ class SliderService implements ServiceLocatorAwareInterface
         $items = $this->getSliderItemTable()->getBy(array('slider_id' => $slider->getId(), 'status_id' => 1), 'position ASC');
 
         /* @var $item SliderItem */
-        foreach($items as $item)
-        {
+        foreach($items as $item) {
             $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'SliderItem', 'language_id' => $langId, 'entity_id' => $item->getId()));
 
             /* @var $block Block */
-            foreach($blocks as $block)
-            {
+            foreach($blocks as $block) {
                 $fieldName = $block->getName();
 
-                switch ($fieldName)
-                {
+                switch ($fieldName) {
                     case 'title':
                         $item->setTitle($block->getValue());
                         break;

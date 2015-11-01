@@ -5,8 +5,6 @@ use CmsIr\System\Model\Block;
 use CmsIr\System\Model\BlockTable;
 use CmsIr\System\Model\Language;
 use CmsIr\System\Model\LanguageTable;
-use CmsIr\System\Model\LogEvent;
-use CmsIr\System\Model\LogEventTable;
 use CmsIr\System\Model\MailConfig;
 use CmsIr\System\Model\MailConfigTable;
 use CmsIr\System\Model\Menu;
@@ -94,17 +92,6 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new MailConfig());
                     return new TableGateway('cms_mail_config', $dbAdapter, null, $resultSetPrototype);
-                },
-                'CmsIr\System\Model\LogEventTable' =>  function($sm) {
-                    $tableGateway = $sm->get('LogEventTableGateway');
-                    $table = new LogEventTable($tableGateway);
-                    return $table;
-                },
-                'LogEventTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new LogEvent());
-                    return new TableGateway('cms_log_event', $dbAdapter, null, $resultSetPrototype);
                 },
                 'CmsIr\System\Model\LanguageTable' =>  function($sm) {
                     $tableGateway = $sm->get('LanguageTableGateway');

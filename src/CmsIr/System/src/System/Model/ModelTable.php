@@ -35,7 +35,6 @@ class ModelTable implements ServiceLocatorAwareInterface
 
     public function countRowsWhere(array $where)
     {
-
         $select = $this->tableGateway->getSql()->select();
         $select->where($where);
         $select->columns(array('row_count' => new Expression('COUNT(1)')));
@@ -50,13 +49,11 @@ class ModelTable implements ServiceLocatorAwareInterface
         $select = $this->tableGateway->getSql()->select();
         $select->where($where);
 
-        if (!empty($order))
-        {
+        if (!empty($order)) {
             $select->order($order);
         }
 
-        if (!empty($limit))
-        {
+        if (!empty($limit)) {
             $select->limit($limit);
         }
 
@@ -64,8 +61,7 @@ class ModelTable implements ServiceLocatorAwareInterface
 
         $result = array();
 
-        foreach($resultSet as $entity)
-        {
+        foreach($resultSet as $entity) {
             $result[$entity->getId()] = $entity;
         }
 
@@ -77,8 +73,7 @@ class ModelTable implements ServiceLocatorAwareInterface
         $select = $this->tableGateway->getSql()->select();
         $select->where($where);
 
-        if (!empty($order))
-        {
+        if (!empty($order)) {
             $select->order($order);
         }
 
@@ -92,8 +87,7 @@ class ModelTable implements ServiceLocatorAwareInterface
         $select = $this->tableGateway->getSql()->select();
         $select->where($where);
 
-        if (!empty($order))
-        {
+        if (!empty($order)) {
             $select->order($order);
         }
 
@@ -103,8 +97,7 @@ class ModelTable implements ServiceLocatorAwareInterface
 
         $count = 0;
 
-        foreach($resultSet as $entity)
-        {
+        foreach($resultSet as $entity) {
             $count++;
         }
 
@@ -126,8 +119,7 @@ class ModelTable implements ServiceLocatorAwareInterface
 
         $entity = $result->current();
 
-        if(empty($entity))
-        {
+        if(empty($entity)) {
             return false;
         }
 
@@ -153,8 +145,7 @@ class ModelTable implements ServiceLocatorAwareInterface
 
         $entity = $result->current();
 
-        if(empty($entity))
-        {
+        if(empty($entity)) {
             return false;
         }
 
@@ -183,8 +174,7 @@ class ModelTable implements ServiceLocatorAwareInterface
         $select = $this->tableGateway->getSql()->select();
         $select->where($where);
 
-        if (!empty($order))
-        {
+        if (!empty($order)) {
             $select->order($order);
         }
 
@@ -247,13 +237,10 @@ class ModelTable implements ServiceLocatorAwareInterface
 
     public function getSortingColumnDir ($columns, $data)
     {
-        for ($i=0 ; $i<intval($data->iSortingCols); $i++)
-        {
-            if ($data['bSortable_'.intval($data['iSortCol_'.$i])] == 'true')
-            {
+        for ($i=0 ; $i<intval($data->iSortingCols); $i++) {
+            if ($data['bSortable_'.intval($data['iSortCol_'.$i])] == 'true') {
                 $sortingColumn = $columns[$data['iSortCol_'.$i]];
-                if(preg_match_all("/[A-Z]/", $sortingColumn, $matches) !== 0)
-                {
+                if(preg_match_all("/[A-Z]/", $sortingColumn, $matches) !== 0) {
                     $sortingColumn = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $sortingColumn));
                 }
                 $sortingDir = $data['sSortDir_'.$i];
@@ -266,10 +253,8 @@ class ModelTable implements ServiceLocatorAwareInterface
     public function getFilterPredicate ($columns, $data)
     {
         $where = array();
-        for ( $i=0 ; $i<count($columns) ; $i++ )
-        {
-            if(strpos($columns[$i], 'status') === false && strpos($columns[$i], 'groups') === false)
-            {
+        for ( $i=0 ; $i<count($columns) ; $i++ ) {
+            if(strpos($columns[$i], 'status') === false && strpos($columns[$i], 'groups') === false) {
                 $where[] = new Predicate\Like($columns[$i], '%'.$data->sSearch.'%');
             }
         }
@@ -284,15 +269,12 @@ class ModelTable implements ServiceLocatorAwareInterface
             $tmp = array();
             foreach($columns as $column){
                 $column = 'get'.ucfirst($column);
-                if($column == 'getStatus')
-                {
+                if($column == 'getStatus') {
                     $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-                } elseif($column == 'getGroups')
-                {
+                } elseif($column == 'getGroups') {
                     $tmp[] = $this->getGroupsToDisplay($row->getGroups());
 
-                } else
-                {
+                } else {
                     $tmp[] = $row->$column();
                 }
             }

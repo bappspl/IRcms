@@ -28,7 +28,7 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
 
             $tmp = array();
 
-            foreach($columns as $column){
+            foreach($columns as $column) {
                 $column = 'get'.ucfirst($column);
                 $tmp[] = $row->$column();
             }
@@ -63,17 +63,13 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
         );
 
         $id = (int) $gallery->getId();
-        if ($id == 0)
-        {
+        if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
-        } else
-        {
-            if ($this->getOneBy(array('id' => $id)))
-            {
+        } else {
+            if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
-            } else
-            {
+            } else {
                 throw new \Exception('Gallery id does not exist');
             }
         }

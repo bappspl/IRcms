@@ -33,13 +33,11 @@ class TagTable extends ModelTable
 
     public function deleteTag($ids)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
 
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->delete(array('id' => $id));
         }
     }

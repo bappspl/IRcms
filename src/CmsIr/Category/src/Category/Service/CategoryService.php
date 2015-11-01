@@ -18,8 +18,7 @@ class CategoryService implements ServiceLocatorAwareInterface
 
         $categoryArray = array();
 
-        foreach($categories as $category)
-        {
+        foreach($categories as $category) {
             $categoryArray[$category->getId()] = $category->getName();
         }
 
@@ -31,18 +30,15 @@ class CategoryService implements ServiceLocatorAwareInterface
         $categories = $this->getCategoryTable()->getAll();
 
         /* @var $category Category */
-        foreach($categories as $category)
-        {
+        foreach($categories as $category) {
             $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Category', 'language_id' => $langId, 'entity_id' => $category->getId()));
             $category->setBlocks($blocks);
 
             /* @var $block Block */
-            foreach($blocks as $block)
-            {
+            foreach($blocks as $block) {
                 $fieldName = $block->getName();
 
-                switch ($fieldName)
-                {
+                switch ($fieldName) {
                     case 'title':
                         $category->setTitle($block->getValue());
                         break;

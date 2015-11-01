@@ -26,20 +26,17 @@ class FileService implements ServiceLocatorAwareInterface
         $counter = 0;
 
         /* @var $gallery File */
-        foreach ($galleries as $gallery)
-        {
+        foreach ($galleries as $gallery) {
             $files = $gallery->getFilename();
-            if(!empty($files))
-            {
+
+            if(!empty($files)) {
                 $files = unserialize($files);
 
-                foreach($files as $file)
-                {
+                foreach($files as $file) {
                     array_push($filesArray, $file);
                     $counter++;
 
-                    if($counter >= $count)
-                    {
+                    if($counter >= $count) {
                         break;
                     }
                 }
@@ -51,11 +48,9 @@ class FileService implements ServiceLocatorAwareInterface
 
     public function getMimeContentType($filename)
     {
-        if(!function_exists('finfo_open'))
-        {
+        if(!function_exists('finfo_open')) {
             $mimeType = $this->getMimeTypeFromFilename($filename);
-        } else
-        {
+        } else {
             $finfo = finfo_open(FILEINFO_MIME);
             $mimetype = finfo_file($finfo, $filename);
             finfo_close($finfo);
@@ -123,11 +118,10 @@ class FileService implements ServiceLocatorAwareInterface
         );
 
         $ext = strtolower(array_pop(explode('.',$filename)));
-        if (array_key_exists($ext, $mime_types))
-        {
+
+        if (array_key_exists($ext, $mime_types)) {
             $mimeType = $mime_types[$ext];
-        } else
-        {
+        } else {
             $mimeType = 'application/octet-stream';
         }
 

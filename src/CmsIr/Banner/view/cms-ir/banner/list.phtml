@@ -2,12 +2,14 @@
     <!-- BEGIN DATA TABLE -->
     <div class="the-box">
         <div class="table-responsive">
-            <table class="table table-striped table-hover" id="datatable-banner">
+            <table class="table table-striped table-hover" id="datatable-banner" style="width: 100% !important;">
                 <thead class="the-box dark full">
                 <tr>
+                    <th class="dt-body-center"><input type="checkbox" name="check-all" class="check-all i-grey" data-toggle="tooltip" title="Podgląd" /></th>
                     <th>Nazwa</th>
+                    <th>status_id</th>
                     <th>Status</th>
-                    <th class="action-column">Akcje</th>
+                    <th>Akcje</th>
                 </tr>
                 </thead>
             </table>
@@ -21,9 +23,20 @@
         </div><!-- /.table-responsive -->
     </div><!-- /.the-box .default -->
     <!-- END DATA TABLE -->
+
+    <div class="massive-action">
+        <select name="massive-action">
+            <option value="">Masowe działania</option>
+            <option value="delete">Usuń wybrane</option>
+            <option value="status">Zmień status</option>
+        </select>
+    </div>
 <?php echo $this->partial('partial/delete-banner-modal'); ?>
+<?php echo $this->partial('partial/delete-massive-banner-modal'); ?>
+<?php echo $this->partial('partial/status-massive-banner-modal'); ?>
 
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.responsive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/banner.css'); ?>
 

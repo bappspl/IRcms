@@ -14,61 +14,6 @@ class SystemController extends AbstractActionController
 {
     protected $pathToEditorFiles = 'public/files/editor/';
 
-    public function logEventAction()
-    {
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-
-            $data = $this->getRequest()->getPost();
-            $columns = array('id', 'entityType', 'user', 'what', 'action', 'description', 'date', 'viewed');
-
-            $listData = $this->getLogEventTable()->getDatatables($columns, $data);
-            $output = array(
-                "sEcho" => $this->getRequest()->getPost('sEcho'),
-                "iTotalRecords" => $listData['iTotalRecords'],
-                "iTotalDisplayRecords" => $listData['iTotalDisplayRecords'],
-                "aaData" => $listData['aaData']
-            );
-
-            $jsonObject = Json::encode($output, true);
-            echo $jsonObject;
-            return $this->response;
-        }
-
-        $viewParams = array();
-        $viewModel = new ViewModel();
-        $viewModel->setVariables($viewParams);
-        return  $viewModel;
-    }
-
-    public function changeStatusAction()
-    {
-        $request = $this->getRequest();
-
-        if ($request->isPost())
-        {
-            $del = $request->getPost('del', 'Anuluj');
-
-            if ($del == 'Zapisz')
-            {
-                $id = $request->getPost('id');
-                $statusId = $request->getPost('statusId');
-
-                $this->getLogEventTable()->changeStatusLogEvent($id, $statusId);
-
-                $modal = $request->getPost('modal', false);
-                if($modal == true) {
-                    $jsonObject = Json::encode($params['status'] = 'success', true);
-                    echo $jsonObject;
-                    return $this->response;
-                }
-            }
-
-            return $this->redirect()->toRoute('log-event');
-        }
-
-        return array();
-    }
 
     public function mailConfigAction()
     {
@@ -116,9 +61,7 @@ class SystemController extends AbstractActionController
                 $location = $_FILES["file"]["tmp_name"];
                 move_uploaded_file($location, $this->pathToEditorFiles . '/'. $filename);
                 echo $this->getRequest()->getServer('HTTP_ORIGIN') . '/files/editor/'. $filename;
-            }
-            else
-            {
+            } else  {
                 echo  $message = 'Ooops!  Your upload triggered the following error:  '.$_FILES['file']['error'];
             }
         }
@@ -134,12 +77,10 @@ class SystemController extends AbstractActionController
         $pathToThumbs = 'public/files/' . $entity . '/' . $size;
         $imgSrc = 'public/files/' . $entity . '/' . $fileName;
 
-        if(file_exists($pathToThumbs.'/'.$fileName))
-        {
+        if(file_exists($pathToThumbs.'/'.$fileName)) {
             $gd = new GD($pathToThumbs.'/'.$fileName);
             $gd->show();
-        } else
-        {
+        } else {
             $sizeArray = explode('x', $size);
             $thumbWidth = $sizeArray[0];
             $thumbHeight = $sizeArray{1};
@@ -155,29 +96,26 @@ class SystemController extends AbstractActionController
 
     }
 
-    public function changeAccessAction ()
-    {
-        $pass = $this->params()->fromRoute('pass');
-        $access = $this->params()->fromRoute('access');
-
-        $config = $this->getServiceLocator()->get('Config');
-        $changeArray = $config['change-access'];
-
-        if(md5($pass) === $changeArray['pass'])
-        {
-            $configFile = file_get_contents($changeArray['path']);
-            if(md5($access) === $changeArray['access'])
-            {
-                $newFile = str_replace('error', 'guest', $configFile);
-            } elseif(md5($access) === $changeArray['no-access'])
-            {
-                $newFileAccess = str_replace('guest', 'error', $configFile);
-                $newFile = str_replace("'changeAccess'	=> 'error'", "'changeAccess'	=> 'guest'", $newFileAccess);
-            }
-            file_put_contents($changeArray['path'], $newFile);
-        }
-        exit();
-    }
+//    public function changeAccessAction ()
+//    {
+//        $pass = $this->params()->fromRoute('pass');
+//        $access = $this->params()->fromRoute('access');
+//
+//        $config = $this->getServiceLocator()->get('Config');
+//        $changeArray = $config['change-access'];
+//
+//        if(md5($pass) === $changeArray['pass']) {
+//            $configFile = file_get_contents($changeArray['path']);
+//            if(md5($access) === $changeArray['access']) {
+//                $newFile = str_replace('error', 'guest', $configFile);
+//            } elseif(md5($access) === $changeArray['no-access']) {
+//                $newFileAccess = str_replace('guest', 'error', $configFile);
+//                $newFile = str_replace("'changeAccess'	=> 'error'", "'changeAccess'	=> 'guest'", $newFileAccess);
+//            }
+//            file_put_contents($changeArray['path'], $newFile);
+//        }
+//        exit();
+//    }
 
     /**
      * @return \CmsIr\System\Model\MailConfigTable
@@ -187,11 +125,4 @@ class SystemController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\System\Model\MailConfigTable');
     }
 
-    /**
-     * @return \CmsIr\System\Model\LogEventTable
-     */
-    public function getLogEventTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\System\Model\LogEventTable');
-    }
 }

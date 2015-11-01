@@ -29,8 +29,7 @@ class LanguageTable extends ModelTable
         $langArray = array();
 
         /* @var $lang \CmsIr\System\Model\Language */
-        foreach($languages as $lang)
-        {
+        foreach($languages as $lang) {
             $langArray[$lang->getId()] = $lang->getUrlShortcut();
         }
 

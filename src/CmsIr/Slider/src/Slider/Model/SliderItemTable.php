@@ -38,16 +38,13 @@ class SliderItemTable extends ModelTable
         );
 
         $id = (int) $slider->getId();
-        if ($id == 0)
-        {
+        if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
-        } else
-        {
+        } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
-            } else
-            {
+            } else {
                 throw new \Exception('Slider item id does not exist');
             }
         }
@@ -58,15 +55,12 @@ class SliderItemTable extends ModelTable
     public function saveItems($data)
     {
         $i = 0;
-        foreach($data as $sliderItem)
-        {
+        foreach($data as $sliderItem) {
             $id = $sliderItem['id'];
-            if ($id)
-            {
+            if ($id) {
                 $dataItem = array('position' => $i);
                 $this->tableGateway->update($dataItem, array('id' => $id));
-            } else
-            {
+            } else {
                 throw new \Exception('Item id does not exist');
             }
 

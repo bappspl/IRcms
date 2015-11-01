@@ -8,6 +8,7 @@ class Page extends Model
 {
     protected $id;
     protected $name;
+    protected $slug;
     protected $status_id;
     protected $filename_main;
     protected $filename_background;
@@ -24,6 +25,7 @@ class Page extends Model
     {
         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
+        $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
         $this->filename_background = (!empty($data['filename_background'])) ? $data['filename_background'] : null;
@@ -208,5 +210,21 @@ class Page extends Model
     public function setFilenameBackground($filename_background)
     {
         $this->filename_background = $filename_background;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 }

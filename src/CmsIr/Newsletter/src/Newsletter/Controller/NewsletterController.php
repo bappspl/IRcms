@@ -26,7 +26,6 @@ class NewsletterController extends AbstractActionController
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
-
             $data = $this->getRequest()->getPost();
             $columns = array('id', 'subject', 'groups', 'statusId', 'status', 'id');
 
@@ -65,13 +64,10 @@ class NewsletterController extends AbstractActionController
         $subscribers = $this->getSubscriberTable()->getBy(array('status_id' => $confirmedStatusId));
 
         $subscriberEmails = array();
-        foreach($subscribers as $subscriber)
-        {
+        foreach($subscribers as $subscriber) {
             $subscriberGroups = unserialize($subscriber->getGroups());
-            foreach($subscriberGroups as $group)
-            {
-                if(in_array($group, $groups))
-                {
+            foreach($subscriberGroups as $group) {
+                if(in_array($group, $groups)) {
                     $subscriberEmails[$subscriber->getEmail()] = $subscriber->getEmail();
                 }
             }
@@ -99,8 +95,7 @@ class NewsletterController extends AbstractActionController
         $body = new MimeMessage();
         $body->setParts(array($html));
 
-        foreach($emails as $email)
-        {
+        foreach($emails as $email) {
             $message = new Message();
             $this->getRequest()->getServer();
             $message->addTo($email)
@@ -218,8 +213,7 @@ class NewsletterController extends AbstractActionController
 
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
                 $this->getNewsletterTable()->deleteNewsletter($id);
@@ -247,12 +241,10 @@ class NewsletterController extends AbstractActionController
             return $this->redirect()->toRoute('newsletter');
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Zapisz')
-            {
+            if ($del == 'Zapisz') {
                 $id = $request->getPost('id');
                 $statusId = $request->getPost('statusId');
 

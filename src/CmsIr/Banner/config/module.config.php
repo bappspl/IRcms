@@ -11,7 +11,9 @@ return array(
     'view_manager' => array(
         'template_map' => array(
             'partial/flashmessages-banner'  => __DIR__ . '/../view/partial/flashmessages-banner.phtml',
-            'partial/delete-banner-modal'  => __DIR__ . '/../view/partial/delete-banner-modal.phtml'
+            'partial/delete-banner-modal'  => __DIR__ . '/../view/partial/delete-banner-modal.phtml',
+            'partial/delete-massive-banner-modal'  => __DIR__ . '/../view/partial/delete-massive-banner-modal.phtml',
+            'partial/status-massive-banner-modal'  => __DIR__ . '/../view/partial/status-massive-banner-modal.phtml',
         ),
         'template_path_stack' => array(
             'banner' => __DIR__ . '/../view'

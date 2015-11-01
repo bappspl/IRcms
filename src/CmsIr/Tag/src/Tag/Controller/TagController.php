@@ -83,8 +83,7 @@ class TagController extends AbstractActionController
 
         $tag = $this->getTagTable()->getOneBy(array('id' => $id));
 
-        if(!$tag)
-        {
+        if(!$tag) {
             return $this->redirect()->toRoute('tag');
         }
 
@@ -95,13 +94,11 @@ class TagController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $form->setInputFilter(new TagFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $this->getTagTable()->save($tag);
                 $this->getBlockService()->saveBlocks($id, 'Tag', $request->getPost()->toArray(), 'title');
 
@@ -133,8 +130,7 @@ class TagController extends AbstractActionController
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
 
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
 

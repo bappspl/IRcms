@@ -16,13 +16,11 @@ class MetaService implements ServiceLocatorAwareInterface
         /* @var $meta Meta */
         $meta = $this->getMetaTable()->getOneBy(array('entity_type' => $entityType, 'entity_id' => $entityId));
 
-        if($meta)
-        {
+        if($meta) {
             $meta->setTitle($postData->title);
             $meta->setKeywords($postData->keywords);
             $meta->setDescription($postData->description);
-        } else
-        {
+        } else {
             $meta = new Meta();
             $meta->setTitle($postData->title);
             $meta->setKeywords($postData->keywords);
@@ -30,6 +28,7 @@ class MetaService implements ServiceLocatorAwareInterface
             $meta->setEntityId($entityId);
             $meta->setEntityType($entityType);
         }
+
         $this->getMetaTable()->save($meta);
     }
     /**

@@ -19,18 +19,15 @@ class PostService implements ServiceLocatorAwareInterface
         $posts = $this->getPostTable()->getBy(array('status_id' => 1, 'category' => $category), 'id DESC', $counter);
 
         /* @var $post Post */
-        foreach ($posts as $post)
-        {
+        foreach ($posts as $post) {
             $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Post', 'language_id' => $langId, 'entity_id' => $post->getId()));
             $post->setBlocks($blocks);
 
             /* @var $block Block */
-            foreach($blocks as $block)
-            {
+            foreach($blocks as $block) {
                 $fieldName = $block->getName();
 
-                switch ($fieldName)
-                {
+                switch ($fieldName) {
                     case 'url':
                         $post->setUrl($block->getValue());
                         break;
@@ -46,8 +43,7 @@ class PostService implements ServiceLocatorAwareInterface
                 }
             }
 
-            if($post->getAuthorId())
-            {
+            if($post->getAuthorId()) {
                 /* @var $user Users */
                 $user = $this->getUsersTable()->getOneBy(array('id' => $post->getAuthorId()));
                 $post->setAuthor($user->getName() . ' ' . $user->getSurname());
@@ -69,27 +65,21 @@ class PostService implements ServiceLocatorAwareInterface
         /* @var $postBlock Block */
         $postBlock = $this->getBlockTable()->getOneBy(array('entity_type' => 'Post', 'language_id' => $langId, 'name' => 'url', 'value' => $url));
 
-        if(!$postBlock)
-        {
+        if(!$postBlock) {
             return null;
         }
 
         /* @var $post Post */
         $post = $this->getPostTable()->getOneBy(array('id' => $postBlock->getEntityId(), 'status_id' => 1, 'category' => $category));
 
-
-
-
         $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Post', 'language_id' => $langId, 'entity_id' => $post->getId()));
         $post->setBlocks($blocks);
 
         /* @var $block Block */
-        foreach($blocks as $block)
-        {
+        foreach($blocks as $block) {
             $fieldName = $block->getName();
 
-            switch ($fieldName)
-            {
+            switch ($fieldName) {
                 case 'url':
                     $post->setUrl($block->getValue());
                     break;
@@ -108,12 +98,44 @@ class PostService implements ServiceLocatorAwareInterface
 
         $date = $post->getDate();
         $date = new \DateTime($date);
-        $post->setDate($date->format('j M'));
+        $post->setDate($date->format('j F'));
 
         $files = $this->getFileTable()->getBy(array('entity_type' => 'Post', 'entity_id' => $post->getId()));
         $post->setFiles($files);
 
         return $post;
+    }
+
+    public function findPostWithBlocksSearch($entity, $langId)
+    {
+        $post = $this->getPostTable()->getOneBy(array('id' => $entity->getEntityId(), 'status_id' => 1));
+
+        if($post) {
+            /* @var $entity Post */
+            $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Post', 'entity_id' => $post->getId(), 'language_id' => $langId));
+
+            /* @var $block Block */
+            foreach($blocks as $block) {
+                $fieldName = $block->getName();
+
+                switch ($fieldName) {
+                    case 'title':
+                        $post->setTitle($block->getValue());
+                        break;
+                    case 'content':
+                        $post->setContent($block->getValue());
+                        break;
+                    case 'url':
+                        $post->setUrl($block->getValue());
+                        break;
+                }
+            }
+
+            return $post;
+
+        } else {
+            return null;
+        }
     }
 
     /**

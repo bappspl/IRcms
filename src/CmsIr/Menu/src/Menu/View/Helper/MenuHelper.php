@@ -24,30 +24,24 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
         // $item == $node
         /* @var $item MenuNode */
-        foreach($menu as $item)
-        {
-            if(is_array($item->getItems()))
-            {
+        foreach($menu as $item) {
+            if(is_array($item->getItems())) {
                 $subItems = $item->getItems();
 
                 $fistItem = end($subItems);
                 $checkUrl = $fistItem->getUrl();
 
                 $pos = strpos($route, $checkUrl);
-            } else
-            {
+            } else {
 
                 $checkUrl = $item->getItems()->getUrl();
                 $pos = strpos($route, $checkUrl);
             }
 
-            if($pos !== false && $checkUrl !== '/')
-            {
+            if($pos !== false && $checkUrl !== '/') {
                 $active = 'active';
-            } else
-            {
-                if($checkUrl == '/' && strlen($route) == 1)
-                {
+            } else {
+                if($checkUrl == '/' && strlen($route) == 1) {
                     $active = 'active';
                 } else {
                     $active = '';
@@ -56,23 +50,20 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
             $template .= '<li class="'. $liClass . '">';
 
-            if(is_array($item->getItems()))
-            {
+            if(is_array($item->getItems())) {
                 $subItems = $item->getItems();
 
                 $fistItem = end($subItems);
 
                 //lang
 
-                if($item->getProviderType() == 'Page' && $langId !== null)
-                {
+                if($item->getProviderType() == 'Page' && $langId !== null) {
                     $label = $fistItem->getLabel();
                     $pageId = $this->getPageTable()->getOneBy(array('name' => $label))->getId();
                     $label = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'title'))->getValue();
                     $url = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'url'))->getValue();
                     $url = '/' . $lang . '/strona/' . $url;
-                } else
-                {
+                } else {
                     $url = $fistItem->getUrl();
                     $label = $fistItem->getLabel();
                 }
@@ -87,15 +78,13 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                 foreach($subItems as $subItem) {
                     $subItemNode = $subItem->getItems();
 
-                    if($item->getProviderType() == 'Page' && $langId !== null)
-                    {
+                    if($item->getProviderType() == 'Page' && $langId !== null) {
                         $label = $fistItem->getLabel();
                         $pageId = $this->getPageTable()->getOneBy(array('name' => $label))->getId();
                         $label = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'title'))->getValue();
                         $url = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'url'))->getValue();
                         $url = '/' . $lang . '/strona/' . $url;
-                    } else
-                    {
+                    } else {
                         $label = $fistItem->getLabel();
                         $url = $fistItem->getUrl();
                     }
@@ -105,25 +94,22 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
                 $template .= '</li></ul></li></ul>';
 
-
             } else {
                 $subItem = $item->getItems();
 
-                if($item->getProviderType() == 'Page' && $langId !== null)
-                {
+                if($item->getProviderType() == 'Page' && $langId !== null) {
                     $label = $subItem->getLabel();                    ;
                     $pageId = $this->getPageTable()->getOneBy(array('name' => $label))->getId();
                     $label = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'title'))->getValue();
                     $url = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'url'))->getValue();
                     $url = '/' . $lang . '/strona/' . $url;
-                } else
-                {
+                } else {
                     $label = $this->translate($subItem->getLabel());
                     $url = '/' . $lang . $subItem->getUrl();
                 }
 
                 $subtitle = $subItem->getSubtitle();
-                $template .= '<a href="'.$url.'" class="' . $active . ' mn-has-sub"" title="'.$subtitle.'">'.$label.'</a>';
+                $template .= '<a href="'.$url.'" class="' . $active . ' "" title="'.$subtitle.'">'.$label.'</a>';
             }
             $template .= '</li>';
         }
@@ -142,10 +128,10 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
                         <div class="mn-wrap">
                             <form method="post" class="form">
                                 <div class="search-wrap">
-                                    <button class="search-button animate" type="submit" title="'.$this->translate('Szukaj').'">
+                                    <button class="search-button animate" type="submit" id="szukajka" title="'.$this->translate('Szukaj').'">
                                         <i class="fa fa-search"></i>
                                     </button>
-                                    <input type="text" class="form-control search-field" placeholder="'.$this->translate('Szukaj').'">
+                                    <input type="text" id="szukaj" class="form-control search-field" placeholder="'.$this->translate('Szukaj').'">
                                 </div>
                             </form>
                         </div>
@@ -171,14 +157,11 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
         $template = '';
 
-
-        foreach($menuMain as $menuSmall)
-        {
+        foreach($menuMain as $menuSmall) {
 
             $template .= '<row>';
 
-            foreach($menuSmall as $small)
-            {
+            foreach($menuSmall as $small) {
 
                 if(is_array($small->getItems())) {
 
@@ -193,8 +176,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 
                     $template .= '<p><a href="' . $url . '">' . $label . '</a></p>';
 
-                    if(!empty($subItems))
-                    {
+                    if(!empty($subItems)) {
                         $template .= '<ul>';
 
                         foreach($subItems as $subItem) {

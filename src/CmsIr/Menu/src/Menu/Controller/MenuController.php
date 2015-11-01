@@ -64,7 +64,6 @@ class MenuController extends AbstractActionController
             $data = $request->getPost('data');
             $this->getMenuService()->saveMenu($data);
 
-
             $jsonObject = Json::encode($params['status'] = 'success', true);
             echo $jsonObject;
             return $this->response;
@@ -78,8 +77,7 @@ class MenuController extends AbstractActionController
         if ($request->isPost()) {
             $nodes = $request->getPost('nodes');
 
-            foreach($nodes as $node)
-            {
+            foreach($nodes as $node) {
                 $this->getMenuService()->getMenuItemTable()->deleteMenuItemByNodeId($node);
                 $this->getMenuService()->getMenuNodeTable()->deleteMenuNode($node);
             }
@@ -94,33 +92,28 @@ class MenuController extends AbstractActionController
     public function editNodeAction ()
     {
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $nodeId = $request->getPost('nodeId');
             $nodeLabel = $request->getPost('label');
             $nodeUrl = $request->getPost('url');
             $subtitle = $request->getPost('subtitle');
 
             $nodeExist = $this->getMenuService()->getMenuItemTable()->getOneBy(array('url' => $nodeUrl));
-            if($nodeExist == false)
-            {
+            if($nodeExist == false) {
                 // update
                 $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl, $subtitle);
                 $jsonObject = Json::encode($params['status'] = 'success', true);
                 echo $jsonObject;
                 return $this->response;
-            } else
-            {
+            } else {
 
-                if($nodeId == $nodeExist->getId())
-                {
+                if($nodeId == $nodeExist->getId()) {
                     // update
                     $this->getMenuService()->getMenuItemTable()->updateMenuItem($nodeId, $nodeLabel, $nodeUrl, $subtitle);
                     $jsonObject = Json::encode($params['status'] = 'success', true);
                     echo $jsonObject;
                     return $this->response;
-                } else
-                {
+                } else {
                     $jsonObject = Json::encode($params['status'] = 'error', true);
                     echo $jsonObject;
                     return $this->response;
@@ -142,8 +135,8 @@ class MenuController extends AbstractActionController
             $pageProvider = $request->getPost('pageProvider');
 
             $nodeExist = $this->getMenuService()->getMenuItemTable()->getOneBy(array('url' => $nodeUrl));
-            if($nodeExist == false)
-            {
+
+            if($nodeExist == false) {
                 // save
                 $menuNode = new MenuNode();
                 $menuNode->setDepth(0);
@@ -166,7 +159,6 @@ class MenuController extends AbstractActionController
                 echo $jsonObject;
                 return $this->response;
             } else {
-
                 $jsonObject = Json::encode($params['status'] = 'error', true);
                 echo $jsonObject;
                 return $this->response;

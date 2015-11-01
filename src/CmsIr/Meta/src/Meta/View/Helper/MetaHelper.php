@@ -16,8 +16,7 @@ class MetaHelper extends AbstractHelper implements ServiceLocatorAwareInterface
     {
         $form = new MetaForm();
 
-        if($entity)
-        {
+        if($entity) {
             $type = get_class($entity);
             $explode = explode('\\', $type);
             $entityType = end($explode);

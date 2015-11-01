@@ -19,8 +19,7 @@ class TagService implements ServiceLocatorAwareInterface
 
         $tagArray = array();
 
-        foreach($tags as $tag)
-        {
+        foreach($tags as $tag) {
             $tagArray[$tag->getName()] = $tag->getName();
         }
 
@@ -31,16 +30,13 @@ class TagService implements ServiceLocatorAwareInterface
     {
         $updatedTags = array();
 
-        foreach($tagArray as $tag)
-        {
+        foreach($tagArray as $tag) {
             /* @var $foundTag Tag */
             $foundTag = $this->getTagTable()->getOneBy(array('name' => $tag));
 
-            if($foundTag)
-            {
+            if($foundTag) {
                 $id = $foundTag->getId();
-            } else
-            {
+            } else {
                 $newTag = new Tag();
                 $newTag->setName($tag);
 
@@ -54,11 +50,9 @@ class TagService implements ServiceLocatorAwareInterface
             /* @var $foundTagEntity TagEntity */
             $foundTagEntity = $this->getTagEntityTable()->getOneBy(array('tag_id' => $id, 'entity_id' => $entity_id, 'entity_type' => $entity_type));
 
-            if($foundTagEntity)
-            {
+            if($foundTagEntity) {
                 array_push($updatedTags, $foundTagEntity->getId());
-            } else
-            {
+            } else {
                 $tagEntity = new TagEntity();
                 $tagEntity->setTagId($id);
                 $tagEntity->setEntityId($entity_id);
@@ -73,12 +67,10 @@ class TagService implements ServiceLocatorAwareInterface
         $allTagEntites = $this->getTagEntityTable()->getBy(array('entity_id' => $entity_id, 'entity_type' => $entity_type));
 
         /* @var $t TagEntity */
-        foreach($allTagEntites as $t)
-        {
+        foreach($allTagEntites as $t) {
             $tId = $t->getId();
 
-            if(!in_array($tId, $updatedTags))
-            {
+            if(!in_array($tId, $updatedTags)) {
                 $this->getTagEntityTable()->deleteTagEntity($tId);
             }
         }
@@ -91,8 +83,7 @@ class TagService implements ServiceLocatorAwareInterface
         $tags = array();
 
         /* @var $tagEntity TagEntity */
-        foreach($allTagEntites as $tagEntity)
-        {
+        foreach($allTagEntites as $tagEntity) {
             $tagId = $tagEntity->getTagId();
 
             /* @var $tag Tag */

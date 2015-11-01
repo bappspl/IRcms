@@ -44,19 +44,16 @@ class PlaceController extends AbstractActionController {
         $form = new PlaceForm();
 
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $form->setInputFilter(new PlaceFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $place = new Place();
                 $place->exchangeArray($form->getData());
                 $region = $place->getRegion();
-                if($region === 'mazowieckie')
-                {
+                if($region === 'mazowieckie') {
                     $place->setRegion('Województwo mazowieckie');
                 }
 
@@ -88,17 +85,14 @@ class PlaceController extends AbstractActionController {
         $form->bind($place);
 
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $form->setInputFilter(new PlaceFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $region = $place->getRegion();
-                if($region === 'mazowieckie')
-                {
+                if($region === 'mazowieckie') {
                     $place->setRegion('Województwo mazowieckie');
                 }
 
@@ -144,16 +138,13 @@ class PlaceController extends AbstractActionController {
             return $this->redirect()->toRoute('palce');
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Tak')
-            {
+            if ($del == 'Tak') {
                 $id = $request->getPost('id');
 
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
 

@@ -122,8 +122,7 @@ class SliderController extends AbstractActionController
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
 
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
 
@@ -260,6 +259,7 @@ class SliderController extends AbstractActionController
         $request = $this->getRequest();
         $sliderId = (int) $this->params()->fromRoute('slider_id', 0);
         $itemId = (int) $this->params()->fromRoute('item_id', 0);
+
         if (!$sliderId && !$itemId) {
             return $this->redirect()->toRoute('slider');
         }
@@ -319,12 +319,10 @@ class SliderController extends AbstractActionController
             return $this->redirect()->toRoute('slider');
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Zapisz')
-            {
+            if ($del == 'Zapisz') {
                 $id = $request->getPost('id');
                 $statusId = $request->getPost('statusId');
 

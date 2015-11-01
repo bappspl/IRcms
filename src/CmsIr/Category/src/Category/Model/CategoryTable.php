@@ -33,13 +33,11 @@ class CategoryTable extends ModelTable
 
     public function deleteCategory($ids)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
 
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->delete(array('id' => $id));
         }
     }
@@ -48,9 +46,8 @@ class CategoryTable extends ModelTable
     {
         $dataArray = array();
         foreach($filteredRows as $row) {
-
             $tmp = array();
-            foreach($columns as $column){
+            foreach($columns as $column) {
                 $column = 'get'.ucfirst($column);
                 $tmp[] = $row->$column();
             }
@@ -127,5 +124,4 @@ class CategoryTable extends ModelTable
 
         return $id;
     }
-
 }

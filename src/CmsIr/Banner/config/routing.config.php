@@ -87,6 +87,20 @@ return array(
                     ),
                 ),
             ),
+            'change-status' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-status/:banner_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Banner',
+                        'controller' => 'CmsIr\Banner\Controller\Banner',
+                        'action'     => 'changeStatus',
+                    ),
+                    'constraints' => array(
+                        'banner_id' =>  '[0-9]+'
+                    ),
+                ),
+            ),
         ),
     ),
 );

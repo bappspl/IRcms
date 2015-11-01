@@ -68,28 +68,27 @@ class PostController extends AbstractActionController
         /* @var $user Users */
         $users = $this->getUsersTable()->getAll();
         $arrUsers = array();
-        foreach($users as $user)
-        {
+
+        foreach($users as $user) {
             $arrUsers[$user->getId()] = $user->getName() . ' ' . $user->getSurname();
         }
+
         $form->get('author_id')->setValueOptions($arrUsers);
 
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $form->setInputFilter(new PostFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
 
                 $post = new Post();
                 $post->exchangeArray($form->getData());
                 $post->setCategory($category);
-                if(!empty($extraResult))
-                {
+
+                if(!empty($extraResult)) {
                     $serializedExtraResult = serialize($extraResult);
                     $post->setExtra($serializedExtraResult);
                 }
@@ -99,10 +98,9 @@ class PostController extends AbstractActionController
                 $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-                if(!empty($scannedDirectory))
-                {
-                    foreach($scannedDirectory as $file)
-                    {
+
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
                         $postFile = new File();
@@ -118,8 +116,7 @@ class PostController extends AbstractActionController
                 }
 
                 // Only for DNA
-                if($post->getStatusId() == 1 && $category == 'news')
-                {
+                if($post->getStatusId() == 1 && $category == 'news') {
 //                    $newsletterContent = "Na stronie pojawił się nowy artykuł! <br>" .
 //                        "Kliknij w poniższy link, aby go przeczytać: <a href='" .
 //                        $this->getRequest()->getServer('HTTP_ORIGIN') .
@@ -145,17 +142,14 @@ class PostController extends AbstractActionController
 
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
 
-                } else
-                {
+                } else {
                     $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
-
                 }
 
                 return $this->redirect()->toRoute('post', array('category' => $category));
             }
-        } else
-        {
+        } else {
             $this->emptyTempDirectory();
         }
 
@@ -163,8 +157,8 @@ class PostController extends AbstractActionController
         $extraFields = $config['extra_fields'];
 
         $fields = array();
-        if(array_key_exists($category, $extraFields['post']))
-        {
+
+        if(array_key_exists($category, $extraFields['post'])) {
             $fields = $extraFields['post'][$category];
         }
 
@@ -198,8 +192,8 @@ class PostController extends AbstractActionController
         /* @var $user Users */
         $users = $this->getUsersTable()->getAll();
         $arrUsers = array();
-        foreach($users as $user)
-        {
+
+        foreach($users as $user) {
             $arrUsers[$user->getId()] = $user->getName() . ' ' . $user->getSurname();
         }
 
@@ -211,20 +205,17 @@ class PostController extends AbstractActionController
         $form->bind($post);
 
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $form->setInputFilter(new PostFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
                 $post->setCategory($category);
 
                 if($userRoleId < 3) $post->setStatusId(2);
-                if(!empty($extraResult))
-                {
+                if(!empty($extraResult)) {
                     $serializedExtraResult = serialize($extraResult);
                     $post->setExtra($serializedExtraResult);
                 }
@@ -233,10 +224,9 @@ class PostController extends AbstractActionController
                 $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-                if(!empty($scannedDirectory))
-                {
-                    foreach($scannedDirectory as $file)
-                    {
+
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
                         $postFile = new File();
@@ -257,8 +247,7 @@ class PostController extends AbstractActionController
 
                 return $this->redirect()->toRoute('post', array('category' => $category));
             }
-        } else
-        {
+        } else {
             $this->emptyTempDirectory();
         }
 
@@ -266,37 +255,32 @@ class PostController extends AbstractActionController
         $extraFields = $config['extra_fields'];
 
         $fields = array();
-        if(array_key_exists($category, $extraFields['post']))
-        {
+        if(array_key_exists($category, $extraFields['post'])) {
             $fields = $extraFields['post'][$category];
         }
 
         $extra = $post->getExtra();
-        if(!is_null($extra))
-        {
+
+        if(!is_null($extra)) {
             $extraAsArray = unserialize($extra);
             $extraAsArrayKeys = array_keys($extraAsArray);
 
             $tmp = array();
-            foreach($fields as $field)
-            {
+            foreach($fields as $field) {
                 $attributes = $field['attributes'];
                 $name = $attributes['name'];
 
-                switch($field['type'])
-                {
+                switch($field['type']) {
                     case 'text':
-                        if(in_array($name, $extraAsArrayKeys))
-                        {
+                        if(in_array($name, $extraAsArrayKeys)) {
                             $field['options']['value'] = $extraAsArray[$name];
                         }
-                    break;
+                        break;
                     case 'textarea':
-                        if(in_array($name, $extraAsArrayKeys))
-                        {
+                        if(in_array($name, $extraAsArrayKeys)) {
                             $field['options']['value'] = $extraAsArray[$name];
                         }
-                    break;
+                        break;
                 }
                 $tmp[] = $field;
             }
@@ -332,8 +316,8 @@ class PostController extends AbstractActionController
         /* @var $user Users */
         $users = $this->getUsersTable()->getAll();
         $arrUsers = array();
-        foreach($users as $user)
-        {
+
+        foreach($users as $user) {
             $arrUsers[$user->getId()] = $user->getName() . ' ' . $user->getSurname();
         }
 
@@ -345,34 +329,30 @@ class PostController extends AbstractActionController
         $extraFields = $config['extra_fields'];
 
         $fields = array();
-        if(array_key_exists($category, $extraFields['post']))
-        {
+
+        if(array_key_exists($category, $extraFields['post'])) {
             $fields = $extraFields['post'][$category];
         }
 
         $extra = $post->getExtra();
-        if(!is_null($extra))
-        {
+
+        if(!is_null($extra)) {
             $extraAsArray = unserialize($extra);
             $extraAsArrayKeys = array_keys($extraAsArray);
 
             $tmp = array();
-            foreach($fields as $field)
-            {
+            foreach($fields as $field) {
                 $attributes = $field['attributes'];
                 $name = $attributes['name'];
 
-                switch($field['type'])
-                {
+                switch($field['type']) {
                     case 'text':
-                        if(in_array($name, $extraAsArrayKeys))
-                        {
+                        if(in_array($name, $extraAsArrayKeys)) {
                             $field['options']['value'] = $extraAsArray[$name];
                         }
                         break;
                     case 'textarea':
-                        if(in_array($name, $extraAsArrayKeys))
-                        {
+                        if(in_array($name, $extraAsArrayKeys)) {
                             $field['options']['value'] = $extraAsArray[$name];
                         }
                         break;
@@ -402,27 +382,21 @@ class PostController extends AbstractActionController
             return $this->redirect()->toRoute('post-list', array('category' => $category));
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Tak')
-            {
+            if ($del == 'Tak') {
                 $id = $request->getPost('id');
 
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
 
-                foreach($id as $oneId)
-                {
+                foreach($id as $oneId) {
                     $postFiles = $this->getFileTable()->getBy(array('entity_type' => 'Post', 'entity_id' => $oneId));
 
-                    if((!empty($postFiles)))
-                    {
-                        foreach($postFiles as $file)
-                        {
+                    if((!empty($postFiles))) {
+                        foreach($postFiles as $file) {
                             unlink('./public/files/post/'.$file->getFilename());
                             $this->getFileTable()->deleteFile($file->getId());
                         }
@@ -457,12 +431,10 @@ class PostController extends AbstractActionController
             return $this->redirect()->toRoute('post-list', array('category' => $category));
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Zapisz')
-            {
+            if ($del == 'Zapisz') {
                 $id = $request->getPost('id');
                 $statusId = $request->getPost('statusId');
 
@@ -485,8 +457,7 @@ class PostController extends AbstractActionController
 
     public function uploadFilesAction ()
     {
-        if (!empty($_FILES))
-        {
+        if (!empty($_FILES)) {
             //var_dump($_FILES);die;
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
@@ -514,8 +485,8 @@ class PostController extends AbstractActionController
         if ($request->isPost()) {
             $id = (int) $request->getPost('id');
             $filePath = $request->getPost('filePath');
-            if($id != 0)
-            {
+
+            if($id != 0) {
                 $this->getFileTable()->deleteFile($id);
                 unlink('./public'.$filePath);
             } else
@@ -563,8 +534,7 @@ class PostController extends AbstractActionController
         $body = new MimeMessage();
         $body->setParts(array($html));
 
-        foreach($emails as $email)
-        {
+        foreach($emails as $email) {
             $message = new Message();
             $this->getRequest()->getServer();
             $message->addTo($email)
@@ -579,10 +549,9 @@ class PostController extends AbstractActionController
     public function emptyTempDirectory()
     {
         $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-        if(!empty($scannedDirectory))
-        {
-            foreach($scannedDirectory as $file)
-            {
+
+        if(!empty($scannedDirectory)) {
+            foreach($scannedDirectory as $file) {
                 unlink($this->uploadDir.'/'.$file);
             }
         }
@@ -590,8 +559,7 @@ class PostController extends AbstractActionController
 
     private function checkExtraFields($obj, $arr)
     {
-        if(!is_array($arr))
-        {
+        if(!is_array($arr)) {
             $arr = (array) $arr;
             $formKeys = array_keys($arr);
             $tmp = array();
@@ -600,16 +568,13 @@ class PostController extends AbstractActionController
                 $tmp[] = substr($field, 3, strlen($field));
             }
             $formKeys = $tmp;
-        } else
-        {
+        } else {
             $formKeys = array_keys($arr);
         }
 
         $result = array();
-        foreach($obj as $key => $field)
-        {
-            if(!in_array($key, $formKeys))
-            {
+        foreach($obj as $key => $field) {
+            if(!in_array($key, $formKeys)) {
                 $result[$key] = $field;
             }
         }

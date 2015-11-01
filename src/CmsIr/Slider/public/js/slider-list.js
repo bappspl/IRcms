@@ -147,7 +147,7 @@ $(function () {
                                             {
                                                 $('.spinner').hide();
                                                 $('.check-all').iCheck('uncheck');
-                                                $('#'+modal).modal('hide');
+                                                //$('#'+modal).modal('hide');
                                                 $('select[name="massive-action"]').val('');
                                                 table.ajax.reload();
                                             }
@@ -175,7 +175,7 @@ $(function () {
                                             {
                                                 $('.spinner').hide();
                                                 $('.check-all').iCheck('uncheck');
-                                                $('#'+modal).modal('hide');
+                                                //$('#'+modal).modal('hide');
                                                 $('select[name="massive-action"]').val('');
                                                 $('#'+modal+' select[name="status"]').val(1);
                                                 table.ajax.reload();

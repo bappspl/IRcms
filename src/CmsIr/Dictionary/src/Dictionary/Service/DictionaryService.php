@@ -20,12 +20,10 @@ class DictionaryService implements ServiceLocatorAwareInterface
         $entity->setBlocks($blocks);
 
         /* @var $block Block */
-        foreach($blocks as $block)
-        {
+        foreach($blocks as $block) {
             $fieldName = $block->getName();
 
-            switch ($fieldName)
-            {
+            switch ($fieldName) {
                 case 'title':
                     $entity->setTitle($block->getValue());
                     break;
@@ -36,6 +34,82 @@ class DictionaryService implements ServiceLocatorAwareInterface
         }
 
         return $entity;
+    }
+
+    public function findDictionariesWithBlocksByNames($names, $langId)
+    {
+        $dictionaries = array();
+
+        foreach($names as $name) {
+            /* @var $dictionary Dictionary */
+            $dictionary = $this->getDictionaryTable()->getOneBy(array('name' => $name));
+
+            /* @var $entity Dictionary */
+            $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Dictionary', 'entity_id' => $dictionary->getId(), 'language_id' => $langId));
+            $dictionary->setBlocks($blocks);
+
+            /* @var $block Block */
+            foreach($blocks as $block) {
+                $fieldName = $block->getName();
+
+                switch ($fieldName) {
+                    case 'title':
+                        $dictionary->setTitle($block->getValue());
+                        break;
+                    case 'content':
+                        $dictionary->setContent($block->getValue());
+                        break;
+                }
+            }
+
+            $dictionaries[$dictionary->getName()] = $dictionary;
+        }
+
+        return $dictionaries;
+    }
+
+    public function findDictionariesAsAssocArrayByCategory($category)
+    {
+        $dictionariesArray = array();
+
+        $dictionaries = $this->getDictionaryTable()->getBy(array('category' => $category));
+
+        /* @var $dictionary Dictionary */
+        foreach($dictionaries as $dictionary) {
+            $dictionariesArray[$dictionary->getId()] = $dictionary->getName();
+        }
+
+        return $dictionariesArray;
+    }
+
+    public function findDictionaryById($id, $langId)
+    {
+        if($id == null) {
+            return null;
+        }
+
+        $dictionary = $this->getDictionaryTable()->getOneBy(array('id' => $id));
+
+        /* @var $dictionary Dictionary */
+        $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Dictionary', 'entity_id' => $dictionary->getId(), 'language_id' => $langId));
+
+        /* @var $block Block */
+        foreach($blocks as $block) {
+            $fieldName = $block->getName();
+
+            switch ($fieldName) {
+                case 'title':
+                    $dictionary->setTitle($block->getValue());
+                    break;
+                case 'content':
+                    $dictionary->setContent($block->getValue());
+                    break;
+            }
+        }
+
+        $dictionary->setBlocks($blocks);
+
+        return $dictionary;
     }
 
     /**
@@ -61,7 +135,6 @@ class DictionaryService implements ServiceLocatorAwareInterface
     {
         return $this->getServiceLocator()->get('CmsIr\Dictionary\Model\DictionaryTable');
     }
-
 
     /**
      * @return mixed

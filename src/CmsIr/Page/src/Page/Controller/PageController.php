@@ -20,14 +20,8 @@ class PageController extends AbstractActionController
     protected $uploadDir = 'public/temp_files/page/';
     protected $destinationUploadDir = 'public/files/page/';
 
-    public function getMailConfigTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\System\Model\MailConfigTable');
-    }
-
     public function listAction()
     {
-        //$options = $this->getMailConfigTable()->generateMailConfigArray();
         $request = $this->getRequest();
         if ($request->isPost()) {
 
@@ -57,8 +51,7 @@ class PageController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $form->setInputFilter(new PageFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
@@ -70,10 +63,8 @@ class PageController extends AbstractActionController
                 $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-                if(!empty($scannedDirectory))
-                {
-                    foreach($scannedDirectory as $file)
-                    {
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
                         $postFile = new File();
@@ -92,8 +83,7 @@ class PageController extends AbstractActionController
 
                 $this->getBlockService()->saveBlocks($id, 'Page', $request->getPost()->toArray(), 'title');
 
-                if ($add == 'Tak')
-                {
+                if ($add == 'Tak') {
                     $parentNodeId = $request->getPost('menu');
 
                     $menuNode = new MenuNode();
@@ -102,11 +92,9 @@ class PageController extends AbstractActionController
                     $menuNode->setProviderType('Page');
                     $menuNode->setPosition(0);
 
-                    if ($parentNodeId == 0)
-                    {
+                    if ($parentNodeId == 0) {
                         $menuNode->setDepth(0);
-                    } elseif ($parentNodeId > 0)
-                    {
+                    } elseif ($parentNodeId > 0) {
                         $menuNode->setDepth(1);
                         $menuNode->setParentId($parentNodeId);
                     }
@@ -125,7 +113,6 @@ class PageController extends AbstractActionController
 
                     $this->getMenuService()->saveMenuItem($menuItem);
                 }
-
 
                 $this->flashMessenger()->addMessage('Strona została dodana poprawnie.');
 
@@ -150,8 +137,7 @@ class PageController extends AbstractActionController
         /* @var $page Page */
         $page = $this->getPageTable()->getOneBy(array('id' => $id));
 
-        if(!$page)
-        {
+        if(!$page)  {
             return $this->redirect()->toRoute('page');
         }
 
@@ -164,21 +150,17 @@ class PageController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $form->setInputFilter(new PageFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $id = $this->getPageTable()->save($page);
                 $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-                if(!empty($scannedDirectory))
-                {
-                    foreach($scannedDirectory as $file)
-                    {
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
                         $postFile = new File();
@@ -231,26 +213,21 @@ class PageController extends AbstractActionController
                 $menuItem = $this->getMenuItemTable()->getOneBy(array('url' => '/strona/' . $url));
 
                 /* @var $menuItem MenuItem */
-                if($menuItem)
-                {
+                if($menuItem) {
                     $menuNodeId = $menuItem->getNodeId();
                     $this->getMenuItemTable()->deleteMenuItemByNodeId($menuNodeId);
                     $this->getMenuNodeTable()->deleteMenuNode($menuNodeId);
                 }
 
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
 
-                foreach($id as $oneId)
-                {
+                foreach($id as $oneId) {
                     $pageFiles = $this->getFileTable()->getBy(array('entity_type' => 'page', 'entity_id' => $oneId));
 
-                    if((!empty($pageFiles)))
-                    {
-                        foreach($pageFiles as $file)
-                        {
+                    if((!empty($pageFiles))) {
+                        foreach($pageFiles as $file) {
                             unlink('./public/files/page/'.$file->getFilename());
                             $this->getFileTable()->deleteFile($file->getId());
                         }
@@ -285,12 +262,10 @@ class PageController extends AbstractActionController
             return $this->redirect()->toRoute('page');
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Zapisz')
-            {
+            if ($del == 'Zapisz') {
                 $id = $request->getPost('id');
                 $statusId = $request->getPost('statusId');
 
@@ -312,8 +287,7 @@ class PageController extends AbstractActionController
 
     public function uploadFilesMainAction ()
     {
-        if (!empty($_FILES))
-        {
+        if (!empty($_FILES)) {
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
 
@@ -324,11 +298,9 @@ class PageController extends AbstractActionController
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile))
-            {
+            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile)) {
                 echo $targetFile;
-            } else
-            {
+            } else {
                 echo 0;
             }
         }
@@ -337,8 +309,7 @@ class PageController extends AbstractActionController
 
     public function uploadFilesAction ()
     {
-        if (!empty($_FILES))
-        {
+        if (!empty($_FILES)) {
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
             $file = explode('.', $targetFile);
@@ -349,11 +320,9 @@ class PageController extends AbstractActionController
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile))
-            {
+            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
                 echo $targetFile;
-            } else
-            {
+            } else {
                 echo 0;
             }
 
@@ -369,13 +338,11 @@ class PageController extends AbstractActionController
             $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');
 
-            if(!empty($id))
-            {
+            if(!empty($id)) {
                 $this->getFileTable()->deleteFile($id);
                 unlink('./public'.$filePath);
 
-            } else
-            {
+            } else {
                 unlink('./public'.$filePath);
             }
         }
@@ -393,13 +360,11 @@ class PageController extends AbstractActionController
             $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');
 
-            if(!empty($id))
-            {
+            if(!empty($id)) {
                 $this->getFileTable()->deleteFile($id);
                 unlink('./public'.$filePath);
 
-            } else
-            {
+            } else {
                 unlink('./public'.$filePath);
             }
         }

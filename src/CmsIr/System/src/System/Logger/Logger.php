@@ -25,8 +25,7 @@ class Logger implements ServiceLocatorAwareInterface
         $appName = $config['app_name'];
         $loggerMail = $config['logger_mail'];
 
-        if($loggerMail === true)
-        {
+        if($loggerMail === true) {
             $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
             $from = $this->getServiceLocator()->get('mail.transport')->findFromMail();
 

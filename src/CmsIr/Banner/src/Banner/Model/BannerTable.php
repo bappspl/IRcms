@@ -25,18 +25,16 @@ class BannerTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $dataArray = array();
         foreach($filteredRows as $row) {
-
             $tmp = array();
 
-            foreach($columns as $column){
+            foreach($columns as $column) {
                 $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
+                if($column == 'getStatus') {
+                    $tmp[] = $this->getLabelToDisplay($row->getStatusId());
+                } else  {
+                    $tmp[] = $row->$column();
+                }
             }
-            // dodanie switchera
-            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-
-            $tmp[] = '<a href="banner/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="banner/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -65,17 +63,14 @@ class BannerTable extends ModelTable implements ServiceLocatorAwareInterface
         );
 
         $id = (int) $gallery->getId();
-        if ($id == 0)
-        {
+
+        if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
-        } else
-        {
-            if ($this->getOneBy(array('id' => $id)))
-            {
+        } else {
+            if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
-            } else
-            {
+            } else {
                 throw new \Exception('Banner id does not exist');
             }
         }
@@ -83,10 +78,28 @@ class BannerTable extends ModelTable implements ServiceLocatorAwareInterface
         return $id;
     }
 
-    public function deleteBanner($id)
+    public function deleteBanner($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids)) {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id) {
+            $this->tableGateway->delete(array('id' => $id));
+        }
+    }
+
+    public function changeStatusBanner($ids, $statusId)
+    {
+        if(!is_array($ids)) {
+            $ids = array($ids);
+        }
+
+        $data = array('status_id'  => $statusId);
+
+        foreach($ids as $id) {
+            $this->tableGateway->update($data, array('id' => $id));
+        }
     }
 
     /**

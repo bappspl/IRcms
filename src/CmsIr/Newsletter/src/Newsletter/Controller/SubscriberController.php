@@ -224,8 +224,7 @@ class SubscriberController extends AbstractActionController
 
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
                 $this->getSubscriberTable()->deleteSubscriber($id);
@@ -253,12 +252,10 @@ class SubscriberController extends AbstractActionController
             return $this->redirect()->toRoute('newsletter/subscriber-list');
         }
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $del = $request->getPost('del', 'Anuluj');
 
-            if ($del == 'Zapisz')
-            {
+            if ($del == 'Zapisz')            {
                 $id = $request->getPost('id');
                 $statusId = $request->getPost('statusId');
 
@@ -397,14 +394,12 @@ class SubscriberController extends AbstractActionController
 
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
                 $connectedUsers = $this->getSubscriberTable()->getBySubscriberGroupId($id);
 
-                if($connectedUsers)
-                {
+                if($connectedUsers) {
                     $this->flashMessenger()->addMessage('Nie można usunąć grupy, ponieważ są do niej przypisani subskrybenci!');
                     $jsonObject = Json::encode($params['status'] = 'error', true);
                     echo $jsonObject;

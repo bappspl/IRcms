@@ -19,8 +19,7 @@ class LanguageService implements ServiceLocatorAwareInterface
         $config = $this->getServiceLocator()->get('Config');
         $langArray = $config['languages'];
 
-        if(!in_array($lang, $langArray))
-        {
+        if(!in_array($lang, $langArray)) {
             $lang = 'pl';
         }
 

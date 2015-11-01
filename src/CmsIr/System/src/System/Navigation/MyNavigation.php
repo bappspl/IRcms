@@ -13,8 +13,7 @@ class MyNavigation extends DefaultNavigationFactory
             $fetchMenu = $serviceLocator->get('menu')->fetchAll();
 
 
-            foreach($fetchMenu as $key => $row)
-            {
+            foreach($fetchMenu as $key => $row) {
                 $configuration['navigation'][$this->getName()][$row['name']] = array(
                     'label' => $row['label'],
                     'route' => $row['route'],
@@ -27,14 +26,11 @@ class MyNavigation extends DefaultNavigationFactory
 
                 $pagesArray = array();
 
-                if(!empty($pages))
-                {
-                    foreach($pages as $k => $page)
-                    {
+                if(!empty($pages)) {
+                    foreach($pages as $k => $page) {
                         $params = null;
 
-                        if(!empty($page['params']))
-                        {
+                        if(!empty($page['params'])) {
                             $params = substr($page['params'], 1, strlen($page['params']) - 2);
                             $string = explode(' => ', $params);
                             $k = rtrim($string[0], "'");

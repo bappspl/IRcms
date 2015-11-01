@@ -50,7 +50,7 @@ class FormInput extends ZendFormInput
                     $this->getInlineClosingBracket()
 
                 );
-            break;
+                break;
             case 'select' :
                 $error = new FormElementErrors();
 
@@ -87,7 +87,7 @@ class FormInput extends ZendFormInput
                     $this->getInlineClosingBracket()
 
                 );
-            break;
+                break;
             case 'submit' :
                 return sprintf(
                     '<input %s class="form-control" %s  ',
@@ -95,7 +95,7 @@ class FormInput extends ZendFormInput
                     $this->getInlineClosingBracket()
 
                 );
-            break;
+                break;
             case 'checkbox' :
                 return sprintf(
                     '<input %s class="form-control" %s  ',
@@ -103,7 +103,7 @@ class FormInput extends ZendFormInput
                     $this->getInlineClosingBracket()
 
                 );
-            break;
+                break;
             case 'textarea' :
                 $options = $element->getOptions();
                 $options = reset($options);
@@ -123,7 +123,7 @@ class FormInput extends ZendFormInput
                     $value,
                     $errorMessage
                 );
-            break;
+                break;
             default:
                 $error = new FormElementErrors();
 
@@ -143,7 +143,7 @@ class FormInput extends ZendFormInput
                     $this->getInlineClosingBracket(),
                     $errorMessage
                 );
-            break;
+                break;
         }
 
     }

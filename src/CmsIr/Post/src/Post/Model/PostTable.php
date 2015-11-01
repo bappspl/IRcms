@@ -36,26 +36,22 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
 
     public function deletePost($ids)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
 
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->delete(array('id' => $id));
         }
     }
 
     public function changeStatusPost($ids, $statusId)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
         $data = array('status_id'  => $statusId);
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->update($data, array('id' => $id));
         }
     }
@@ -95,11 +91,9 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             $tmp = array();
             foreach($columns as $column){
                 $column = 'get'.ucfirst($column);
-                if($column == 'getStatus')
-                {
+                if($column == 'getStatus') {
                     $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-                } else
-                {
+                } else {
                     $tmp[] = $row->$column();
                 }
             }
@@ -184,8 +178,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         $select = $this->tableGateway->getSql()->select();
         $select->where($whereLike);
 
-        if (!empty($order))
-        {
+        if (!empty($order)) {
             $select->order($order);
         }
         $select->group(array('id'));

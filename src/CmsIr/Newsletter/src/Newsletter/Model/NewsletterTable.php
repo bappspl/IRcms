@@ -54,13 +54,11 @@ class NewsletterTable extends ModelTable implements ServiceLocatorAwareInterface
 
     public function changeStatusPost($ids, $statusId)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
         $data = array('status_id'  => $statusId);
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->update($data, array('id' => $id));
         }
     }

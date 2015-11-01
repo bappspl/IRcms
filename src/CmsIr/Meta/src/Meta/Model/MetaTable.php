@@ -28,17 +28,14 @@ class MetaTable extends ModelTable
         );
 
         $id = (int) $meta->getId();
-        if ($id == 0)
-        {
+
+        if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
-        } else
-        {
-            if ($this->getOneBy(array('id' => $id)))
-            {
+        } else {
+            if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
-            } else
-            {
+            } else {
                 throw new \Exception('Banner id does not exist');
             }
         }

@@ -20,26 +20,22 @@ class SubscriberTable extends ModelTable implements ServiceLocatorAwareInterface
 
     public function deleteSubscriber($ids)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
 
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->delete(array('id' => $id));
         }
     }
 
     public function changeStatusPost($ids, $statusId)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
         $data = array('status_id'  => $statusId);
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->update($data, array('id' => $id));
         }
     }
@@ -49,13 +45,11 @@ class SubscriberTable extends ModelTable implements ServiceLocatorAwareInterface
         $allSubscribers = $this->getAll();
 
         $subscribers = array();
-        foreach($allSubscribers as $subscriber)
-        {
+        foreach($allSubscribers as $subscriber) {
             $subscriberGroups = $subscriber->getGroups();
             $subscriberGroupsArray = unserialize($subscriberGroups);
 
-            if(in_array($id, $subscriberGroupsArray))
-            {
+            if(in_array($id, $subscriberGroupsArray)) {
                 $subscribers[] = $subscriber;
             }
         }

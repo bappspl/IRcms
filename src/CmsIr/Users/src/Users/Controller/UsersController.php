@@ -91,14 +91,14 @@ class UsersController extends AbstractActionController
         $extraFields = $config['extra_fields'];
 
         $fields = array();
-        if($extraFields['users'])
-        {
+
+        if($extraFields['users']) {
             $fields = $extraFields['users'];
         }
 
         $extra = $user->getExtra();
-        if(!is_null($extra))
-        {
+
+        if(!is_null($extra)) {
             $extraAsArray = unserialize($extra);
             $extraAsArrayKeys = array_keys($extraAsArray);
 
@@ -155,25 +155,24 @@ class UsersController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $form->setInputFilter(new UserFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
                 $data = $form->getData();
                 $data = $this->prepareData($data);
 
                 $user = new Users();
                 $user->exchangeArray($data[0]);
-                if(!empty($extraResult))
-                {
+
+                if(!empty($extraResult)) {
                     $serializedExtraResult = serialize($extraResult);
                     $user->setExtra($serializedExtraResult);
                 }
+
                 $this->getUsersTable()->saveUser($user);
                 $this->sendConfirmationEmail($user, $data[1]);
                 $this->flashMessenger()->addMessage('Użytkownik został dodany poprawnie.');
@@ -186,8 +185,8 @@ class UsersController extends AbstractActionController
         $extraFields = $config['extra_fields'];
 
         $fields = array();
-        if($extraFields['users'])
-        {
+
+        if($extraFields['users']) {
             $fields = $extraFields['users'];
         }
 
@@ -237,20 +236,19 @@ class UsersController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
 
             $form->setInputFilter(new UsereditFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
-                if(!empty($extraResult))
-                {
+
+                if(!empty($extraResult)) {
                     $serializedExtraResult = serialize($extraResult);
                     $user->setExtra($serializedExtraResult);
                 }
+
                 $this->getUsersTable()->saveUser($user);
 
                 $this->flashMessenger()->addMessage('Użytkownik został zedytowany poprawnie.');
@@ -262,34 +260,28 @@ class UsersController extends AbstractActionController
         $extraFields = $config['extra_fields'];
 
         $fields = array();
-        if($extraFields['users'])
-        {
+        if($extraFields['users']) {
             $fields = $extraFields['users'];
         }
 
         $extra = $user->getExtra();
-        if(!is_null($extra))
-        {
+        if(!is_null($extra)) {
             $extraAsArray = unserialize($extra);
             $extraAsArrayKeys = array_keys($extraAsArray);
 
             $tmp = array();
-            foreach($fields as $field)
-            {
+            foreach($fields as $field) {
                 $attributes = $field['attributes'];
                 $name = $attributes['name'];
 
-                switch($field['type'])
-                {
+                switch($field['type']) {
                     case 'text':
-                        if(in_array($name, $extraAsArrayKeys))
-                        {
+                        if(in_array($name, $extraAsArrayKeys)) {
                             $field['options']['value'] = $extraAsArray[$name];
                         }
                         break;
                     case 'textarea':
-                        if(in_array($name, $extraAsArrayKeys))
-                        {
+                        if(in_array($name, $extraAsArrayKeys)) {
                             $field['options']['value'] = $extraAsArray[$name];
                         }
                         break;
@@ -309,6 +301,7 @@ class UsersController extends AbstractActionController
     {
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('id', 0);
+
         if (!$id) {
             return $this->redirect()->toRoute('users');
         }
@@ -321,6 +314,7 @@ class UsersController extends AbstractActionController
                 $this->getUsersTable()->deleteUser($id);
                 $this->flashMessenger()->addMessage('Użytkownik został usunięty poprawnie.');
                 $modal = $request->getPost('modal', false);
+
                 if($modal == true) {
                     $jsonObject = Json::encode($params['status'] = $id, true);
                     echo $jsonObject;
@@ -362,26 +356,21 @@ class UsersController extends AbstractActionController
 
     private function checkExtraFields($obj, $arr)
     {
-        if(!is_array($arr))
-        {
+        if(!is_array($arr)) {
             $arr = (array) $arr;
             $formKeys = array_keys($arr);
             $tmp = array();
-            foreach($formKeys as $key => $field)
-            {
+            foreach($formKeys as $key => $field) {
                 $tmp[] = substr($field, 3, strlen($field));
             }
             $formKeys = $tmp;
-        } else
-        {
+        } else {
             $formKeys = array_keys($arr);
         }
 
         $result = array();
-        foreach($obj as $key => $field)
-        {
-            if(!in_array($key, $formKeys))
-            {
+        foreach($obj as $key => $field) {
+            if(!in_array($key, $formKeys)) {
                 $result[$key] = $field;
             }
         }

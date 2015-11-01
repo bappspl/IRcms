@@ -67,10 +67,8 @@ class CategoryController extends AbstractActionController
                 $id = $this->getCategoryTable()->save($category);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-                if(!empty($scannedDirectory))
-                {
-                    foreach($scannedDirectory as $file)
-                    {
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
                         $postFile = new File();
@@ -106,8 +104,7 @@ class CategoryController extends AbstractActionController
 
         $category = $this->getCategoryTable()->getOneBy(array('id' => $id));
 
-        if(!$category)
-        {
+        if(!$category) {
             return $this->redirect()->toRoute('category');
         }
 
@@ -119,20 +116,16 @@ class CategoryController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $form->setInputFilter(new CategoryFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $this->getCategoryTable()->save($category);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
-                if(!empty($scannedDirectory))
-                {
-                    foreach($scannedDirectory as $file)
-                    {
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
 
                         $postFile = new File();
@@ -178,8 +171,7 @@ class CategoryController extends AbstractActionController
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
 
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
 
@@ -205,8 +197,7 @@ class CategoryController extends AbstractActionController
 
     public function uploadFilesMainAction ()
     {
-        if (!empty($_FILES))
-        {
+        if (!empty($_FILES)) {
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
 
@@ -217,11 +208,9 @@ class CategoryController extends AbstractActionController
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile))
-            {
+            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile)) {
                 echo $targetFile;
-            } else
-            {
+            } else {
                 echo 0;
             }
         }
@@ -230,8 +219,7 @@ class CategoryController extends AbstractActionController
 
     public function uploadFilesAction ()
     {
-        if (!empty($_FILES))
-        {
+        if (!empty($_FILES)) {
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
             $file = explode('.', $targetFile);
@@ -242,11 +230,9 @@ class CategoryController extends AbstractActionController
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile))
-            {
+            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
                 echo $targetFile;
-            } else
-            {
+            } else {
                 echo 0;
             }
 
@@ -262,13 +248,10 @@ class CategoryController extends AbstractActionController
             $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');
 
-            if(!empty($id))
-            {
+            if(!empty($id)) {
                 $this->getFileTable()->deleteFile($id);
                 unlink('./public'.$filePath);
-
-            } else
-            {
+            } else {
                 unlink('./public'.$filePath);
             }
         }
@@ -286,13 +269,10 @@ class CategoryController extends AbstractActionController
             $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');
 
-            if(!empty($id))
-            {
+            if(!empty($id)) {
                 $this->getFileTable()->deleteFile($id);
                 unlink('./public'.$filePath);
-
-            } else
-            {
+            } else {
                 unlink('./public'.$filePath);
             }
         }

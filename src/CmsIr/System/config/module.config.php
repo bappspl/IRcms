@@ -45,10 +45,10 @@ return array(
             'languageHelper' => 'CmsIr\System\View\Helper\Language',
         ),
     ),
-    'change-access' => array(
-        'path' => './config/autoload/acl.global.php',
-        'pass' => '882b5e09db9b4d7da178b64ed98ecfc3',
-        'access' => 'c4ca4238a0b923820dcc509a6f75849b',
-        'no-access' => 'cfcd208495d565ef66e7dff9f98764da'
-    )
+//    'change-access' => array(
+//        'path' => './config/autoload/acl.global.php',
+//        'pass' => '882b5e09db9b4d7da178b64ed98ecfc3',
+//        'access' => 'c4ca4238a0b923820dcc509a6f75849b',
+//        'no-access' => 'cfcd208495d565ef66e7dff9f98764da'
+//    )
 );

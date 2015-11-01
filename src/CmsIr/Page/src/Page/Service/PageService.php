@@ -36,8 +36,7 @@ class PageService implements ServiceLocatorAwareInterface
         $pages = $this->getPageTable()->getBy(array('status_id' => $activeStatusId));
 
         /* @var $page Page */
-        foreach($pages as $page)
-        {
+        foreach($pages as $page) {
             $blocks = $this->getBlockTable()->getBy(array('entity_id' => $page->getId(), 'entity_type' => 'Page', 'language_id' => $langId));
             $page->setBlocks($blocks);
         }
@@ -50,25 +49,21 @@ class PageService implements ServiceLocatorAwareInterface
         /* @var $pageBlock Block */
         $pageBlock = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'language_id' => $langId, 'name' => 'url', 'value' => $url));
 
-        if(!$pageBlock)
-        {
+        if(!$pageBlock) {
             return null;
         }
 
         /* @var $page Page */
         $page = $this->getPageTable()->getOneBy(array('id' => $pageBlock->getEntityId(), 'status_id' => 1));
 
-
         $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Page', 'language_id' => $langId, 'entity_id' => $page->getId()));
         $page->setBlocks($blocks);
 
         /* @var $block Block */
-        foreach($blocks as $block)
-        {
+        foreach($blocks as $block) {
             $fieldName = $block->getName();
 
-            switch ($fieldName)
-            {
+            switch ($fieldName) {
                 case 'url':
                     $page->setUrl($block->getValue());
                     break;
@@ -88,6 +83,38 @@ class PageService implements ServiceLocatorAwareInterface
         $page->setFiles($files);
 
         return $page;
+    }
+
+    public function findPageWithBlocksSearch($entity, $langId)
+    {
+        $page = $this->getPageTable()->getOneBy(array('id' => $entity->getEntityId(), 'status_id' => 1));
+
+        if($page) {
+            /* @var $entity Page */
+            $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Page', 'entity_id' => $page->getId(), 'language_id' => $langId));
+
+            /* @var $block Block */
+            foreach($blocks as $block) {
+                $fieldName = $block->getName();
+
+                switch ($fieldName) {
+                    case 'title':
+                        $page->setTitle($block->getValue());
+                        break;
+                    case 'content':
+                        $page->setContent($block->getValue());
+                        break;
+                    case 'url':
+                        $page->setUrl($block->getValue());
+                        break;
+                }
+            }
+
+            return $page;
+        } else {
+            return null;
+        }
+
     }
 
     /**

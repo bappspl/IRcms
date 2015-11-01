@@ -2,6 +2,7 @@
 namespace CmsIr\Page\Model;
 
 use CmsIr\System\Model\ModelTable;
+use CmsIr\System\Util\Inflector;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
@@ -24,13 +25,11 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
 
     public function deletePage($ids)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
 
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->delete(array('id' => $id));
         }
     }
@@ -43,11 +42,9 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
             $tmp = array();
             foreach($columns as $column){
                 $column = 'get'.ucfirst($column);
-                if($column == 'getStatus')
-                {
+                if($column == 'getStatus') {
                     $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-                } else
-                {
+                } else {
                     $tmp[] = $row->$column();
                 }
             }
@@ -71,18 +68,17 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $data = array(
             'name' => $page->getName(),
+            'slug' => Inflector::slugify($page->getName()),
             'status_id'  => $page->getStatusId(),
             'filename_main'  => $page->getFilenameMain(),
             'filename_background'  => $page->getFilenameBackground(),
         );
 
         $id = (int) $page->getId();
-        if ($id == 0)
-        {
+        if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
-        } else
-        {
+        } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
             } else {
@@ -95,13 +91,11 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
 
     public function changeStatusPage($ids, $statusId)
     {
-        if(!is_array($ids))
-        {
+        if(!is_array($ids)) {
             $ids = array($ids);
         }
         $data = array('status_id'  => $statusId);
-        foreach($ids as $id)
-        {
+        foreach($ids as $id) {
             $this->tableGateway->update($data, array('id' => $id));
         }
     }

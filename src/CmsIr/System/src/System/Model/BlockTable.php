@@ -34,12 +34,11 @@ class BlockTable extends ModelTable
         );
 
         $id = (int) $block->getId();
-        if ($id == 0)
-        {
+
+        if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
-        } else
-        {
+        } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));
             } else {

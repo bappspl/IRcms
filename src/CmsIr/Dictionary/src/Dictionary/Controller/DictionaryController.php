@@ -100,8 +100,7 @@ class DictionaryController extends AbstractActionController
 
         $dictionary = $this->getDictionaryTable()->getOneBy(array('id' => $id));
 
-        if(!$dictionary)
-        {
+        if(!$dictionary) {
             return $this->redirect()->toRoute('dictionary', array('category' => $category));
         }
 
@@ -112,13 +111,11 @@ class DictionaryController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $form->setInputFilter(new DictionaryFormFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
 
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $this->getDictionaryTable()->save($dictionary);
                 $this->getBlockService()->saveBlocks($id, 'Dictionary', $request->getPost()->toArray(), 'title');
 
@@ -151,8 +148,7 @@ class DictionaryController extends AbstractActionController
             if ($del == 'Tak') {
                 $id = $request->getPost('id');
 
-                if(!is_array($id))
-                {
+                if(!is_array($id)) {
                     $id = array($id);
                 }
 
@@ -178,8 +174,7 @@ class DictionaryController extends AbstractActionController
 
     public function uploadAction ()
     {
-        if (!empty($_FILES))
-        {
+        if (!empty($_FILES)) {
             $tempFile   = $_FILES['Filedata']['tmp_name'];
             $targetFile = $_FILES['Filedata']['name'];
             $file = explode('.', $targetFile);
@@ -190,11 +185,9 @@ class DictionaryController extends AbstractActionController
             $uniqidFilename = $fileName.'-'.uniqid();
             $targetFile = $uniqidFilename.'.'.$fileExt;
 
-            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile))
-            {
+            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile)) {
                 echo $targetFile;
-            } else
-            {
+            } else {
                 echo 0;
             }
 

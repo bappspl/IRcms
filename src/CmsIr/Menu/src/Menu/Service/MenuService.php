@@ -24,40 +24,36 @@ class MenuService implements ServiceLocatorAwareInterface
         $menuNodes = $this->getMenuNodeTable()->getBy(array('tree_id' => $treeId), array('position' => 'ASC'));
 
         $nodesArray = array();
-        foreach($menuNodes as $node)
-        {
+        foreach($menuNodes as $node) {
 
             /* @var $node MenuNode */
             /* @var $nodesItem MenuItem */
             $nodeId = $node->getId();
             $parentId = $node->getParentId();
             $providerType = $node->getProviderType();
-            if(is_null($parentId))
-            {
+
+            if(is_null($parentId)) {
                 $nodesNode = $this->getMenuNodeTable()->getBy(array('parent_id' => $nodeId), array('position' => 'ASC'));
-                if(empty($nodesNode))
-                {
+
+                if(empty($nodesNode)) {
                     $nodesItem = $this->getMenuItemTable()->getOneBy(array('node_id' => $nodeId));
                     $node->setItems($nodesItem);
 
-                    if($providerType === 'page')
-                    {
+                    if($providerType === 'page') {
                         $url = substr($nodesItem->getUrl(), 8);
 //                        $pageId = $this->getPageTable()->getOneBy(array('name' => $nodesItem->getLabel(), 'url' => $url));
                         $pageId = $this->getPageTable()->getOneBy(array('name' => $nodesItem->getLabel()));
                         $node->setSettings($pageId->getId());
                     }
-                } else
-                {
-                    foreach($nodesNode as $nodeNode)
-                    {
+                } else {
+                    foreach($nodesNode as $nodeNode) {
                         /* @var $nodeNode MenuNode */
                         $nodeNodeId = $nodeNode->getId();
                         $providerTypeNode = $nodeNode->getProviderType();
                         $nodesItem = $this->getMenuItemTable()->getOneBy(array('node_id' => $nodeNodeId));
                         $nodeNode->setItems($nodesItem);
-                        if($providerTypeNode === 'page')
-                        {
+
+                        if($providerTypeNode === 'page') {
                             $url = substr($nodesItem->getUrl(), 8);
                             $pageId = $this->getPageTable()->getOneBy(array('name' => $nodesItem->getLabel(), 'url' => $url));
                             $nodeNode->setSettings($pageId->getId());
@@ -66,13 +62,12 @@ class MenuService implements ServiceLocatorAwareInterface
                     $result = $this->getMenuItemTable()->getOneBy(array('id' => $nodeId));
                     $nodesNode[] = $result;
                     $node->setItems($nodesNode);
-                    if($providerType === 'page')
-                    {
+
+                    if($providerType === 'page') {
                         $url = substr($result->getUrl(), 8);
                         $pageId = $this->getPageTable()->getOneBy(array('name' => $result->getLabel(), 'url' => $url));
                         $node->setSettings($pageId->getId());
                     }
-
                 }
                 $nodesArray[] = $node;
             }
@@ -84,13 +79,12 @@ class MenuService implements ServiceLocatorAwareInterface
     public function saveMenu($data)
     {
         $i = 0;
-        foreach($data as $menuItem)
-        {
-            if(array_key_exists('children', $menuItem))
-            {
+
+        foreach($data as $menuItem) {
+            if(array_key_exists('children', $menuItem)) {
                 $a = 0;
-                foreach($menuItem['children'] as $child)
-                {
+
+                foreach($menuItem['children'] as $child) {
                     $id = $child['id'];
                     $this->getMenuNodeTable()->saveOrderNode($id, $menuItem['id'], $a);
                     $a++;
@@ -110,8 +104,7 @@ class MenuService implements ServiceLocatorAwareInterface
         $nodes = $this->getMenuNodeTable()->getBy(array('depth' => 0));
 
         /* @var $node MenuNode */
-        foreach($nodes as $node)
-        {
+        foreach($nodes as $node) {
             $node->setItems($this->getMenuItemTable()->getOneBy(array('node_id' => $node->getId())));
         }
 
