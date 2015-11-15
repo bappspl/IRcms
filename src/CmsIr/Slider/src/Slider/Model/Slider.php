@@ -24,6 +24,11 @@ class Slider extends Model
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : 2;
     }
 
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
     /**
      * @param mixed $id
      */

@@ -29,10 +29,44 @@ class SliderService implements ServiceLocatorAwareInterface
         return $sliders;
     }
 
+    public function findOneCachedBySlug($slug, $langId, $cacheKey = null)
+    {
+        /* @var $slider Slider */
+        $slider = $this->getSliderTable()->getOneCachedBy(array('slug' => $slug), null, $cacheKey);
+
+        var_dump($slider);die;
+
+        $items = $this->getSliderItemTable()->getBy(array('slider_id' => $slider->getId(), 'status_id' => 1), 'position ASC');
+
+        /* @var $item SliderItem */
+        foreach($items as $item) {
+            $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'SliderItem', 'language_id' => $langId, 'entity_id' => $item->getId()));
+
+            /* @var $block Block */
+            foreach($blocks as $block) {
+                $fieldName = $block->getName();
+
+                switch ($fieldName) {
+                    case 'title':
+                        $item->setTitle($block->getValue());
+                        break;
+                    case 'subtitle':
+                        $item->setSubtitle($block->getValue());
+                        break;
+                }
+            }
+        }
+
+        $slider->setItems($items);
+
+        return $slider;
+    }
+
     public function findOneBySlug($slug, $langId)
     {
         /* @var $slider Slider */
         $slider = $this->getSliderTable()->getOneBy(array('slug' => $slug));
+
 
         $items = $this->getSliderItemTable()->getBy(array('slider_id' => $slider->getId(), 'status_id' => 1), 'position ASC');
 

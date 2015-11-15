@@ -2,6 +2,8 @@
 namespace CmsIr\Slider\Model;
 
 use CmsIr\System\Model\ModelTable;
+use Zend\Cache\Storage\StorageInterface;
+use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
@@ -12,14 +14,20 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
-
     protected $tableGateway;
-
     protected $originalResultSetPrototype;
+    protected $cache;
 
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
+        $this->resultSetPrototype = new HydratingResultSet();
+        $this->resultSetPrototype->setObjectPrototype(new Slider());
+    }
+
+    public function setCache(StorageInterface $cache)
+    {
+        $this->cache = $cache;
     }
 
     public function getSlider($id)
@@ -106,6 +114,25 @@ class SliderTable extends ModelTable implements ServiceLocatorAwareInterface
         foreach($ids as $id) {
             $this->tableGateway->update($data, array('id' => $id));
         }
+    }
+
+    public function getOneCachedBy($where, $order = null, $cacheKey)
+    {
+        if( ($resultSet = $this->cache->getItem($cacheKey)) == FALSE) {
+
+            $select = $this->tableGateway->getSql()->select();
+            $select->where($where);
+
+            if (!empty($order)) {
+                $select->order($order);
+            }
+
+            $resultSet = $this->tableGateway->selectWith($select);
+            $resultSet = $resultSet->toArray();
+            $this->cache->setItem($cacheKey,  $resultSet );
+        }
+
+        return $resultSet;
     }
 
     /**

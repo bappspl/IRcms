@@ -115,35 +115,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
         }
         // $template .= $this->addExtraOptions();
 
-        $template .= '<li><a>&nbsp;</a></li>
-            <!-- End Divider -->
 
-            <!-- Search -->
-            <li>
-                <a href="#" class="mn-has-sub"><i class="fa fa-search"></i>'.$this->translate('Szukaj').'</a>
-
-                <ul class="mn-sub">
-
-                    <li>
-                        <div class="mn-wrap">
-                            <form method="post" class="form">
-                                <div class="search-wrap">
-                                    <button class="search-button animate" type="submit" id="szukajka" title="'.$this->translate('Szukaj').'">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                    <input type="text" id="szukaj" class="form-control search-field" placeholder="'.$this->translate('Szukaj').'">
-                                </div>
-                            </form>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </li>
-            <!-- End Search -->
-
-            <!-- Languages -->
-           ';
 
 //        $template .= '</ul>';
         return $template;
