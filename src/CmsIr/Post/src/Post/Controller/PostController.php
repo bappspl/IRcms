@@ -59,7 +59,9 @@ class PostController extends AbstractActionController
 
     public function createPostAction ()
     {
-        $form = new PostForm();
+        $tags = $this->getTagService()->findAsAssocArray();
+
+        $form = new PostForm($tags);
         $category = $this->params()->fromRoute('category');
 
         $userRoleId = $this->identity()->role;
@@ -140,10 +142,19 @@ class PostController extends AbstractActionController
 
                     $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
 
+                    if(!empty($request->getPost()->toArray()['tag_id'])) {
+                        $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Product');
+                    }
+
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
 
                 } else {
                     $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
+
+                    if(!empty($request->getPost()->toArray()['tag_id'])) {
+                        $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Product');
+                    }
+
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
                 }
 
@@ -197,12 +208,17 @@ class PostController extends AbstractActionController
             $arrUsers[$user->getId()] = $user->getName() . ' ' . $user->getSurname();
         }
 
-        $form = new PostForm();
+        $tags = $this->getTagService()->findAsAssocArray();
+
+        $form = new PostForm($tags);
         $form->get('author_id')->setValueOptions($arrUsers);
 
         if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
 
         $form->bind($post);
+
+        $tagsForForm = $this->getTagService()->findAsAssocArrayForEntity( $id, 'Product');
+        $form->get('tag_id')->setValue($tagsForForm);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -242,6 +258,10 @@ class PostController extends AbstractActionController
                 }
 
                 $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
+
+                if(!empty($request->getPost()->toArray()['tag_id'])) {
+                    $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Product');
+                }
 
                 $this->flashMessenger()->addMessage('Wpis został zedytowany poprawnie.');
 
@@ -643,5 +663,13 @@ class PostController extends AbstractActionController
     public function getBlockService()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
+    }
+
+    /**
+     * @return \CmsIr\Tag\Service\TagService
+     */
+    public function getTagService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Tag\Service\TagService');
     }
 }

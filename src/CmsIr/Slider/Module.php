@@ -52,8 +52,8 @@ class Module
                 'CmsIr\Slider\Model\SliderTable' =>  function($sm) {
                         $tableGateway = $sm->get('SliderTableGateway');
                         $table = new SliderTable($tableGateway);
-                        $cacheAdapter = $sm->get('Zend\Cache\Storage\Filesystem');
-                        $table->setCache($cacheAdapter);
+//                        $cacheAdapter = $sm->get('Zend\Cache\Storage\Filesystem');
+//                        $table->setCache($cacheAdapter);
                         return $table;
                     },
                 'SliderTableGateway' => function ($sm) {

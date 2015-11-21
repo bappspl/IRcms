@@ -6,7 +6,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 class PostForm extends Form
 {
-    public function __construct($name = null)
+    public function __construct($tags)
     {
         parent::__construct('Post');
         $this->setAttribute('method', 'post');
@@ -79,6 +79,21 @@ class PostForm extends Form
                 'label' => 'Autor',
                 'value_options' => array(
                 ),
+                'disable_inarray_validator' => true,
+            )
+        ));
+
+        $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control select2',
+                'name' => 'tag_id',
+                'multiple' => 'multiple',
+                'id' => 'tag_id',
+            ),
+            'options' => array(
+                'label' => 'Tagi',
+                'value_options' => $tags,
                 'disable_inarray_validator' => true,
             )
         ));
