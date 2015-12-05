@@ -11,8 +11,13 @@ class Gallery extends Model
     protected $name;
     protected $slug;
     protected $url;
+    protected $filename_main;
+    protected $category_id;
 
+    //virtual
     protected $files;
+    protected $title;
+
 
     public function exchangeArray($data)
     {
@@ -21,6 +26,8 @@ class Gallery extends Model
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : Inflector::slugify($data['name']);
+        $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
+        $this->category_id = (!empty($data['category_id'])) ? $data['category_id'] : null;
     }
 
     /**
@@ -117,5 +124,53 @@ class Gallery extends Model
     public function setStatusId($status_id)
     {
         $this->status_id = $status_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilenameMain()
+    {
+        return $this->filename_main;
+    }
+
+    /**
+     * @param mixed $filename_main
+     */
+    public function setFilenameMain($filename_main)
+    {
+        $this->filename_main = $filename_main;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategoryId()
+    {
+        return $this->category_id;
+    }
+
+    /**
+     * @param mixed $category_id
+     */
+    public function setCategoryId($category_id)
+    {
+        $this->category_id = $category_id;
     }
 }

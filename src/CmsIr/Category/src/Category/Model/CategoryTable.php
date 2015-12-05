@@ -57,7 +57,7 @@ class CategoryTable extends ModelTable
         return $dataArray;
     }
 
-    public function getCategoryDatatables($columns, $data)
+    public function getCategoryDatatables($columns, $data, $type)
     {
         $displayFlag = false;
 
@@ -81,7 +81,10 @@ class CategoryTable extends ModelTable
                     Predicate\PredicateSet::COMBINED_BY_OR
                 ),
             );
+            $where['type'] = $type;
             $displayFlag = true;
+        } else {
+            $where['type'] = $type;
         }
 
         $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
@@ -108,6 +111,7 @@ class CategoryTable extends ModelTable
         $data = array(
             'name' => $category->getName(),
             'filename_main' => $category->getFilenameMain(),
+            'type' => $category->getType(),
         );
 
         $id = (int) $category->getId();

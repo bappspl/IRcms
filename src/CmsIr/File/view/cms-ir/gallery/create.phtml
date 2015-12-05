@@ -1,33 +1,74 @@
 <?php
-    $form = $this->form;
-    $form->prepare();
-    echo $this->form()->openTag($form);
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
 ?>
+
+<?php echo $this->customFormHelper($form->get('filename_main')); ?>
 <?php echo $this->customFormHelper($form->get('filename')); ?>
-<?php echo $this->customFormHelper($form->get('id')) ?>
 
 <div class="row">
     <div class="col-sm-6">
-        <div class="the-box">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="the-box">
 
-            <h4 class="small-title">Dane podstawowe</h4>
-            <?php echo $this->customFormHelper($form->get('name')) ?>
-            <?php echo $this->customFormHelper($form->get('url')) ?>
-            <?php echo $this->customFormHelper($form->get('status_id')) ?>
+                    <h4 class="small-title">Dane podstawowe</h4>
 
+                    <?php echo $this->customFormHelper($form->get('name')) ?>
+
+                    <div class="form-group">
+                        <label><?php echo $this->formLabel($form->get('status_id')); ?></label>
+                        <?php echo $this->formSelect($form->get('status_id')); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label><?php echo $this->formLabel($form->get('category_id')); ?></label>
+                        <?php echo $this->formSelect($form->get('category_id')); ?>
+                    </div>
+
+                </div>
+            </div>
         </div>
+
+        <?php echo $this->languageHelper('partial/language-file') ?>
+
     </div>
     <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="the-box">
+                    <h4 class="small-title">Zdjęcie główne</h4>
 
-        <div class="the-box">
-            <h4 class="small-title">Pliki</h4>
+                    <div class="form-group">
+                        <?php echo $this->customFormHelper($form->get('upload_main')); ?>
+                        <a href="javascript:$('#upload-main').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
+                        <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
+                        <div id="queue-main"></div>
+                        <div class="files-main"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <?php echo $this->customFormHelper($form->get('upload')); ?>
-            <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
-            <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
-            <div id="queue"></div>
-            <div class="files"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="the-box">
+                    <h4 class="small-title">Galeria zdjęć</h4>
 
+                    <div class="form-group">
+
+                        <?php echo $this->customFormHelper($form->get('upload')); ?>
+
+                        <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
+                        <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>
+
+                        <div id="queue"></div>
+                        <div class="files">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>

@@ -1,3 +1,4 @@
+<input type="hidden" id="type" value="<?php echo $type ?>">
 <?php echo $this->partial('partial/flashmessages-category'); ?>
     <!-- BEGIN DATA TABLE -->
     <div class="the-box">
@@ -14,7 +15,7 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <a class="btn btn-facebook pull-right" href="<?php echo $this->url('category/create'); ?>">Dodaj nową</a>
+                    <a class="btn btn-facebook pull-right" href="<?php echo $this->url('category/create', array('type' => $type)); ?>">Dodaj nową</a>
                 </div>
             </div>
 

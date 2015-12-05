@@ -43,25 +43,25 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="the-box">
-                    <h4 class="small-title">Galeria zdjęć</h4>
-
-                    <div class="form-group">
-
-                        <?php echo $this->customFormHelper($form->get('upload')); ?>
-
-                        <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
-                        <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>
-
-                        <div id="queue"></div>
-                        <div class="files">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--        <div class="row">-->
+<!--            <div class="col-sm-12">-->
+<!--                <div class="the-box">-->
+<!--                    <h4 class="small-title">Galeria zdjęć</h4>-->
+<!---->
+<!--                    <div class="form-group">-->
+<!---->
+<!--                        --><?php //echo $this->customFormHelper($form->get('upload')); ?>
+<!---->
+<!--                        <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>-->
+<!--                        <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
+<!---->
+<!--                        <div id="queue"></div>-->
+<!--                        <div class="files">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
     </div>
 </div>
@@ -71,7 +71,7 @@
     <div class="col-sm-12">
         <div class="the-box">
             <div class="input-group col-sm-12 text-right">
-                <a class="btn btn-default" href="<?php echo $this->url('category'); ?>">Anuluj</a> &nbsp
+                <a class="btn btn-default" href="<?php echo $this->url('category', array('type' => $type)); ?>">Anuluj</a> &nbsp
                 <?php echo $this->formInput($form->get('submit')); ?>
             </div>
         </div>

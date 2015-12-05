@@ -12,6 +12,7 @@ class Page extends Model
     protected $status_id;
     protected $filename_main;
     protected $filename_background;
+    protected $type;
 
     // virtual
     protected $blocks;
@@ -34,6 +35,7 @@ class Page extends Model
         $this->title = (!empty($data['title'])) ? $data['title'] : null;
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null;
+        $this->type = isset($data['type']) ? $data['type'] : null;
     }
 
     /**
@@ -226,5 +228,21 @@ class Page extends Model
     public function setSlug($slug)
     {
         $this->slug = $slug;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

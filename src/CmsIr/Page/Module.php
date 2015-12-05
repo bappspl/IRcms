@@ -2,6 +2,8 @@
 namespace CmsIr\Page;
 
 use CmsIr\Page\Model\Page;
+use CmsIr\Page\Model\PagePart;
+use CmsIr\Page\Model\PagePartTable;
 use CmsIr\Page\Model\PageTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
@@ -57,6 +59,17 @@ class Module
                         $resultSetPrototype = new ResultSet();
                         $resultSetPrototype->setArrayObjectPrototype(new Page());
                         return new TableGateway('cms_page', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\Page\Model\PagePartTable' =>  function($sm) {
+                        $tableGateway = $sm->get('PagePartTableGateway');
+                        $table = new PagePartTable($tableGateway);
+                        return $table;
+                    },
+                'PagePartTableGateway' => function ($sm) {
+                        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                        $resultSetPrototype = new ResultSet();
+                        $resultSetPrototype->setArrayObjectPrototype(new PagePart());
+                        return new TableGateway('cms_page_part', $dbAdapter, null, $resultSetPrototype);
                 },
             ),
         );

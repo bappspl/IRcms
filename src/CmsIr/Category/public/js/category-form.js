@@ -7,7 +7,7 @@ $(function () {
         'method'   : 'post',
         'multi'         : true,
         'queueID'          : 'queue',
-        'uploadScript'     : '/cms-ir/category/upload',
+        'uploadScript'     : '/cms-ir/category-upload/upload',
         'onUploadComplete' : function(file, data) {
             $('#filename').val(data);
             if($('#filename').val().length > 0) {
@@ -26,7 +26,7 @@ $(function () {
                 $cache = $(this);
                 $.ajax({
                     type: "POST",
-                    url: "/cms-ir/category/delete-photo",
+                    url: "/cms-ir/category-upload/delete-photo",
                     dataType : 'json',
                     data: {
                         id: id,
@@ -54,7 +54,7 @@ $(function () {
         $cache = $(this);
         $.ajax({
             type: "POST",
-            url: "/cms-ir/category/delete-photo",
+            url: "/cms-ir/category-upload/delete-photo",
             dataType : 'json',
             data: {
                 id: id,
@@ -76,7 +76,7 @@ $(function () {
         'method'   : 'post',
         'multi'         : true,
         'queueID'          : 'queue-main',
-        'uploadScript'     : '/cms-ir/category/upload-main',
+        'uploadScript'     : '/cms-ir/category-upload/upload-main',
         'onUploadComplete' : function(file, data) {
             $('#filename-main').val(data);
             if($('#filename-main').val().length > 0) {
@@ -97,7 +97,7 @@ $(function () {
                 $cache = $(this);
                 $.ajax({
                     type: "POST",
-                    url: "/cms-ir/category/delete-photo-main",
+                    url: "/cms-ir/category-upload/delete-photo-main",
                     dataType : 'json',
                     data: {
                         id: id,
@@ -131,7 +131,7 @@ $(function () {
         $cache = $(this);
         $.ajax({
             type: "POST",
-            url: "/cms-ir/category/delete-photo-main",
+            url: "/cms-ir/category-upload/delete-photo-main",
             dataType : 'json',
             data: {
                 id: id,

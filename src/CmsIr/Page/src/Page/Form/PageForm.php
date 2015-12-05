@@ -165,5 +165,20 @@ class PageForm extends Form
                 'label' => 'Upload',
             ),
         ));
+
+        $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'type',
+            ),
+            'options' => array(
+                'label' => 'Typ strony',
+                'value_options' => array(
+                    '0' => 'Standardowa',
+                    '1' => 'Rozbudowana'
+                ),
+            )
+        ));
     }
 }

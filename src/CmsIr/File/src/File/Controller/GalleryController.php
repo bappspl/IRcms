@@ -24,9 +24,9 @@ class GalleryController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('name');
+            $columns = array('id', 'name', 'statusId', 'status', 'id');
 
-            $listData = $this->getGalleryTable()->getDatatables($columns, $data);
+            $listData = $this->getGalleryTable()->getDatatables($columns,$data);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -48,7 +48,10 @@ class GalleryController extends AbstractActionController
 
     public function createAction()
     {
-        $form = new GalleryForm();
+        $statuses = $this->getStatusService()->findAsAssocArray();
+        $categories = $this->getCategoryService()->findAsAssocArray('gallery');
+
+        $form = new GalleryForm($statuses, $categories);
 
         $request = $this->getRequest();
 
@@ -80,12 +83,11 @@ class GalleryController extends AbstractActionController
                     }
                 }
 
+                $this->getBlockService()->saveBlocks($id, 'Gallery', $request->getPost()->toArray(), 'title');
+
                 $this->flashMessenger()->addMessage('Galeria została dodana poprawnie.');
                 return $this->redirect()->toRoute('gallery');
             }
-        } else {
-            $path = $this->uploadDir . '*';
-            array_map('unlink', glob($path));
         }
 
         $viewParams = array();
@@ -107,7 +109,12 @@ class GalleryController extends AbstractActionController
             return $this->redirect()->toRoute('gallery');
         }
 
-        $form = new GalleryForm();
+        $blocks = $this->getBlockService()->getBlocks($gallery, 'Gallery');
+
+        $statuses = $this->getStatusService()->findAsAssocArray();
+        $categories = $this->getCategoryService()->findAsAssocArray('gallery');
+
+        $form = new GalleryForm($statuses, $categories);
         $form->bind($gallery);
 
         $request = $this->getRequest();
@@ -142,6 +149,8 @@ class GalleryController extends AbstractActionController
                     }
                 }
 
+                $this->getBlockService()->saveBlocks($id, 'Gallery', $request->getPost()->toArray(), 'title');
+
                 $this->flashMessenger()->addMessage('Galeria została edytowana poprawnie.');
                 return $this->redirect()->toRoute('gallery');
             }
@@ -153,6 +162,7 @@ class GalleryController extends AbstractActionController
         $viewParams = array();
         $viewParams['form'] = $form;
         $viewParams['galleryFiles'] = $galleryFiles;
+        $viewParams['blocks'] = $blocks;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -162,7 +172,6 @@ class GalleryController extends AbstractActionController
     {
         $request = $this->getRequest();
         $id = (int) $this->params()->fromRoute('gallery_id', 0);
-
         if (!$id) {
             return $this->redirect()->toRoute('gallery');
         }
@@ -171,16 +180,26 @@ class GalleryController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = (int) $request->getPost('id');
+                $id = $request->getPost('id');
+
+                if(!is_array($id)) {
+                    $id = array($id);
+                }
+
+                foreach($id as $oneId) {
+                    $galleryFiles = $this->getFileTable()->getBy(array('entity_type' => 'gallery', 'entity_id' => $oneId));
+
+                    if((!empty($galleryFiles))) {
+                        foreach($galleryFiles as $file) {
+                            unlink('./public/files/gallery/'.$file->getFilename());
+                            $this->getFileTable()->deleteFile($file->getId());
+                        }
+                    }
+                }
 
                 $this->getGalleryTable()->deleteGallery($id);
-
-                $this->getFileTable()->deleteFilesWhere(array('entity_id' => $id));
-
-                $this->flashMessenger()->addMessage('Element został usunięty poprawnie.');
-
+                $this->flashMessenger()->addMessage('Galeria została usunięta poprawnie.');
                 $modal = $request->getPost('modal', false);
-
                 if($modal == true) {
                     $jsonObject = Json::encode($params['status'] = $id, true);
                     echo $jsonObject;
@@ -188,13 +207,67 @@ class GalleryController extends AbstractActionController
                 }
             }
 
-            return $this->redirect()->toRoute('file');
+            return $this->redirect()->toRoute('page');
         }
 
         return array(
             'id'    => $id,
-            'page'  => $this->getFileTable()->getOneBy(array('id' => $id))
+            'page' => $this->getGalleryTable()->getOneBy(array('id' => $id))
         );
+    }
+
+    public function changeStatusAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('gallery_id');
+
+        if (!$id) {
+            return $this->redirect()->toRoute('gallery');
+        }
+
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Zapisz') {
+                $id = $request->getPost('id');
+                $statusId = $request->getPost('statusId');
+
+                $this->getGalleryTable()->changeStatusGallery($id, $statusId);
+
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = 'success', true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('gallery');
+        }
+
+        return array();
+    }
+
+    public function uploadFilesMainAction ()
+    {
+        if (!empty($_FILES)) {
+            $tempFile   = $_FILES['Filedata']['tmp_name'];
+            $targetFile = $_FILES['Filedata']['name'];
+
+            $file = explode('.', $targetFile);
+            $fileName = $file[0];
+            $fileExt = $file[1];
+
+            $uniqidFilename = $fileName.'-'.uniqid();
+            $targetFile = $uniqidFilename.'.'.$fileExt;
+
+            if(move_uploaded_file($tempFile,$this->destinationUploadDir.$targetFile)) {
+                echo $targetFile;
+            } else {
+                echo 0;
+            }
+        }
+        return $this->response;
     }
 
     public function uploadFilesAction ()
@@ -240,6 +313,28 @@ class GalleryController extends AbstractActionController
         return $this->response;
     }
 
+    public function deletePhotoMainAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id');
+            $name = $request->getPost('name');
+            $filePath = $request->getPost('filePath');
+
+            if(!empty($id)) {
+                $this->getFileTable()->deleteFile($id);
+                unlink('./public'.$filePath);
+
+            } else {
+                unlink('./public'.$filePath);
+            }
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
     /**
      * @return \CmsIr\File\Model\GalleryTable
      */
@@ -262,5 +357,37 @@ class GalleryController extends AbstractActionController
     public function getFileService()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Service\FileService');
+    }
+
+    /**
+     * @return \CmsIr\System\Service\BlockService
+     */
+    public function getBlockService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
+    }
+
+    /**
+     * @return \CmsIr\System\Model\BlockTable
+     */
+    public function getBlockTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\BlockTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Service\StatusService
+     */
+    public function getStatusService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Service\StatusService');
+    }
+
+    /**
+     * @return \CmsIr\Category\Service\CategoryService
+     */
+    public function getCategoryService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Category\Service\CategoryService');
     }
 }

@@ -1,5 +1,7 @@
 $(function () {
 
+    var typeFromList = $('#type').val();
+
     /** BEGIN DATATABLE EXAMPLE **/
     if ($('#datatable-category').length > 0){
         selectedIds = [];
@@ -12,7 +14,7 @@ $(function () {
             "responsive": true,
             "processing": true,
             "serverSide": true,
-            "ajaxSource": "/cms-ir/category",
+            "ajaxSource": "/cms-ir/category/" + typeFromList,
             "serverMethod": "POST",
             "paginate":true,
             "sortable": true,
@@ -34,8 +36,8 @@ $(function () {
                     "targets": [ 2 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
                         if ( type === 'display' ) {
-                            return '<a href="category/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
-                                '<a href="category/delete/'+data+'" id="'+data+'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+                            return '<a href="' + typeFromList +'/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
+                                '<a href="category-upload/delete/'+data+'" id="'+data+'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
                         }
                         return data;
                     },
@@ -128,7 +130,7 @@ $(function () {
 
                                         $.ajax({
                                             type: "POST",
-                                            url: "/cms-ir/category/delete/1",
+                                            url: "/cms-ir/category-upload/delete/1",
                                             dataType : 'json',
                                             data: {
                                                 modal: true,
@@ -178,7 +180,7 @@ $(function () {
 
                     $.ajax({
                         type: "POST",
-                        url: "/cms-ir/category/delete/" + entityId,
+                        url: "/cms-ir/category-upload/delete/" + entityId,
                         dataType : 'json',
                         data: {
                             modal: true,

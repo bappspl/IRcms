@@ -308,6 +308,17 @@ class ModelTable implements ServiceLocatorAwareInterface
         return $template;
     }
 
+    public function changePosition($position)
+    {
+        foreach($position as $id => $pos) {
+            if($pos > 0) {
+                $data = array('position' => $pos);
+
+                $this->tableGateway->update($data, array('id' => $id));
+            }
+        }
+    }
+
     /**
      * @return \CmsIr\System\Model\StatusTable
      */

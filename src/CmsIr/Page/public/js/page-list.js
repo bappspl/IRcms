@@ -17,12 +17,19 @@ $(function () {
             "paginate":true,
             "sortable": true,
             "searchable": true,
-            "order": [[ 1, "desc" ]],
+            "order": [[ 2, "desc" ]],
             "columnDefs": [
                 {
                     "targets": [ 0 ],
+                    "className":      'details-control',
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": ''
+                },
+                {
+                    "targets": [ 1 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
-                        if ( type === 'display' ) {
+                        if ( type === 'display') {
                             return '<div class="checkbox"><label><input type="checkbox" class="check-row i-grey" /></label></div>';
                         }
                         return data;
@@ -30,25 +37,29 @@ $(function () {
                     "className": "dt-body-center",
                     "sortable": false
                 },
-                { "orderData": 2, "targets": [ 3 ] },
+                { "orderData": 3, "targets": [ 4 ] },
                 {
-                    "targets": [ 4 ],
+                    "targets": [ 5 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
-                        if ( type === 'display' ) {
+                        if ( type === 'display' && row[6] == 0) {
                             return  '<a href="page/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
+                                '<a href="page/delete/'+data+'" id="'+data+'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
+                        } else if(type === 'display' && row[6] == 1) {
+                            return '<a href="page/part/' + data + '" class="btn btn-info" data-toggle="tooltip" title="Lista"><i class="fa fa-list"></i></a> ' +
+                            '<a href="page/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
                                 '<a href="page/delete/'+data+'" id="'+data+'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
                         }
                         return data;
                     },
-                    "className": "dt-body-action",
+                    "className": "dt-body-action text-right",
                     "sortable": false
                 },
                 {
                     "sortable": false,
-                    "targets": [ -1 ]
+                    "targets": [ -1, -2 ]
                 },
                 {
-                    "targets": [ 2 ],
+                    "targets": [ 3, 6 ],
                     "visible": false,
                     "className": "never"
                 }
@@ -234,5 +245,79 @@ $(function () {
             }).modal('show');
         });
 
+        $('#datatable-page tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
+
+            if ( row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else if(row.data()[6] == 1){
+
+                var id = row.data()[0];
+
+                $.ajax({
+                    type: "POST",
+                    url: "/cms-ir/page/get-parts",
+                    dataType : 'json',
+                    data: {
+                        id: id
+                    },
+                    success: function(json)
+                    {
+                        row.child(json).show();
+                        $('.nestable3').nestable({ maxDepth: 1 });
+                        tr.addClass('shown');
+
+                        $('.dd').on('change', function() {
+                            var pos = $('.dd').nestable('serialize');
+                            var endedPos = [];
+
+                            $.each(pos, function(k, v) {
+                                endedPos[v.id] = k + 1;
+
+                            });
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/cms-ir/page/order-parts",
+                                dataType : 'json',
+                                data: {
+                                    pos: endedPos
+                                },
+                                success: function(json)
+                                {
+                                    console.log('ok');
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        } );
+
+    }
+
+    function format (id) {
+        var string = '';
+
+        $.ajax({
+            type: "POST",
+            url: "/cms-ir/page/get-parts",
+            dataType : 'json',
+            data: {
+                id: id
+            },
+            success: function(json)
+            {
+                //console.log(json);
+                string += json;
+                //console.log(string);
+                console.log(string);
+
+                return string;
+            }
+        });
     }
 });
