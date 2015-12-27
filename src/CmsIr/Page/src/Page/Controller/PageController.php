@@ -32,7 +32,7 @@ class PageController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'id', 'name', 'statusId', 'status', 'id', 'type');
+            $columns = array('id', 'id', 'name', 'statusId', 'status', 'id', 'type', 'position');
 
             $listData = $this->getPageTable()->getDatatables($columns,$data);
 
@@ -627,13 +627,13 @@ class PageController extends AbstractActionController
         return $this->response;
     }
 
-    public function changePositionAction()
+    public function changePositionPageAction()
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $position = $request->getPost('position');
 
-            $this->getPagePartTable()->changePosition($position);
+            $this->getPageTable()->changePosition($position);
         }
 
         $jsonObject = Json::encode($params['status'] = 'success', true);

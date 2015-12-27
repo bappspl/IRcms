@@ -12,6 +12,7 @@
                 <th>Status</th>
                 <th>Akcje</th>
                 <th>type</th>
+                <th>position</th>
             </tr>
             </thead>
         </table>
@@ -41,10 +42,12 @@
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.responsive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/rowReorder.bootstrap.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/page.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.responsive.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datatable.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/dataTables.rowReorder.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.nestable.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/page-list.js'); ?>

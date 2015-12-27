@@ -182,17 +182,17 @@ class UsersController extends AbstractActionController
         }
 
         $config = $this->getServiceLocator()->get('config');
-        $extraFields = $config['extra_fields'];
+//        $extraFields = $config['extra_fields'];
 
-        $fields = array();
-
-        if($extraFields['users']) {
-            $fields = $extraFields['users'];
-        }
+//        $fields = array();
+//
+//        if($extraFields['users']) {
+//            $fields = $extraFields['users'];
+//        }
 
         $viewParams = array();
         $viewParams['form'] = $form;
-        $viewParams['extraFields'] = $fields;
+//        $viewParams['extraFields'] = $fields;
         return new ViewModel($viewParams);
     }
 
@@ -256,44 +256,44 @@ class UsersController extends AbstractActionController
             }
         }
 
-        $config = $this->getServiceLocator()->get('config');
-        $extraFields = $config['extra_fields'];
-
-        $fields = array();
-        if($extraFields['users']) {
-            $fields = $extraFields['users'];
-        }
-
-        $extra = $user->getExtra();
-        if(!is_null($extra)) {
-            $extraAsArray = unserialize($extra);
-            $extraAsArrayKeys = array_keys($extraAsArray);
-
-            $tmp = array();
-            foreach($fields as $field) {
-                $attributes = $field['attributes'];
-                $name = $attributes['name'];
-
-                switch($field['type']) {
-                    case 'text':
-                        if(in_array($name, $extraAsArrayKeys)) {
-                            $field['options']['value'] = $extraAsArray[$name];
-                        }
-                        break;
-                    case 'textarea':
-                        if(in_array($name, $extraAsArrayKeys)) {
-                            $field['options']['value'] = $extraAsArray[$name];
-                        }
-                        break;
-                }
-                $tmp[] = $field;
-            }
-            $fields = $tmp;
-        }
+//        $config = $this->getServiceLocator()->get('config');
+//        $extraFields = $config['extra_fields'];
+//
+//        $fields = array();
+//        if($extraFields['users']) {
+//            $fields = $extraFields['users'];
+//        }
+//
+//        $extra = $user->getExtra();
+//        if(!is_null($extra)) {
+//            $extraAsArray = unserialize($extra);
+//            $extraAsArrayKeys = array_keys($extraAsArray);
+//
+//            $tmp = array();
+//            foreach($fields as $field) {
+//                $attributes = $field['attributes'];
+//                $name = $attributes['name'];
+//
+//                switch($field['type']) {
+//                    case 'text':
+//                        if(in_array($name, $extraAsArrayKeys)) {
+//                            $field['options']['value'] = $extraAsArray[$name];
+//                        }
+//                        break;
+//                    case 'textarea':
+//                        if(in_array($name, $extraAsArrayKeys)) {
+//                            $field['options']['value'] = $extraAsArray[$name];
+//                        }
+//                        break;
+//                }
+//                $tmp[] = $field;
+//            }
+//            $fields = $tmp;
+//        }
 
         $viewParams = array();
         $viewParams['form'] = $form;
-        $viewParams['extraFields'] = $fields;
+//        $viewParams['extraFields'] = $fields;
         return new ViewModel($viewParams);
     }
 

@@ -85,6 +85,9 @@ class SliderService implements ServiceLocatorAwareInterface
                     case 'subtitle':
                         $item->setSubtitle($block->getValue());
                         break;
+                    case 'button':
+                        $item->setButton($block->getValue());
+                        break;
                 }
             }
         }

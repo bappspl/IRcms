@@ -9,6 +9,8 @@ use CmsIr\System\Model\MailConfig;
 use CmsIr\System\Model\MailConfigTable;
 use CmsIr\System\Model\Menu;
 use CmsIr\System\Model\MenuTable;
+use CmsIr\System\Model\Settings;
+use CmsIr\System\Model\SettingsTable;
 use CmsIr\System\Model\Status;
 use CmsIr\System\Model\StatusTable;
 use Zend\Db\ResultSet\ResultSet;
@@ -124,6 +126,17 @@ class Module
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Block());
                     return new TableGateway('cms_block', $dbAdapter, null, $resultSetPrototype);
+                },
+                'CmsIr\System\Model\SettingsTable' =>  function($sm) {
+                    $tableGateway = $sm->get('SettingsTableGateway');
+                    $table = new SettingsTable($tableGateway);
+                    return $table;
+                },
+                'SettingsTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Settings());
+                    return new TableGateway('cms_settings', $dbAdapter, null, $resultSetPrototype);
                 },
                 'Navigation' => 'CmsIr\System\Navigation\MyNavigationFactory'
             ),

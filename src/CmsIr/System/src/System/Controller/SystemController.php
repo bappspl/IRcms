@@ -1,6 +1,9 @@
 <?php
 namespace CmsIr\System\Controller;
 
+use CmsIr\File\Model\Gallery;
+use CmsIr\System\Model\Settings;
+use CmsIr\Video\Model\Video;
 use PHPThumb\GD;
 use CmsIr\System\Form\MailConfigForm;
 use CmsIr\System\Form\MailConfigFormFilter;
@@ -25,7 +28,22 @@ class SystemController extends AbstractActionController
 //            return $this->redirect()->toRoute('settings');
 //        }
 
-        $form = new MailConfigForm();
+        $galleries = $this->getGalleryTable()->getBy(array('status_id' => 1));
+        $videos = $this->getVideoTable()->getBy(array('status_id' => 1));
+
+        $allArray = array();
+
+        /* @var $gallery Gallery */
+        foreach($galleries as $gallery) {
+            $allArray['Gallery-' . $gallery->getId()] = 'Galeria - ' . $gallery->getName();
+        }
+
+        /* @var $video Video */
+        foreach($videos as $video) {
+            $allArray['Video-' . $video->getId()] = 'Video - ' . $video->getName();
+        }
+
+        $form = new MailConfigForm($allArray);
         $form->bind($config);
 
         $request = $this->getRequest();
@@ -36,7 +54,19 @@ class SystemController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+
                 $this->getMailConfigTable()->save($config);
+
+                $settings = $request->getPost()->settings;
+                $values = explode('-', $settings);
+
+                $settingsObject = new Settings();
+                $settingsObject->setId(1);
+                $settingsObject->setEntityId($values[1]);
+                $settingsObject->setEntityType($values[0]);
+                $settingsObject->setName('opcja');
+
+                $this->getSettingsTable()->save($settingsObject);
 
                 $this->flashMessenger()->addMessage('Ustawienia zostały edytowane poprawnie.');
 
@@ -125,4 +155,27 @@ class SystemController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\System\Model\MailConfigTable');
     }
 
+    /**
+     * @return \CmsIr\File\Model\GalleryTable
+     */
+    public function getGalleryTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\File\Model\GalleryTable');
+    }
+
+    /**
+     * @return \CmsIr\Video\Model\VideoTable
+     */
+    public function getVideoTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Video\Model\VideoTable');
+    }
+
+    /**
+     * @return \CmsIr\System\Model\SettingsTable
+     */
+    public function getSettingsTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\System\Model\SettingsTable');
+    }
 }

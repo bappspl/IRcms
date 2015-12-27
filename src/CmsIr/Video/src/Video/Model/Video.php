@@ -13,6 +13,7 @@ class Video extends Model
     protected $url;
 
     //virtual
+    protected $blocks;
     protected $title;
     protected $description;
 
@@ -135,5 +136,21 @@ class Video extends Model
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBlocks()
+    {
+        return $this->blocks;
+    }
+
+    /**
+     * @param mixed $blocks
+     */
+    public function setBlocks($blocks)
+    {
+        $this->blocks = $blocks;
     }
 }

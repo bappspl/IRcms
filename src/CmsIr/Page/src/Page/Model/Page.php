@@ -13,6 +13,7 @@ class Page extends Model
     protected $filename_main;
     protected $filename_background;
     protected $type;
+    protected $position;
 
     // virtual
     protected $blocks;
@@ -21,6 +22,7 @@ class Page extends Model
     protected $title;
     protected $content;
     protected $subtitle;
+    protected $parts;
 
     public function exchangeArray($data) 
     {
@@ -36,6 +38,8 @@ class Page extends Model
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null;
         $this->type = isset($data['type']) ? $data['type'] : null;
+        $this->parts = isset($data['parts']) ? $data['parts'] : null;
+        $this->position = isset($data['position']) ? $data['position'] : null;
     }
 
     /**
@@ -244,5 +248,37 @@ class Page extends Model
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParts()
+    {
+        return $this->parts;
+    }
+
+    /**
+     * @param mixed $parts
+     */
+    public function setParts($parts)
+    {
+        $this->parts = $parts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }

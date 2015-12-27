@@ -17,7 +17,11 @@ $(function () {
             "paginate":true,
             "sortable": true,
             "searchable": true,
-            "order": [[ 2, "desc" ]],
+            "order": [[ 7, "asc" ]],
+            "rowReorder": {
+                update: false,
+                selector: 'td:not(:last-child):not(:first-child)'
+            },
             "columnDefs": [
                 {
                     "targets": [ 0 ],
@@ -56,10 +60,10 @@ $(function () {
                 },
                 {
                     "sortable": false,
-                    "targets": [ -1, -2 ]
+                    "targets": [ -2, -3 ]
                 },
                 {
-                    "targets": [ 3, 6 ],
+                    "targets": [ 3, 6, -1 ],
                     "visible": false,
                     "className": "never"
                 }
@@ -298,6 +302,28 @@ $(function () {
         } );
 
     }
+
+    table.on( 'row-reorder', function ( e, diff, edit ) {
+        var result = [];
+
+        for ( var i=0, ien=diff.length ; i<ien ; i++ ) {
+            var rowData = table.row( diff[i].node ).data();
+            result[rowData[0]] = diff[i].newPosition + 1;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/cms-ir/page/change-position",
+            dataType : 'json',
+            data: {
+                position: result
+            },
+            success: function(json)
+            {
+                table.ajax.reload();
+            }
+        });
+    });
 
     function format (id) {
         var string = '';

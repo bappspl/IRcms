@@ -17,7 +17,7 @@ class Gallery extends Model
     //virtual
     protected $files;
     protected $title;
-
+    protected $category;
 
     public function exchangeArray($data)
     {
@@ -28,6 +28,8 @@ class Gallery extends Model
         $this->url = (!empty($data['url'])) ? $data['url'] : Inflector::slugify($data['name']);
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
         $this->category_id = (!empty($data['category_id'])) ? $data['category_id'] : null;
+        $this->files = (!empty($data['files'])) ? $data['files'] : null;
+        $this->category = (!empty($data['category'])) ? $data['category'] : null;
     }
 
     /**
@@ -172,5 +174,21 @@ class Gallery extends Model
     public function setCategoryId($category_id)
     {
         $this->category_id = $category_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
     }
 }

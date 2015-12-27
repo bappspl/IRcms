@@ -3,6 +3,7 @@ namespace CmsIr\File\Model;
 
 use CmsIr\System\Model\ModelTable;
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Predicate;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;

@@ -1,6 +1,8 @@
 <?php
 namespace CmsIr\Dashboard\Controller;
 
+use CmsIr\File\Model\Gallery;
+use CmsIr\Video\Model\Video;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 

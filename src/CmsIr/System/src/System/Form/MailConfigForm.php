@@ -6,7 +6,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 class MailConfigForm extends Form
 {
-    public function __construct($name = null)
+    public function __construct($settings)
     {
         parent::__construct('MailConfig');
         $this->setAttribute('method', 'post');
@@ -54,6 +54,20 @@ class MailConfigForm extends Form
             'options' => array(
                 'label' => 'Hasło',
             ),
+        ));
+
+
+        $this->add(array(
+            'type' => 'select',
+            'attributes' => array(
+                'class' => 'form-control',
+                'name' => 'settings',
+            ),
+            'options' => array(
+                'label' => 'Status',
+                'value_options' => $settings,
+                'disable_inarray_validator' => true,
+            )
         ));
 
         $this->add(array(

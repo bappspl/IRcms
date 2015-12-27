@@ -29,7 +29,7 @@ class PostController extends AbstractActionController
         $category = $this->params()->fromRoute('category');
 
         $userRoleId = $this->identity()->role;
-        $userRoleId < 3 ? $userId = $this->identity()->id : $userId = null;
+        $userRoleId < 1 ? $userId = $this->identity()->id : $userId = null;
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -65,10 +65,10 @@ class PostController extends AbstractActionController
         $category = $this->params()->fromRoute('category');
 
         $userRoleId = $this->identity()->role;
-        if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
+        if($userRoleId < 1) $form->get('status_id')->setAttribute('disabled', 'disabled');
 
         /* @var $user Users */
-        $users = $this->getUsersTable()->getAll();
+        $users = $this->getUsersTable()->getBy(array(new Predicate\Operator('role', Predicate\Operator::OP_EQ, 2)));
         $arrUsers = array();
 
         foreach($users as $user) {
@@ -95,7 +95,7 @@ class PostController extends AbstractActionController
 //                    $post->setExtra($serializedExtraResult);
 //                }
 
-                if($userRoleId < 3) $post->setStatusId(2);
+                if($userRoleId < 1) $post->setStatusId(2);
                 $id = $this->getPostTable()->save($post);
                 $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
 
@@ -143,7 +143,7 @@ class PostController extends AbstractActionController
                     $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
 
                     if(!empty($request->getPost()->toArray()['tag_id'])) {
-                        $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Product');
+                        $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Post');
                     }
 
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie oraz wysłano newsletter.');
@@ -152,7 +152,7 @@ class PostController extends AbstractActionController
                     $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
 
                     if(!empty($request->getPost()->toArray()['tag_id'])) {
-                        $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Product');
+                        $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Post');
                     }
 
                     $this->flashMessenger()->addMessage('Wpis został utworzony poprawnie.');
@@ -201,7 +201,7 @@ class PostController extends AbstractActionController
         }
 
         /* @var $user Users */
-        $users = $this->getUsersTable()->getAll();
+        $users = $this->getUsersTable()->getBy(array(new Predicate\Operator('role', Predicate\Operator::OP_EQ, 2)));
         $arrUsers = array();
 
         foreach($users as $user) {
@@ -213,11 +213,11 @@ class PostController extends AbstractActionController
         $form = new PostForm($tags);
         $form->get('author_id')->setValueOptions($arrUsers);
 
-        if($userRoleId < 3) $form->get('status_id')->setAttribute('disabled', 'disabled');
+        if($userRoleId < 1) $form->get('status_id')->setAttribute('disabled', 'disabled');
 
         $form->bind($post);
 
-        $tagsForForm = $this->getTagService()->findAsAssocArrayForEntity( $id, 'Product');
+        $tagsForForm = $this->getTagService()->findAsAssocArrayForEntity( $id, 'Post');
         $form->get('tag_id')->setValue($tagsForForm);
 
         $request = $this->getRequest();
@@ -230,7 +230,7 @@ class PostController extends AbstractActionController
 //                $extraResult = $this->checkExtraFields($request->getPost(), $form->getData());
                 $post->setCategory($category);
 
-                if($userRoleId < 3) $post->setStatusId(2);
+                if($userRoleId < 1) $post->setStatusId(2);
 //                if(!empty($extraResult)) {
 //                    $serializedExtraResult = serialize($extraResult);
 //                    $post->setExtra($serializedExtraResult);
@@ -260,7 +260,7 @@ class PostController extends AbstractActionController
                 $this->getBlockService()->saveBlocks($id, 'Post', $request->getPost()->toArray(), 'title');
 
                 if(!empty($request->getPost()->toArray()['tag_id'])) {
-                    $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Product');
+                    $this->getTagService()->saveTags($request->getPost()->toArray()['tag_id'], $id, 'Post');
                 }
 
                 $this->flashMessenger()->addMessage('Wpis został zedytowany poprawnie.');

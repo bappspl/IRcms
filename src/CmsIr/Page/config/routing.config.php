@@ -184,6 +184,19 @@ return array(
                     ),
                 ),
             ),
+            'change-position' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-position',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Page',
+                        'controller' => 'CmsIr\Page\Controller\Page',
+                        'action'     => 'changePositionPage',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
             'part' => array(
                 'may_terminate' => true,
                 'type'    => 'Segment',

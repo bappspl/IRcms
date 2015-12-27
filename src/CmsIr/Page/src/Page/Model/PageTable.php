@@ -23,6 +23,49 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway = $tableGateway;
     }
 
+    public function getDatatables($columns, $data)
+    {
+        $displayFlag = false;
+
+        $allRows = $this->getAll();
+        $countAllRows = count($allRows);
+
+        $trueOffset = (int) $data->iDisplayStart;
+        $trueLimit = (int) $data->iDisplayLength;
+
+        $sorting = array('id', 'asc');
+        if(isset($data->iSortCol_0)) {
+            $sorting = $this->getSortingColumnDir($columns, $data);
+        }
+
+        $where = array();
+        if ($data->sSearch != '') {
+            $columnsToSearch = array('id', 'name');
+            $where = array(
+                new Predicate\PredicateSet(
+                    $this->getFilterPredicate($columnsToSearch, $data),
+                    Predicate\PredicateSet::COMBINED_BY_OR
+                )
+            );
+        }
+
+        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
+            $select
+                ->where($where)
+                ->order($sorting[0] . ' ' . $sorting[1]);
+        });
+
+        $dataArray = $this->getDataToDisplay($filteredRows, $columns);
+
+        if($displayFlag == true) {
+            $countFilteredRows = $filteredRows->count();
+        } else {
+            $countFilteredRows = $countAllRows;
+        }
+
+        return array('iTotalRecords' => $countAllRows, 'iTotalDisplayRecords' => $countFilteredRows, 'aaData' => $dataArray);
+    }
+
     public function deletePage($ids)
     {
         if(!is_array($ids)) {
@@ -73,12 +116,17 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
             'filename_main'  => $page->getFilenameMain(),
             'filename_background'  => $page->getFilenameBackground(),
             'type'  => $page->getType(),
+            'position'  => $page->getPosition(),
         );
 
         $id = (int) $page->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
+
+            $pos = array('position' => $id);
+
+            $this->tableGateway->update($pos, array('id' => $id));
         } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));

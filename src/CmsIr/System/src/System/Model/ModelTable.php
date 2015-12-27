@@ -14,7 +14,7 @@ use Zend\Paginator\Paginator;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ModelTable implements ServiceLocatorAwareInterface
+abstract class ModelTable implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
     protected $tableGateway;
