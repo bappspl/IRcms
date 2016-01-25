@@ -79,6 +79,19 @@ return array(
                     ),
                 ),
             ),
+            'change-position' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-position',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Video',
+                        'controller' => 'CmsIr\Video\Controller\Video',
+                        'action'     => 'changePosition',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );

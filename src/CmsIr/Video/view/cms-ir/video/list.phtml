@@ -9,6 +9,7 @@
                     <th>Nazwa</th>
                     <th>status_id</th>
                     <th>Status</th>
+                    <th>Position</th>
                     <th>Akcje</th>
                 </tr>
                 </thead>
@@ -39,9 +40,13 @@
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.responsive.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/rowReorder.bootstrap.min.css'); ?>
+
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/video.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.responsive.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datatable.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/dataTables.rowReorder.min.js'); ?>
+
 <?php $this->headScript()->appendFile($this->basePath().'/js/video-list.js'); ?>

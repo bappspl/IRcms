@@ -11,6 +11,7 @@ class Video extends Model
     protected $name;
     protected $slug;
     protected $url;
+    protected $position;
 
     //virtual
     protected $blocks;
@@ -24,6 +25,7 @@ class Video extends Model
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
+        $this->position = (!empty($data['position'])) ? $data['position'] : null;
     }
 
     /**
@@ -152,5 +154,21 @@ class Video extends Model
     public function setBlocks($blocks)
     {
         $this->blocks = $blocks;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }

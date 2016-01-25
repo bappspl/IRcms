@@ -45,7 +45,8 @@ class MenuController extends AbstractActionController
 
         /* @var $activeStatus Status */
 
-        $existingPages = $this->getPageService()->findAllActiveWithBlocksByLanguageUrlShortcut('pl');
+//        $existingPages = $this->getPageService()->findAllActiveWithBlocksByLanguageUrlShortcut('pl');
+        $existingPages = $this->getPageTable()->getBy(array('status_id' => 1));
 
         $viewParams = array();
         $viewParams['menu'] = $menu;

@@ -42,7 +42,7 @@ class MenuService implements ServiceLocatorAwareInterface
                     if($providerType === 'page') {
                         $url = substr($nodesItem->getUrl(), 8);
 //                        $pageId = $this->getPageTable()->getOneBy(array('name' => $nodesItem->getLabel(), 'url' => $url));
-                        $pageId = $this->getPageTable()->getOneBy(array('name' => $nodesItem->getLabel()));
+                        $pageId = $this->getPageTable()->getOneBy(array('slug' => $url));
                         $node->setSettings($pageId->getId());
                     }
                 } else {

@@ -18,7 +18,7 @@ class VideoController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'statusId', 'status', 'id');
+            $columns = array('id', 'name', 'statusId', 'status', 'position', 'id');
 
             $listData = $this->getVideoTable()->getDatatables($columns, $data);
 
@@ -188,6 +188,20 @@ class VideoController extends AbstractActionController
         }
 
         return array();
+    }
+
+    public function changePositionAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getVideoTable()->changePosition($position);
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
     }
 
     /**

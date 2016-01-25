@@ -154,6 +154,11 @@ class PageController extends AbstractActionController
         $form = new PageForm();
         $form->bind($page);
 
+        $slug = $page->getSlug();
+
+        /* @var $menuItem MenuItem */
+        $menuItem = $this->getMenuItemTable()->getOneBy(array('url' => '/strona/' . $slug));
+
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -164,7 +169,14 @@ class PageController extends AbstractActionController
                 $id = $this->getPageTable()->save($page);
                 $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
+                if(isset($menuItem)) {
+                    $newPage = $this->getPageTable()->getOneBy(array('id' => $id));
+                    $menuItem->setUrl('/strona/' . $newPage->getSlug());
+                    $this->getMenuItemTable()->saveMenuItem($menuItem);
+                }
+
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
+
                 if(!empty($scannedDirectory)) {
                     foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);

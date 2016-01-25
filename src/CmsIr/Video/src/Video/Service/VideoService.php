@@ -15,31 +15,36 @@ class VideoService implements ServiceLocatorAwareInterface
     public function findOneByLangIdWithBlocks($langId)
     {
         /* @var $video Video */
-        $videos = $this->getVideoTable()->getAll();
+        $videos = $this->getVideoTable()->getBy(array(), 'position asc');
 
-        $video = $videos[array_rand($videos)];
-
-        if(!$video) {
+        if(!$videos) {
             return null;
         }
-        $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Video', 'language_id' => $langId, 'entity_id' => $video->getId()));
-        $video->setBlocks($blocks);
 
-        /* @var $block Block */
-        foreach($blocks as $block) {
-            $fieldName = $block->getName();
+        $videoArray = array();
 
-            switch ($fieldName) {
-                case 'title':
-                    $video->setTitle($block->getValue());
-                    break;
-                case 'description':
-                    $video->setDescription($block->getValue());
-                    break;
+        foreach($videos as $video) {
+            $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Video', 'language_id' => $langId, 'entity_id' => $video->getId()));
+            $video->setBlocks($blocks);
+
+            /* @var $block Block */
+            foreach($blocks as $block) {
+                $fieldName = $block->getName();
+
+                switch ($fieldName) {
+                    case 'title':
+                        $video->setTitle($block->getValue());
+                        break;
+                    case 'description':
+                        $video->setDescription($block->getValue());
+                        break;
+                }
             }
+
+            array_push($videoArray, $video);
         }
 
-        return $video;
+        return $videoArray;
     }
 
     /**

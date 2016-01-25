@@ -23,6 +23,49 @@ class VideoTable extends ModelTable implements ServiceLocatorAwareInterface
         $this->tableGateway = $tableGateway;
     }
 
+    public function getDatatables($columns, $data)
+    {
+        $displayFlag = false;
+
+        $allRows = $this->getAll();
+        $countAllRows = count($allRows);
+
+        $trueOffset = (int) $data->iDisplayStart;
+        $trueLimit = (int) $data->iDisplayLength;
+
+        $sorting = array('id', 'asc');
+        if(isset($data->iSortCol_0)) {
+            $sorting = $this->getSortingColumnDir($columns, $data);
+        }
+
+        $where = array();
+        if ($data->sSearch != '') {
+            $columnsToSearch = array('id', 'name');
+            $where = array(
+                new Predicate\PredicateSet(
+                    $this->getFilterPredicate($columnsToSearch, $data),
+                    Predicate\PredicateSet::COMBINED_BY_OR
+                )
+            );
+        }
+
+        $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
+            $select
+                ->where($where)
+                ->order($sorting[0] . ' ' . $sorting[1]);
+        });
+
+        $dataArray = $this->getDataToDisplay($filteredRows, $columns);
+
+        if($displayFlag == true) {
+            $countFilteredRows = $filteredRows->count();
+        } else {
+            $countFilteredRows = $countAllRows;
+        }
+
+        return array('iTotalRecords' => $countAllRows, 'iTotalDisplayRecords' => $countFilteredRows, 'aaData' => $dataArray);
+    }
+
     public function deleteVideo($ids)
     {
         if(!is_array($ids)) {
@@ -71,6 +114,7 @@ class VideoTable extends ModelTable implements ServiceLocatorAwareInterface
             'slug' => Inflector::slugify($video->getName()),
             'status_id'  => $video->getStatusId(),
             'url'  => $video->getUrl(),
+            'position'  => $video->getPosition(),
         );
 
         $id = (int) $video->getId();

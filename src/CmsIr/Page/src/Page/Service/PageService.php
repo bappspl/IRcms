@@ -47,14 +47,14 @@ class PageService implements ServiceLocatorAwareInterface
     public function findOneByUrlAndLangIdWithBlocks($url, $langId)
     {
         /* @var $pageBlock Block */
-        $pageBlock = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'language_id' => $langId, 'name' => 'url', 'value' => $url));
-
-        if(!$pageBlock) {
-            return null;
-        }
+//        $pageBlock = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'language_id' => $langId, 'name' => 'url', 'value' => $url));
+//
+//        if(!$pageBlock) {
+//            return null;
+//        }
 
         /* @var $page Page */
-        $page = $this->getPageTable()->getOneBy(array('id' => $pageBlock->getEntityId(), 'status_id' => 1));
+        $page = $this->getPageTable()->getOneBy(array('slug' => $url, 'status_id' => 1));
 
         $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Page', 'language_id' => $langId, 'entity_id' => $page->getId()));
         $page->setBlocks($blocks);
