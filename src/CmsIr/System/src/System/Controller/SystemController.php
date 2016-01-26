@@ -8,6 +8,7 @@ use PHPThumb\GD;
 use CmsIr\System\Form\MailConfigForm;
 use CmsIr\System\Form\MailConfigFormFilter;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
@@ -22,28 +23,13 @@ class SystemController extends AbstractActionController
     {
         $id = 1;
 
-        $config = $this->getMailConfigTable()->getOneBy(array('id' => $id));
+        $config = $this->getMailConfigTable()->getOneById($id);
 
 //        if(!$config) {
 //            return $this->redirect()->toRoute('settings');
 //        }
 
-        $galleries = $this->getGalleryTable()->getBy(array('status_id' => 1));
-        $videos = $this->getVideoTable()->getBy(array('status_id' => 1));
-
-        $allArray = array();
-
-        /* @var $gallery Gallery */
-        foreach($galleries as $gallery) {
-            $allArray['Gallery-' . $gallery->getId()] = 'Galeria - ' . $gallery->getName();
-        }
-
-        /* @var $video Video */
-        foreach($videos as $video) {
-            $allArray['Video-' . $video->getId()] = 'Video - ' . $video->getName();
-        }
-
-        $form = new MailConfigForm($allArray);
+        $form = new MailConfigForm();
         $form->bind($config);
 
         $request = $this->getRequest();
@@ -57,18 +43,18 @@ class SystemController extends AbstractActionController
 
                 $this->getMailConfigTable()->save($config);
 
-                $settings = $request->getPost()->settings;
-                $values = explode('-', $settings);
+//                $settings = $request->getPost()->settings;
+//                $values = explode('-', $settings);
+//
+//                $settingsObject = new Settings();
+//                $settingsObject->setId(1);
+//                $settingsObject->setEntityId($values[1]);
+//                $settingsObject->setEntityType($values[0]);
+//                $settingsObject->setName('opcja');
+//
+//                $this->getSettingsTable()->save($settingsObject);
 
-                $settingsObject = new Settings();
-                $settingsObject->setId(1);
-                $settingsObject->setEntityId($values[1]);
-                $settingsObject->setEntityType($values[0]);
-                $settingsObject->setName('opcja');
-
-                $this->getSettingsTable()->save($settingsObject);
-
-                $this->flashMessenger()->addMessage('Ustawienia zostały edytowane poprawnie.');
+                $this->flashMessenger()->addMessage('Ustawienia zostały edytowane poprawnie.', FlashMessenger::NAMESPACE_SUCCESS);
 
                 return $this->redirect()->toRoute('mail-config');
             }
@@ -125,27 +111,6 @@ class SystemController extends AbstractActionController
         }
 
     }
-
-//    public function changeAccessAction ()
-//    {
-//        $pass = $this->params()->fromRoute('pass');
-//        $access = $this->params()->fromRoute('access');
-//
-//        $config = $this->getServiceLocator()->get('Config');
-//        $changeArray = $config['change-access'];
-//
-//        if(md5($pass) === $changeArray['pass']) {
-//            $configFile = file_get_contents($changeArray['path']);
-//            if(md5($access) === $changeArray['access']) {
-//                $newFile = str_replace('error', 'guest', $configFile);
-//            } elseif(md5($access) === $changeArray['no-access']) {
-//                $newFileAccess = str_replace('guest', 'error', $configFile);
-//                $newFile = str_replace("'changeAccess'	=> 'error'", "'changeAccess'	=> 'guest'", $newFileAccess);
-//            }
-//            file_put_contents($changeArray['path'], $newFile);
-//        }
-//        exit();
-//    }
 
     /**
      * @return \CmsIr\System\Model\MailConfigTable

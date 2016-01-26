@@ -8,6 +8,7 @@ class MailConfig
     protected $host;
     protected $username;
     protected $password;
+    protected $send;
 
     public function exchangeArray($data)
     {
@@ -15,6 +16,7 @@ class MailConfig
         $this->host   = (!empty($data['host'])) ? $data['host'] : null;
         $this->username = (!empty($data['username'])) ? $data['username'] : null;
         $this->password = (!empty($data['password'])) ? $data['password'] : null;
+        $this->send = (!empty($data['send'])) ? $data['send'] : null;
     }
 
     /**
@@ -79,5 +81,21 @@ class MailConfig
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSend()
+    {
+        return $this->send;
+    }
+
+    /**
+     * @param mixed $send
+     */
+    public function setSend($send)
+    {
+        $this->send = $send;
     }
 }

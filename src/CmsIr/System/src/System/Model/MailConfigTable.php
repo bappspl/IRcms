@@ -37,6 +37,7 @@ class MailConfigTable extends ModelTable
             'host' => $config->getHost(),
             'username'  => $config->getUsername(),
             'password'  => $config->getPassword(),
+            'send'  => $config->getSend(),
         );
 
         $id = (int) $config->getId();

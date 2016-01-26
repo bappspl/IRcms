@@ -6,7 +6,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 class MailConfigForm extends Form
 {
-    public function __construct($settings)
+    public function __construct()
     {
         parent::__construct('MailConfig');
         $this->setAttribute('method', 'post');
@@ -56,20 +56,6 @@ class MailConfigForm extends Form
             ),
         ));
 
-
-        $this->add(array(
-            'type' => 'select',
-            'attributes' => array(
-                'class' => 'form-control',
-                'name' => 'settings',
-            ),
-            'options' => array(
-                'label' => 'Status',
-                'value_options' => $settings,
-                'disable_inarray_validator' => true,
-            )
-        ));
-
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
@@ -77,6 +63,18 @@ class MailConfigForm extends Form
                 'value' => 'Zapisz',
                 'id' => 'submit',
                 'class' => 'btn btn-primary pull-right'
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'send',
+            'attributes' => array(
+                'id' => 'send',
+                'type'  => 'text',
+                'placeholder' => 'Email docelowy'
+            ),
+            'options' => array(
+                'label' => 'Email',
             ),
         ));
     }

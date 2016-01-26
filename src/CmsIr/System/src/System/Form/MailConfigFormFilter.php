@@ -3,6 +3,7 @@ namespace CmsIr\System\Form;
 
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\EmailAddress;
 use Zend\Validator\NotEmpty;
 
 class MailConfigFormFilter extends InputFilter
@@ -67,9 +68,34 @@ class MailConfigFormFilter extends InputFilter
         ));
 
         $this->add(array(
-            'name'       => 'settings',
-            'required' => false
+            'name'       => 'send',
+            'required' => true,
+            'filters'  => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+            ),
+            'validators' => array(
+                array(
+                    'name' => 'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            NotEmpty::IS_EMPTY => 'Uzupełnij pole!'
+                        )
+                    ),
+                    'break_chain_on_failure' => true
+                ),
+                array(
+                    'name' => 'EmailAddress',
+                    'options' => array(
+                        'messages' => array(
+                            EmailAddress::INVALID_FORMAT => 'Błędny format maila!'
+                        )
+                    ),
+                    'break_chain_on_failure' => true
+                ),
+            ),
         ));
+
 
 	}
 }

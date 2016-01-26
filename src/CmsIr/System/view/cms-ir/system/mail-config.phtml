@@ -1,4 +1,4 @@
-<?php echo $this->partial('partial/flashmessages'); ?>
+<?php echo $this->partial('partial/flashmessages-system'); ?>
 
 
 <?php
@@ -20,16 +20,13 @@ echo $this->form()->openTag($form);
         </div>
     </div>
 
-<!--    <div class="col-sm-6">-->
-<!--        <div class="the-box">-->
-<!---->
-<!--            <div class="form-group">-->
-<!--                <label>--><?php //echo $this->formLabel($form->get('settings')); ?><!--</label>-->
-<!--                --><?php //echo $this->formSelect($form->get('settings')); ?>
-<!--            </div>-->
-<!---->
-<!--        </div>-->
-<!--    </div>-->
+    <div class="col-sm-6">
+        <div class="the-box">
+
+            <?php echo $this->customFormHelper($form->get('send')); ?>
+
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-12">
