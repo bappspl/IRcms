@@ -82,6 +82,20 @@ class ModelTable implements ServiceLocatorAwareInterface
         return $entity;
     }
 
+    public function getOneById($id, $order = null)
+    {
+        $select = $this->tableGateway->getSql()->select();
+        $select->where(array('id' => $id));
+
+        if (!empty($order)) {
+            $select->order($order);
+        }
+
+        $resultSet = $this->tableGateway->selectWith($select);
+        $entity = $resultSet->current();
+        return $entity;
+    }
+
     public function getByAndCount($where, $order = null)
     {
         $select = $this->tableGateway->getSql()->select();
