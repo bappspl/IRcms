@@ -16,15 +16,20 @@ class Logger implements ServiceLocatorAwareInterface
 
     public function logException($exception)
     {
-        $logger = new \Zend\Log\Logger();
-        $writer = new Stream('./data/log/'.date('Y-m-d').'-error.log');
-        $logger->addWriter($writer);
-        $logger->log(\Zend\Log\Logger::CRIT, $exception);
-
         $config = $this->getServiceLocator()->get('Config');
+
+        $showErrors = $config['logger_show'];
+
+        $logger = new \Zend\Log\Logger();
+
+        if(!$showErrors) {
+            $writer = new Stream('./data/log/'.date('Y-m-d').'-error.log');
+            $logger->addWriter($writer);
+            $logger->log(\Zend\Log\Logger::CRIT, $exception);
+        }
+
         $appName = $config['app_name'];
         $loggerMail = $config['logger_mail'];
-        
 
         if($loggerMail === true) {
             $transport = $this->getServiceLocator()->get('mail.transport')->findMailConfig();
