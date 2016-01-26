@@ -20,11 +20,11 @@ return array(
                 'controller' => 'CmsIr\System\Controller\System',
                 'action'     => 'createThumb',
             ),
-            'constraints' => array(
-                'entity' => '[a-zA-Z0-9_-]+',
-                'size' => '[a-zA-Z0-9_-]+',
-                'filename' => '[a-zA-Z0-9_.-]+',
-            ),
+//            'constraints' => array(
+//                'entity' => '[a-zA-Z0-9_-]+',
+//                'size' => '[a-zA-Z0-9_-]+',
+//                'filename' => '[a-zA-Z0-9_.-]+',
+//            ),
         ),
     ),
     'change-access' => array(
