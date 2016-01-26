@@ -30,6 +30,11 @@
                                 <input name="<?php echo $lang->getUrlShortcut() ?>-subtitle" id="subtitle" type="text" placeholder="Wprowadź podtytuł" value="<?php echo isset($values[$lang->getUrlShortcut(). '-subtitle']) ? $values[$lang->getUrlShortcut(). '-subtitle'] : '' ?>" class="form-control">
                             </div>
 
+                            <div class="form-group  has-feedback">
+                                <label> Przycisk </label>
+                                <input name="<?php echo $lang->getUrlShortcut() ?>-button" id="button" type="text" placeholder="Wprowadź zawartość przycisku" value="<?php echo isset($values[$lang->getUrlShortcut(). '-button']) ? $values[$lang->getUrlShortcut(). '-button'] : '' ?>" class="form-control">
+                            </div>
+
                         </div>
 
                     <?php endforeach ?>

@@ -20,9 +20,11 @@ class Post
     protected $blocks;
     protected $extra;
     protected $title;
+    protected $short_content;
     protected $content;
     protected $url;
     protected $author;
+    protected $tags;
 
     // opinions
     protected $client;
@@ -46,6 +48,8 @@ class Post
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
         $this->author = (!empty($data['author'])) ? $data['author'] : null;
+        $this->tags = (!empty($data['tags'])) ? $data['tags'] : null;
+        $this->short_content = (!empty($data['short_content'])) ? $data['short_content'] : null;
 
         $this->client = (!empty($data['client'])) ? $data['client'] : null;
     }
@@ -322,5 +326,37 @@ class Post
     public function setFilenameBackground($filename_background)
     {
         $this->filename_background = $filename_background;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param mixed $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShortContent()
+    {
+        return $this->short_content;
+    }
+
+    /**
+     * @param mixed $short_content
+     */
+    public function setShortContent($short_content)
+    {
+        $this->short_content = $short_content;
     }
 }

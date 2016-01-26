@@ -18,7 +18,7 @@ $(function () {
             "paginate":true,
             "sortable": true,
             "searchable": true,
-            "order": [[ 1, "desc" ]],
+            "order": [[ 2, "desc" ]],
             "columnDefs": [
                 {
                     "targets": [ 0 ],
@@ -36,8 +36,7 @@ $(function () {
                     "targets": [ 5 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
                         if ( type === 'display' ) {
-                            return  '<a href="'+category+'/preview/'+data+'" class="btn btn-info" data-toggle="tooltip" title="Podgląd"><i class="fa fa-eye"></i></a> ' +
-                                    '<a href="'+category+'/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
+                            return '<a href="'+category+'/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
                                     '<a href="'+category+'/delete/'+data+'" id="'+data+'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
                         }
                         return data;

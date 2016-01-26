@@ -1,8 +1,14 @@
 $(function () {
+
+    $(".select2").select2({
+        tags: true
+    });
+
     $('.datetimepicker').datetimepicker({
         locale: 'pl',
         format: 'YYYY-MM-DD HH:mm:ss'
     });
+
     var category = 'news';
     $('#upload').uploadifive({
         'auto'             : false,

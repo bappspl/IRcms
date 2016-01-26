@@ -23,13 +23,15 @@ class CategoryController extends AbstractActionController
 
     public function listAction()
     {
+        $type = $this->params()->fromRoute('type');
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
             $columns = array('id', 'name', 'id');
 
-            $listData = $this->getCategoryTable()->getCategoryDatatables($columns, $data);
+            $listData = $this->getCategoryTable()->getCategoryDatatables($columns, $data, $type);
 
             $output = array(
                 "sEcho" => $this->getRequest()->getPost('sEcho'),
@@ -44,6 +46,7 @@ class CategoryController extends AbstractActionController
         }
 
         $viewParams = array();
+        $viewParams['type'] = $type;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -51,6 +54,8 @@ class CategoryController extends AbstractActionController
 
     public function createAction()
     {
+        $type = $this->params()->fromRoute('type');
+
         $form = new CategoryForm();
 
         $request = $this->getRequest();
@@ -64,6 +69,8 @@ class CategoryController extends AbstractActionController
                 $category = new Category();
 
                 $category->exchangeArray($form->getData());
+                $category->setType($type);
+
                 $id = $this->getCategoryTable()->save($category);
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
@@ -87,12 +94,13 @@ class CategoryController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Kategoria została dodana poprawnie.');
 
-                return $this->redirect()->toRoute('category');
+                return $this->redirect()->toRoute('category', array('type' => $type));
             }
         }
 
         $viewParams = array();
         $viewParams['form'] = $form;
+        $viewParams['type'] = $type;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -100,6 +108,7 @@ class CategoryController extends AbstractActionController
 
     public function editAction()
     {
+        $type = $this->params()->fromRoute('type');
         $id = $this->params()->fromRoute('category_id');
 
         $category = $this->getCategoryTable()->getOneBy(array('id' => $id));
@@ -144,7 +153,7 @@ class CategoryController extends AbstractActionController
 
                 $this->flashMessenger()->addMessage('Kategoria została edytowana poprawnie.');
 
-                return $this->redirect()->toRoute('category');
+                return $this->redirect()->toRoute('category', array('type' => $type));
             }
         }
 
@@ -152,6 +161,7 @@ class CategoryController extends AbstractActionController
         $viewParams['form'] = $form;
         $viewParams['blocks'] = $blocks;
         $viewParams['categoryFiles'] = $categoryFiles;
+        $viewParams['type'] = $type;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;

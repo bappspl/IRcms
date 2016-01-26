@@ -23,6 +23,11 @@ echo $this->form()->openTag($form);
                             <?php echo $this->formSelect($form->get('status_id')); ?>
                         </div>
 
+                        <div class="form-group">
+                            <label><?php echo $this->formLabel($form->get('type')); ?></label>
+                            <?php echo $this->formSelect($form->get('type')); ?>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -94,7 +99,7 @@ echo $this->form()->openTag($form);
         </div>
     </div>
 
-    <?php echo $this->partial('partial/meta-form', array('entity' => $page)); ?>
+<!--    --><?php //echo $this->partial('partial/meta-form', array('entity' => $page)); ?>
 
     <div class="row">
         <div class="col-sm-12">

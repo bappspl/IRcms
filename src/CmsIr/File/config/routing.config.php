@@ -76,6 +76,19 @@ return array(
                     ),
                 ),
             ),
+            'upload-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/upload-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\File',
+                        'controller' => 'CmsIr\File\Controller\Gallery',
+                        'action'     => 'uploadFilesMain',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
             'delete-photo' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -84,6 +97,33 @@ return array(
                         'module' => 'CmsIr\File',
                         'controller' => 'CmsIr\File\Controller\Gallery',
                         'action'     => 'deletePhoto',
+                    ),
+                ),
+            ),
+            'change-status' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-status/:gallery_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\File',
+                        'controller' => 'CmsIr\File\Controller\Gallery',
+                        'action'     => 'changeStatus',
+                    ),
+                    'constraints' => array(
+                        'gallery_id' =>  '[0-9]+'
+                    ),
+                ),
+            ),
+            'delete-photo-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/delete-photo-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\File',
+                        'controller' => 'CmsIr\File\Controller\Gallery',
+                        'action'     => 'deletePhotoMain',
+                    ),
+                    'constraints' => array(
                     ),
                 ),
             ),

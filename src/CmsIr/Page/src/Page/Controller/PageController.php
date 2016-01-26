@@ -6,7 +6,10 @@ use CmsIr\Menu\Model\MenuItem;
 use CmsIr\Menu\Model\MenuNode;
 use CmsIr\Page\Form\PageForm;
 use CmsIr\Page\Form\PageFormFilter;
+use CmsIr\Page\Form\PagePartForm;
+use CmsIr\Page\Form\PagePartFormFilter;
 use CmsIr\Page\Model\Page;
+use CmsIr\Page\Model\PagePart;
 use CmsIr\System\Model\Block;
 use CmsIr\System\Util\Inflector;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -20,13 +23,16 @@ class PageController extends AbstractActionController
     protected $uploadDir = 'public/temp_files/page/';
     protected $destinationUploadDir = 'public/files/page/';
 
+    protected $uploadDirPart = 'public/temp_files/page-part/';
+    protected $destinationUploadDirPart = 'public/files/page-part/';
+
     public function listAction()
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'statusId', 'status', 'id');
+            $columns = array('id', 'id', 'name', 'statusId', 'status', 'id', 'type', 'position');
 
             $listData = $this->getPageTable()->getDatatables($columns,$data);
 
@@ -148,6 +154,11 @@ class PageController extends AbstractActionController
         $form = new PageForm();
         $form->bind($page);
 
+        $slug = $page->getSlug();
+
+        /* @var $menuItem MenuItem */
+        $menuItem = $this->getMenuItemTable()->getOneBy(array('url' => '/strona/' . $slug));
+
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -158,7 +169,14 @@ class PageController extends AbstractActionController
                 $id = $this->getPageTable()->save($page);
                 $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
+                if(isset($menuItem)) {
+                    $newPage = $this->getPageTable()->getOneBy(array('id' => $id));
+                    $menuItem->setUrl('/strona/' . $newPage->getSlug());
+                    $this->getMenuItemTable()->saveMenuItem($menuItem);
+                }
+
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
+
                 if(!empty($scannedDirectory)) {
                     foreach($scannedDirectory as $file) {
                         $mimeType = $this->getFileService()->getMimeContentType($this->uploadDir.'/'.$file);
@@ -374,6 +392,316 @@ class PageController extends AbstractActionController
         return $this->response;
     }
 
+    public function partAction()
+    {
+        $pageId = (int) $this->params()->fromRoute('page_id');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $data = $this->getRequest()->getPost();
+            $columns = array('id', 'name', 'id', 'position');
+
+            $listData = $this->getPagePartTable()->getDatatables($columns, $data, $pageId);
+
+            $output = array(
+                "sEcho" => $this->getRequest()->getPost('sEcho'),
+                "iTotalRecords" => $listData['iTotalRecords'],
+                "iTotalDisplayRecords" => $listData['iTotalDisplayRecords'],
+                "aaData" => $listData['aaData']
+            );
+
+            $jsonObject = Json::encode($output, true);
+            echo $jsonObject;
+            return $this->response;
+        }
+
+        $viewParams = array();
+        $viewParams['pageId'] = $pageId;
+        $viewModel = new ViewModel();
+        $viewModel->setVariables($viewParams);
+        return $viewModel;
+    }
+
+    public function createPartAction()
+    {
+        $pageId = (int) $this->params()->fromRoute('page_id');
+
+        $form = new PagePartForm();
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $form->setInputFilter(new PagePartFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $pagePart = new PagePart();
+                $pagePart->exchangeArray($form->getData());
+
+                $pagePart->setPageId($pageId);
+
+                $id = $this->getPagePartTable()->save($pagePart);
+
+                $scannedDirectory = array_diff(scandir($this->uploadDirPart), array('..', '.'));
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
+                        $mimeType = $this->getFileService()->getMimeContentType($this->uploadDirPart.'/'.$file);
+
+                        $postFile = new File();
+                        $postFile->setFilename($file);
+                        $postFile->setEntityId($id);
+                        $postFile->setEntityType('PagePart');
+                        $postFile->setMimeType($mimeType);
+
+                        $this->getFileTable()->save($postFile);
+
+                        rename($this->uploadDirPart.'/'.$file, $this->destinationUploadDirPart.'/'.$file);
+                    }
+                }
+
+                $this->getBlockService()->saveBlocks($id, 'PagePart', $request->getPost()->toArray(), 'title');
+
+                $this->flashMessenger()->addMessage('Sekcja została dodana poprawnie.');
+
+                return $this->redirect()->toRoute('page/part', array('page_id' => $pageId));
+            }
+        }
+
+        $menuNodes = $this->getMenuService()->findMenuItemsForPage();
+
+        $viewParams = array();
+        $viewParams['form'] = $form;
+        $viewParams['menuNodes'] = $menuNodes;
+        $viewParams['pageId'] = $pageId;
+        $viewModel = new ViewModel();
+        $viewModel->setVariables($viewParams);
+        return $viewModel;
+    }
+
+    public function editPartAction()
+    {
+        $pageId = $this->params()->fromRoute('page_id');
+        $pagePartId = $this->params()->fromRoute('page_part_id');
+
+        /* @var $pagePart PagePart */
+        $pagePart = $this->getPagePartTable()->getOneBy(array('id' => $pagePartId));
+
+        if(!$pagePart)  {
+            return $this->redirect()->toRoute('page/part', array('page_id' => $pageId));
+        }
+
+        $pagePartFiles = $this->getFileTable()->getBy(array('entity_id' => $pagePartId, 'entity_type' => 'PagePart'));
+
+        $blocks = $this->getBlockService()->getBlocks($pagePart, 'PagePart');
+
+        $form = new PagePartForm();
+        $form->bind($pagePart);
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $form->setInputFilter(new PagePartFormFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $id = $this->getPagePartTable()->save($pagePart);
+                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
+
+                $scannedDirectory = array_diff(scandir($this->uploadDirPart), array('..', '.'));
+                if(!empty($scannedDirectory)) {
+                    foreach($scannedDirectory as $file) {
+                        $mimeType = $this->getFileService()->getMimeContentType($this->uploadDirPart.'/'.$file);
+
+                        $postFile = new File();
+                        $postFile->setFilename($file);
+                        $postFile->setEntityId($id);
+                        $postFile->setEntityType('PagePart');
+                        $postFile->setMimeType($mimeType);
+
+                        $this->getFileTable()->save($postFile);
+
+                        rename($this->uploadDirPart.'/'.$file, $this->destinationUploadDirPart.'/'.$file);
+                    }
+                }
+
+                $this->getBlockService()->saveBlocks($id, 'PagePart', $request->getPost()->toArray(), 'title');
+
+                $this->flashMessenger()->addMessage('Sekcja została edytowana poprawnie.');
+
+                return $this->redirect()->toRoute('page/part', array('page_id' => $pageId));
+            }
+        }
+
+        $viewParams = array();
+        $viewParams['page'] = $pagePart;
+        $viewParams['form'] = $form;
+        $viewParams['pageFiles'] = $pagePartFiles;
+        $viewParams['blocks'] = $blocks;
+        $viewParams['pageId'] = $pageId;
+        $viewModel = new ViewModel();
+        $viewModel->setVariables($viewParams);
+        return $viewModel;
+    }
+
+    public function deletePartAction()
+    {
+        $request = $this->getRequest();
+        $id = (int) $this->params()->fromRoute('page_part_id', 0);
+        $pageId = (int) $this->params()->fromRoute('page_id', 0);
+
+        if (!$id) {
+            return $this->redirect()->toRoute('page');
+        }
+
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'Anuluj');
+
+            if ($del == 'Tak') {
+                $id = $request->getPost('id');
+
+                if(!is_array($id)) {
+                    $id = array($id);
+                }
+
+                foreach($id as $oneId) {
+                    $pageFiles = $this->getFileTable()->getBy(array('entity_type' => 'PagePart', 'entity_id' => $oneId));
+
+                    if((!empty($pageFiles))) {
+                        foreach($pageFiles as $file) {
+                            unlink('./public/files/page-part/'.$file->getFilename());
+                            $this->getFileTable()->deleteFile($file->getId());
+                        }
+                    }
+                }
+
+                $this->getPagePartTable()->deletePagePart($id);
+                $this->flashMessenger()->addMessage('Sekcja została usunięta poprawnie.');
+                $modal = $request->getPost('modal', false);
+                if($modal == true) {
+                    $jsonObject = Json::encode($params['status'] = $id, true);
+                    echo $jsonObject;
+                    return $this->response;
+                }
+            }
+
+            return $this->redirect()->toRoute('page/part', array('page_id' => $pageId));
+        }
+
+        return array(
+            'id'    => $id,
+            'page' => $this->getPageTable()->getOneBy(array('id' => $id))
+        );
+    }
+
+    public function uploadFilesMainPartAction ()
+    {
+        if (!empty($_FILES)) {
+            $tempFile   = $_FILES['Filedata']['tmp_name'];
+            $targetFile = $_FILES['Filedata']['name'];
+
+            $file = explode('.', $targetFile);
+            $fileName = $file[0];
+            $fileExt = $file[1];
+
+            $uniqidFilename = $fileName.'-'.uniqid();
+            $targetFile = $uniqidFilename.'.'.$fileExt;
+
+            if(move_uploaded_file($tempFile,$this->destinationUploadDirPart.$targetFile)) {
+                echo $targetFile;
+            } else {
+                echo 0;
+            }
+        }
+        return $this->response;
+    }
+
+    public function uploadFilesPartAction ()
+    {
+        if (!empty($_FILES)) {
+            $tempFile   = $_FILES['Filedata']['tmp_name'];
+            $targetFile = $_FILES['Filedata']['name'];
+            $file = explode('.', $targetFile);
+
+            $fileName = $file[0];
+            $fileExt = $file[1];
+
+            $uniqidFilename = $fileName.'-'.uniqid();
+            $targetFile = $uniqidFilename.'.'.$fileExt;
+
+            if(move_uploaded_file($tempFile,$this->uploadDirPart.$targetFile)) {
+                echo $targetFile;
+            } else {
+                echo 0;
+            }
+
+        }
+        return $this->response;
+    }
+
+    public function changePositionPageAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getPageTable()->changePosition($position);
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
+    public function getPartsAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $id = $request->getPost('id');
+
+            $parts = $this->getPagePartTable()->getBy(array('page_id' => $id), 'position ASC');
+
+            $htmlViewPart = new ViewModel();
+            $htmlViewPart->setTerminal(true)
+                ->setTemplate('partial/parts')
+                ->setVariables(array(
+                    'parts' => $parts
+                ));
+
+            $htmlOutput = $this->getServiceLocator()
+                ->get('viewrenderer')
+                ->render($htmlViewPart);
+
+            $jsonObject = Json::encode($htmlOutput, true);
+            echo $jsonObject;
+            return $this->response;
+        }
+
+        $jsonObject = Json::encode($params['error'] = 'error', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
+    public function orderPartsAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $pos = $request->getPost('pos');
+
+            $this->getPagePartTable()->changePosition($pos);
+
+            $jsonObject = Json::encode('ok', true);
+            echo $jsonObject;
+            return $this->response;
+        }
+
+        $jsonObject = Json::encode($params['error'] = 'error', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
     /**
      * @return \CmsIr\Page\Model\PageTable
      */
@@ -444,5 +772,13 @@ class PageController extends AbstractActionController
     public function getBlockTable()
     {
         return $this->getServiceLocator()->get('CmsIr\System\Model\BlockTable');
+    }
+
+    /**
+     * @return \CmsIr\Page\Model\PagePartTable
+     */
+    public function getPagePartTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Page\Model\PagePartTable');
     }
 }

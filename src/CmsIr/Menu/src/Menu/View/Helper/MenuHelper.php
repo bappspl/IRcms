@@ -19,158 +19,106 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface
     public function renderMenu($menu, $ulClass = null, $ulId = null, $liClass = null, $subUlClass = null, $subLiClass = null, $langId = null, $lang = null)
     {
         $route = $this->getRoute();
-
-        $template = '<ul class="'.$ulClass.'" id="'.$ulId.'">';
-
-        // $item == $node
-        /* @var $item MenuNode */
+        $template = ' <ul class="nav navbar-nav az-menu-wrapper">';
         foreach($menu as $item) {
             if(is_array($item->getItems())) {
                 $subItems = $item->getItems();
-
                 $fistItem = end($subItems);
                 $checkUrl = $fistItem->getUrl();
-
                 $pos = strpos($route, $checkUrl);
             } else {
-
                 $checkUrl = $item->getItems()->getUrl();
                 $pos = strpos($route, $checkUrl);
             }
-
+            $template .= '<li>';
             if($pos !== false && $checkUrl !== '/') {
                 $active = 'active';
             } else {
-                if($checkUrl == '/' && strlen($route) == 1) {
+                if($checkUrl == '/' && strlen($route) == 1)
+                {
                     $active = 'active';
                 } else {
                     $active = '';
                 }
             }
-
-            $template .= '<li class="'. $liClass . '">';
-
             if(is_array($item->getItems())) {
                 $subItems = $item->getItems();
-
                 $fistItem = end($subItems);
-
-                //lang
-
-                if($item->getProviderType() == 'Page' && $langId !== null) {
-                    $label = $fistItem->getLabel();
-                    $pageId = $this->getPageTable()->getOneBy(array('name' => $label))->getId();
-                    $label = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'title'))->getValue();
-                    $url = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'url'))->getValue();
-                    $url = '/' . $lang . '/strona/' . $url;
-                } else {
-                    $url = $fistItem->getUrl();
-                    $label = $fistItem->getLabel();
-                }
-
-                $subtitle = $fistItem->getSubtitle();
+                $label = $fistItem->getLabel();
+                $url = $fistItem->getUrl();
                 array_pop($subItems);
-
-                $template .= '<a class="' . $active . ' mn-has-sub"" href="' . $url . '" title="'.$subtitle.'">' . $label . ' <i class="fa fa-angle-down"></i></a>';
-
-                $template .= '<ul class="mn-sub mn-has-multi"><li class="mn-sub-multi"><ul>';
-
+                $template .= '<a href="' . $url . '" class="' . $active . '">'.$label.'</a>';
+                $template .= '<ul class="sub-menu">';
                 foreach($subItems as $subItem) {
                     $subItemNode = $subItem->getItems();
-
-                    if($item->getProviderType() == 'Page' && $langId !== null) {
-                        $label = $fistItem->getLabel();
-                        $pageId = $this->getPageTable()->getOneBy(array('name' => $label))->getId();
-                        $label = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'title'))->getValue();
-                        $url = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'url'))->getValue();
-                        $url = '/' . $lang . '/strona/' . $url;
-                    } else {
-                        $label = $fistItem->getLabel();
-                        $url = $fistItem->getUrl();
-                    }
-
+                    $label = $subItemNode->getLabel();
+                    $url = $subItemNode->getUrl();
                     $template .= '<li><a href="'.$url.'">'.$label.'</a></li>';
                 }
-
-                $template .= '</li></ul></li></ul>';
-
+                $template .= '</ul>';
             } else {
                 $subItem = $item->getItems();
-
-                if($item->getProviderType() == 'Page' && $langId !== null) {
-                    $label = $subItem->getLabel();                    ;
-                    $pageId = $this->getPageTable()->getOneBy(array('name' => $label))->getId();
-                    $label = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'title'))->getValue();
-                    $url = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'entity_id' => $pageId, 'language_id' => $langId, 'name' => 'url'))->getValue();
-                    $url = '/' . $lang . '/strona/' . $url;
-                } else {
-                    $label = $this->translate($subItem->getLabel());
-                    $url = '/' . $lang . $subItem->getUrl();
-                }
-
-                $subtitle = $subItem->getSubtitle();
-                $template .= '<a href="'.$url.'" class="' . $active . ' "" title="'.$subtitle.'">'.$label.'</a>';
+                $label = $subItem->getLabel();
+                $url = $subItem->getUrl();
+                $template .= '<a href="'.$url.'" class="' . $active . '">'.$label.'</a>';
             }
             $template .= '</li>';
         }
         // $template .= $this->addExtraOptions();
-
-
-
-//        $template .= '</ul>';
+        $template .= '</ul>';
         return $template;
     }
 
     public function renderSecondMenu($menu, $ulClass = null, $liClass = null, $ulId = null, $subUlClass = null, $subLiClass = null)
     {
         $route = $this->getRoute();
-
-        $menuMain = array_chunk($menu, 3);
-
-        $template = '';
-
-        foreach($menuMain as $menuSmall) {
-
-            $template .= '<row>';
-
-            foreach($menuSmall as $small) {
-
-                if(is_array($small->getItems())) {
-
-                    $template .= '<div class="col-sm-4">';
-
-                    $subItems = $small->getItems();
-
-                    $fistItem = end($subItems);
-                    $label = $fistItem->getLabel();
-                    $url = $fistItem->getUrl();
-                    array_pop($subItems);
-
-                    $template .= '<p><a href="' . $url . '">' . $label . '</a></p>';
-
-                    if(!empty($subItems)) {
-                        $template .= '<ul>';
-
-                        foreach($subItems as $subItem) {
-                            $subItemNode = $subItem->getItems();
-                            $label = $subItemNode->getLabel();
-                            $url = $subItemNode->getUrl();
-
-                            $template .= '<li><a href="'.$url.'">'.$label.'</a></li>';
-                        }
-
-                        $template .= '</ul>';
-                    }
-
-                    $template .= '</div>';
-
-                }
-
+        $template = ' <ul class="nav navbar-nav az-menu-wrapper">';
+        foreach($menu as $item) {
+            if(is_array($item->getItems())) {
+                $subItems = $item->getItems();
+                $fistItem = end($subItems);
+                $checkUrl = $fistItem->getUrl();
+                $pos = strpos($route, $checkUrl);
+            } else {
+                $checkUrl = $item->getItems()->getUrl();
+                $pos = strpos($route, $checkUrl);
             }
-
-            $template .= '</row>';
+            $template .= '<li>';
+            if($pos !== false && $checkUrl !== '/') {
+                $active = 'active';
+            } else {
+                if($checkUrl == '/' && strlen($route) == 1)
+                {
+                    $active = 'active';
+                } else {
+                    $active = '';
+                }
+            }
+            if(is_array($item->getItems())) {
+                $subItems = $item->getItems();
+                $fistItem = end($subItems);
+                $label = $fistItem->getLabel();
+                $url = $fistItem->getUrl();
+                array_pop($subItems);
+                $template .= '<a href="' . $url . '" class="' . $active . '">'.$label.'</a>';
+                $template .= '<ul class="sub-menu">';
+                foreach($subItems as $subItem) {
+                    $subItemNode = $subItem->getItems();
+                    $label = $subItemNode->getLabel();
+                    $url = $subItemNode->getUrl();
+                    $template .= '<li><a href="'.$url.'">'.$label.'</a></li>';
+                }
+                $template .= '</ul>';
+            } else {
+                $subItem = $item->getItems();
+                $label = $subItem->getLabel();
+                $url = $subItem->getUrl();
+                $template .= '<a href="'.$url.'" class="' . $active . '">'.$label.'</a>';
+            }
+            $template .= '</li>';
         }
-
+        // $template .= $this->addExtraOptions();
+        $template .= '</ul>';
         return $template;
     }
 

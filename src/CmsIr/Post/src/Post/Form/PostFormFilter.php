@@ -38,6 +38,11 @@ class PostFormFilter extends InputFilter
             'required' => false,
         ));
 
+        $this->add(array(
+            'name'       => 'tag_id',
+            'required' => false,
+        ));
+
 //        $this->add(array(
 //            'name'       => 'url',
 //            'required' => true,

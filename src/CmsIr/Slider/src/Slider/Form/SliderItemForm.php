@@ -56,6 +56,18 @@ class SliderItemForm extends Form
         ));
 
         $this->add(array(
+            'name' => 'anchor',
+            'attributes' => array(
+                'type'  => 'text',
+                'id' => 'anchor',
+                'class' => 'form-control'
+            ),
+            'options' => array(
+                'label' => 'Kotwica',
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'title',
             'attributes' => array(
                 'type'  => 'text',

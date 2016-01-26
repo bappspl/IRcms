@@ -11,10 +11,10 @@ class CategoryService implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
 
-    public function findAsAssocArray()
+    public function findAsAssocArray($type = null)
     {
         /* @var $category Category */
-        $categories = $this->getCategoryTable()->getAll();
+        $categories = $this->getCategoryTable()->getBy(array('type' => $type));
 
         $categoryArray = array();
 

@@ -2,12 +2,15 @@
 namespace CmsIr\Category\Model;
 
 use CmsIr\System\Model\Model;
+use CmsIr\System\Util\Inflector;
 
 class Category extends Model
 {
     protected $id;
     protected $name;
+    protected $slug;
     protected $filename_main;
+    protected $type;
 
     // virtual columns
     protected $blocks;
@@ -18,11 +21,13 @@ class Category extends Model
     public function exchangeArray($data)
     {
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
+        $this->slug = (!empty($data['slug'])) ? $data['slug'] : Inflector::slugify($data['name']);;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
         $this->title = (!empty($data['title'])) ? $data['title'] : null;
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
+        $this->type = (!empty($data['type'])) ? $data['type'] : null;
     }
 
     /**
@@ -135,5 +140,21 @@ class Category extends Model
     public function setFiles($files)
     {
         $this->files = $files;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

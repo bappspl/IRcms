@@ -3,6 +3,7 @@ namespace CmsIr\File\Model;
 
 use CmsIr\System\Model\ModelTable;
 use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Predicate;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -27,16 +28,14 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
         foreach($filteredRows as $row) {
 
             $tmp = array();
-
-            foreach($columns as $column) {
+            foreach($columns as $column){
                 $column = 'get'.ucfirst($column);
-                $tmp[] = $row->$column();
+                if($column == 'getStatus') {
+                    $tmp[] = $this->getLabelToDisplay($row->getStatusId());
+                } else {
+                    $tmp[] = $row->$column();
+                }
             }
-            // dodanie switchera
-            $tmp[] = $this->getLabelToDisplay($row->getStatusId());
-
-            $tmp[] = '<a href="gallery/edit/'.$row->getId().'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' .
-                '<a href="gallery/delete/'.$row->getId().'" id="'.$row->getId().'" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a>';
             array_push($dataArray, $tmp);
         }
         return $dataArray;
@@ -60,6 +59,8 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
             'slug' => $gallery->getSlug(),
             'url' => $gallery->getUrl(),
             'status_id' => $gallery->getStatusId(),
+            'category_id' => $gallery->getCategoryId(),
+            'filename_main' => $gallery->getFilenameMain(),
         );
 
         $id = (int) $gallery->getId();
@@ -77,10 +78,26 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
         return $id;
     }
 
-    public function deleteGallery($id)
+    public function deleteGallery($ids)
     {
-        $id  = (int) $id;
-        $this->tableGateway->delete(array('id' => $id));
+        if(!is_array($ids)) {
+            $ids = array($ids);
+        }
+
+        foreach($ids as $id) {
+            $this->tableGateway->delete(array('id' => $id));
+        }
+    }
+
+    public function changeStatusGallery($ids, $statusId)
+    {
+        if(!is_array($ids)) {
+            $ids = array($ids);
+        }
+        $data = array('status_id'  => $statusId);
+        foreach($ids as $id) {
+            $this->tableGateway->update($data, array('id' => $id));
+        }
     }
 
     /**

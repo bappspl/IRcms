@@ -47,14 +47,14 @@ class PageService implements ServiceLocatorAwareInterface
     public function findOneByUrlAndLangIdWithBlocks($url, $langId)
     {
         /* @var $pageBlock Block */
-        $pageBlock = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'language_id' => $langId, 'name' => 'url', 'value' => $url));
-
-        if(!$pageBlock) {
-            return null;
-        }
+//        $pageBlock = $this->getBlockTable()->getOneBy(array('entity_type' => 'Page', 'language_id' => $langId, 'name' => 'url', 'value' => $url));
+//
+//        if(!$pageBlock) {
+//            return null;
+//        }
 
         /* @var $page Page */
-        $page = $this->getPageTable()->getOneBy(array('id' => $pageBlock->getEntityId(), 'status_id' => 1));
+        $page = $this->getPageTable()->getOneBy(array('slug' => $url, 'status_id' => 1));
 
         $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'Page', 'language_id' => $langId, 'entity_id' => $page->getId()));
         $page->setBlocks($blocks);
@@ -81,6 +81,38 @@ class PageService implements ServiceLocatorAwareInterface
 
         $files = $this->getFileTable()->getBy(array('entity_type' => 'Page', 'entity_id' => $page->getId()));
         $page->setFiles($files);
+
+        //parts
+        if($page->getType() == 1) {
+            $parts = $this->getPagePartTable()->getBy(array('page_id' => $page->getId()), 'position ASC');
+
+            if(!empty($parts)) {
+
+                /* @var $part \CmsIr\Page\Model\PagePart */
+                foreach ($parts as $part) {
+                    $files = $this->getFileTable()->getBy(array('entity_type' => 'PagePart', 'entity_id' => $part->getId()));
+                    $part->setFiles($files);
+
+                    $blocks = $this->getBlockTable()->getBy(array('entity_type' => 'PagePart', 'language_id' => $langId, 'entity_id' => $part->getId()));
+                    $part->setBlocks($blocks);
+
+                    /* @var $block Block */
+                    foreach($blocks as $block) {
+                        $fieldName = $block->getName();
+
+                        switch ($fieldName) {
+                        case 'title':
+                            $part->setTitle($block->getValue());
+                            break;
+                        case 'content':
+                            $part->setContent($block->getValue());
+                        }
+                    }
+                }
+            }
+
+            $page->setParts($parts);
+        }
 
         return $page;
     }
@@ -155,6 +187,14 @@ class PageService implements ServiceLocatorAwareInterface
     public function getFileTable()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+    }
+
+     /**
+     * @return \CmsIr\Page\Model\PagePartTable
+     */
+    public function getPagePartTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Page\Model\PagePartTable');
     }
 
     /**

@@ -14,12 +14,14 @@ class SliderItem extends Model
     protected $status_id;
     protected $position;
 //    protected $url;
+    protected $anchor;
 
     //virtual
 
     protected $status;
     protected $title;
     protected $subtitle;
+    protected $button;
 
     public function exchangeArray($data) 
     {
@@ -31,6 +33,8 @@ class SliderItem extends Model
         $this->position = (!empty($data['position'])) ? $data['position'] : 0;
         $this->title = (!empty($data['title'])) ? $data['title'] : null;
         $this->subtitle = (!empty($data['subtitle'])) ? $data['subtitle'] : null;
+        $this->anchor = (!empty($data['anchor'])) ? $data['anchor'] : null;
+        $this->button = (!empty($data['button'])) ? $data['button'] : null;
     }
 
     /**
@@ -175,5 +179,37 @@ class SliderItem extends Model
     public function setSubtitle($subtitle)
     {
         $this->subtitle = $subtitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAnchor()
+    {
+        return $this->anchor;
+    }
+
+    /**
+     * @param mixed $anchor
+     */
+    public function setAnchor($anchor)
+    {
+        $this->anchor = $anchor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getButton()
+    {
+        return $this->button;
+    }
+
+    /**
+     * @param mixed $button
+     */
+    public function setButton($button)
+    {
+        $this->button = $button;
     }
 }

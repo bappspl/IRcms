@@ -66,5 +66,10 @@ class MailConfigFormFilter extends InputFilter
             ),
         ));
 
+        $this->add(array(
+            'name'       => 'settings',
+            'required' => false
+        ));
+
 	}
 }

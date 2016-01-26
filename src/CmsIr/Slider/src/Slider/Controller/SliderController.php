@@ -148,7 +148,7 @@ class SliderController extends AbstractActionController
     public function itemsAction()
     {
         $sliderId = $this->params()->fromRoute('slider_id');
-        $items = $this->getSliderItemTable()->getBy(array('slider_id' => $sliderId));
+        $items = $this->getSliderItemTable()->getBy(array('slider_id' => $sliderId), 'position ASC');
 
         $viewParams = array();
         $viewParams['sliderId'] = $sliderId;

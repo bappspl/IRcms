@@ -16,7 +16,7 @@ class PostService implements ServiceLocatorAwareInterface
 
     public function findLastPostsByLangIdWithBlocks($langId, $category, $dateFormat, $counter = null)
     {
-        $posts = $this->getPostTable()->getBy(array('status_id' => 1, 'category' => $category), 'id DESC', $counter);
+        $posts = $this->getPostTable()->getBy(array('status_id' => 1, 'category' => $category), 'date DESC', $counter);
 
         /* @var $post Post */
         foreach ($posts as $post) {
@@ -37,6 +37,9 @@ class PostService implements ServiceLocatorAwareInterface
                     case 'content':
                         $post->setContent($block->getValue());
                         break;
+                    case 'short_content':
+                        $post->setShortContent($block->getValue());
+                        break;
                     case 'client':
                         $post->setClient($block->getValue());
                         break;
@@ -52,6 +55,10 @@ class PostService implements ServiceLocatorAwareInterface
             $date = $post->getDate();
             $date = new \DateTime($date);
             $post->setDate($date->format($dateFormat));
+
+            //tags
+            $tags = $this->getTagService()->findAsAssocArrayForEntity($post->getId(), 'Post');
+            $post->setTags($tags);
 
             $files = $this->getFileTable()->getBy(array('entity_type' => 'Post', 'entity_id' => $post->getId()));
             $post->setFiles($files);
@@ -89,12 +96,20 @@ class PostService implements ServiceLocatorAwareInterface
                 case 'content':
                     $post->setContent($block->getValue());
                     break;
+                case 'short_content':
+                    $post->setShortContent($block->getValue());
+                    break;
             }
         }
 
         /* @var $user Users */
         $user = $this->getUsersTable()->getOneBy(array('id' => $post->getAuthorId()));
-        $post->setAuthor($user->getName() . ' ' . $user->getSurname());
+
+        if(!empty($user)) {
+            $post->setAuthor($user->getName() . ' ' . $user->getSurname());
+        } else {
+            $post->setAuthor('');
+        }
 
         $date = $post->getDate();
         $date = new \DateTime($date);
@@ -124,6 +139,9 @@ class PostService implements ServiceLocatorAwareInterface
                         break;
                     case 'content':
                         $post->setContent($block->getValue());
+                        break;
+                    case 'short_content':
+                        $post->setShortContent($block->getValue());
                         break;
                     case 'url':
                         $post->setUrl($block->getValue());
@@ -192,6 +210,14 @@ class PostService implements ServiceLocatorAwareInterface
     public function getFileTable()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+    }
+
+    /**
+     * @return \CmsIr\Tag\Service\TagService
+     */
+    public function getTagService()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Tag\Service\TagService');
     }
 
     /**

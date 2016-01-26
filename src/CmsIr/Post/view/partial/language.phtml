@@ -29,6 +29,12 @@
                                 <label> Tytuł </label>
                                 <input name="<?php echo $lang->getUrlShortcut() ?>-title" id="title" type="text" placeholder="Wprowadź tytuł" value="<?php echo isset($values[$lang->getUrlShortcut(). '-title']) ? $values[$lang->getUrlShortcut(). '-title'] : '' ?>" class="form-control">
                             </div>
+
+                            <div class="form-group  has-feedback">
+                                <label> Krótki opis </label>
+                                <textarea name="<?php echo $lang->getUrlShortcut() ?>-short_content" id="short_content" placeholder="Wprowadź krótki opis" class="summernote-lg"><?php echo isset($values[$lang->getUrlShortcut(). '-short_content']) ? $values[$lang->getUrlShortcut(). '-short_content'] : '' ?></textarea>
+                            </div>
+
                             <div class="form-group  has-feedback">
                                 <label> Zawartość strony </label>
                                 <textarea name="<?php echo $lang->getUrlShortcut() ?>-content" id="content" placeholder="Wprowadź zawartość strony" class="summernote-lg"><?php echo isset($values[$lang->getUrlShortcut(). '-content']) ? $values[$lang->getUrlShortcut(). '-content'] : '' ?></textarea>

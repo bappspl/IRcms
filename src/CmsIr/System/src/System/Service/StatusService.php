@@ -14,7 +14,7 @@ class StatusService implements ServiceLocatorAwareInterface
 
     public function findAsAssocArray()
     {
-        $statuses = $this->getStatusTable()->getAll();
+        $statuses = $this->getStatusTable()->getBy(array(), 'id asc', 2);
 
         $assoc = array();
 

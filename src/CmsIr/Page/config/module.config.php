@@ -16,6 +16,8 @@ return array(
             'partial/status-massive-page-modal'  => __DIR__ . '/../view/partial/status-massive-page-modal.phtml',
             'partial/add-new-menu-item-modal'  => __DIR__ . '/../view/partial/add-new-menu-item-modal.phtml',
             'partial/language-page'  => __DIR__ . '/../view/partial/language.phtml',
+            'partial/language-page-part'  => __DIR__ . '/../view/partial/language-part.phtml',
+            'partial/parts'  => __DIR__ . '/../view/partial/parts.phtml',
         ),
         'template_path_stack' => array(
             'page' => __DIR__ . '/../view'

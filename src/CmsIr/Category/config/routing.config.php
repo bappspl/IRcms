@@ -1,17 +1,6 @@
 <?php
 return array(
     'category-main' => array(
-        'type'    => 'Segment',
-        'options' => array(
-            'route'    => '/cms-ir/category',
-            'defaults' => array(
-                'module' => 'CmsIr\Category',
-                'controller' => 'CmsIr\Category\Controller\Category',
-                'action'     => 'list',
-            ),
-        ),
-    ),
-    'category' => array(
         'may_terminate' => true,
         'type'    => 'Segment',
         'options' => array(
@@ -21,38 +10,20 @@ return array(
                 'controller' => 'CmsIr\Category\Controller\Category',
                 'action'     => 'list',
             ),
-            'constraints' => array(
-                'category' => '[a-zA-Z0-9_-]+'
+        )
+    ),
+    'category-upload' => array(
+        'may_terminate' => true,
+        'type'    => 'Segment',
+        'options' => array(
+            'route'    => '/cms-ir/category-upload',
+            'defaults' => array(
+                'module' => 'CmsIr\Category',
+                'controller' => 'CmsIr\Category\Controller\Category',
+                'action'     => 'list',
             ),
         ),
         'child_routes' => array(
-            'create' => array(
-                'may_terminate' => true,
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/create',
-                    'defaults' => array(
-                        'module' => 'CmsIr\Category',
-                        'controller' => 'CmsIr\Category\Controller\Category',
-                        'action' => 'create',
-                    ),
-                ),
-            ),
-            'edit' => array(
-                'may_terminate' => true,
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/edit/:category_id',
-                    'defaults' => array(
-                        'module' => 'CmsIr\Category',
-                        'controller' => 'CmsIr\Category\Controller\Category',
-                        'action' => 'edit',
-                    ),
-                    'constraints' => array(
-                        'category_id' => '[0-9]+'
-                    ),
-                ),
-            ),
             'delete' => array(
                 'may_terminate' => true,
                 'type' => 'Segment',
@@ -117,6 +88,51 @@ return array(
                         'action'     => 'deletePhotoMain',
                     ),
                     'constraints' => array(
+                    ),
+                ),
+            ),
+        ),
+    ),
+    'category' => array(
+        'may_terminate' => true,
+        'type'    => 'Segment',
+        'options' => array(
+            'route'    => '/cms-ir/category[/:type]',
+            'defaults' => array(
+                'module' => 'CmsIr\Category',
+                'controller' => 'CmsIr\Category\Controller\Category',
+                'action'     => 'list',
+            ),
+            'constraints' => array(
+                'category' => '[a-zA-Z0-9_-]+',
+                'type' => '[a-zA-Z0-9_-]+'
+            ),
+        ),
+        'child_routes' => array(
+            'create' => array(
+                'may_terminate' => true,
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/create',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Category',
+                        'controller' => 'CmsIr\Category\Controller\Category',
+                        'action' => 'create',
+                    ),
+                ),
+            ),
+            'edit' => array(
+                'may_terminate' => true,
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/edit/:category_id',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Category',
+                        'controller' => 'CmsIr\Category\Controller\Category',
+                        'action' => 'edit',
+                    ),
+                    'constraints' => array(
+                        'category_id' => '[0-9]+'
                     ),
                 ),
             ),

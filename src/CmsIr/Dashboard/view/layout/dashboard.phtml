@@ -15,11 +15,13 @@
         ->prependStylesheet($this->basePath() . '/css/style-responsive.css')
         ->prependStylesheet($this->basePath() . '/css/style.css')
         ->prependStylesheet($this->basePath() . '/plugins/icheck/skins/all.css')
+        ->prependStylesheet($this->basePath() . '/css/select2.min.css')
         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css');
     ?>
 
     <!-- Scripts -->
     <?php echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/select2.min.js')
         ->prependFile($this->basePath() . '/js/apps.js')
         ->prependFile($this->basePath() . '/plugins/icheck/icheck.min.js')
         ->prependFile($this->basePath() . '/plugins/backstretch/jquery.backstretch.min.js')
