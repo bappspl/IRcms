@@ -39,8 +39,8 @@
     <div class="login-header text-center">
 <!--        <img src="--><?php //echo $this->basePath() ?><!--/img/logo-login.png" class="logo" alt="Logo">-->
         <a href="<?php echo $this->url('home') ?>"><img class="logo" id="logo"
-                                                        src="/images-front/logo-lombard.svg" width="120px"
-                                                        alt="Lombard"></a>
+                                                        src="<?php echo $this->basePath('img/logo-login.png') ?>" width="120px"
+                                                        alt="Logo"></a>
     </div>
     <div class="login-wrapper">
         <?php echo $this->content; ?>
