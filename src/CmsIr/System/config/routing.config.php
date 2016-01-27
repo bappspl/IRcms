@@ -38,4 +38,15 @@ return array(
             ),
         ),
     ),
+    'send-test-email' => array(
+        'type'    => 'Segment',
+        'options' => array(
+            'route'    => '/cms-ir/send-test-email',
+            'defaults' => array(
+                'module' => 'CmsIr\System',
+                'controller' => 'CmsIr\System\Controller\System',
+                'action'     => 'sendTestEmail',
+            ),
+        ),
+    ),
 );

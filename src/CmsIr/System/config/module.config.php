@@ -17,6 +17,9 @@ return array(
             'system' => __DIR__ . '/../view'
         ),
         'display_exceptions' => true,
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
     ),
     'service_manager' => array(
         'abstract_factories' => array(

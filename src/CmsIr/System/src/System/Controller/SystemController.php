@@ -7,8 +7,10 @@ use CmsIr\Video\Model\Video;
 use PHPThumb\GD;
 use CmsIr\System\Form\MailConfigForm;
 use CmsIr\System\Form\MailConfigFormFilter;
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
 use Zend\Db\Sql\Predicate;
@@ -109,7 +111,31 @@ class SystemController extends AbstractActionController
             $gd->save($pathToThumbs . '/' . $fileName);
             $gd->show();
         }
+    }
 
+    public function sendTestEmailAction()
+    {
+        /* @var $request Request */
+        $request = $this->getRequest();
+        $viewModel = new ViewModel();
+
+        if ($request->isXmlHttpRequest()) {
+            $viewModel->setTerminal($request->isXmlHttpRequest());
+
+            $this->getMailConfigService()->send('Testowy e-mail', 'Treść testowego maila');
+
+            return new JsonModel(array(
+                'success' => true
+            ));
+        }
+    }
+
+    /**
+     * @return \CmsIr\System\Service\MailConfigService
+     */
+    public function getMailConfigService()
+    {
+        return $this->getServiceLocator()->get('mail.transport');
     }
 
     /**
