@@ -11,6 +11,7 @@ class Dictionary extends Model
     protected $websiteId;
     protected $filename;
     protected $categoryId;
+    protected $position;
 
     // virtual columns
     protected $blocks;
@@ -25,6 +26,7 @@ class Dictionary extends Model
         $this->websiteId = (!empty($data['website_id'])) ? $data['website_id'] : null;
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
         $this->categoryId = (!empty($data['category_id'])) ? $data['category_id'] : null;
+        $this->position = (!empty($data['position'])) ? $data['position'] : null;
     }
 
     /**
@@ -169,6 +171,22 @@ class Dictionary extends Model
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 
 }

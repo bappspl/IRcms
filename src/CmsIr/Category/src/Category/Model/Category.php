@@ -11,6 +11,7 @@ class Category extends Model
     protected $slug;
     protected $filename_main;
     protected $type;
+    protected $position;
 
     // virtual columns
     protected $blocks;
@@ -28,6 +29,7 @@ class Category extends Model
         $this->content = (!empty($data['content'])) ? $data['content'] : null;
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
         $this->type = (!empty($data['type'])) ? $data['type'] : null;
+        $this->position = (!empty($data['position'])) ? $data['position'] : null;
     }
 
     /**
@@ -156,5 +158,37 @@ class Category extends Model
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }

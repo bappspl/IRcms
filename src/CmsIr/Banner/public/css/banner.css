@@ -21,5 +21,8 @@
 }
 .deletePhoto i:hover {
     opacity: 1;
+}
 
+#datatable-banner tr:hover {
+    cursor: ns-resize;
 }

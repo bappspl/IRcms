@@ -26,3 +26,7 @@
 .files-main{
     margin-top: 15px;
 }
+
+#datatable-gallery tr:hover {
+    cursor: ns-resize;
+}

@@ -23,7 +23,7 @@ class TagController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'id');
+            $columns = array('id', 'name', 'position', 'id');
 
             $listData = $this->getTagTable()->getTagDatatables($columns, $data);
 
@@ -152,6 +152,20 @@ class TagController extends AbstractActionController
             'id'    => $id,
             'page'  => $this->getTagTable()->getOneBy(array('id' => $id))
         );
+    }
+
+    public function changePositionAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getTagTable()->changePosition($position);
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
     }
 
     /**

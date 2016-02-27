@@ -127,6 +127,19 @@ return array(
                     ),
                 ),
             ),
+            'change-position' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-position',
+                    'defaults' => array(
+                        'module' => 'CmsIr\File',
+                        'controller' => 'CmsIr\File\Controller\Gallery',
+                        'action'     => 'changePosition',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );

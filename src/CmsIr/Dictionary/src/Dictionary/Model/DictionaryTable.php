@@ -115,12 +115,17 @@ class DictionaryTable extends ModelTable
             'website_id' => $dictionary->getWebsiteId(),
             'filename' => $dictionary->getFilename(),
             'category_id' => $dictionary->getCategoryId(),
+            'position' => $dictionary->getPosition(),
         );
 
         $id = (int) $dictionary->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
+
+            $pos = array('position' => $id);
+
+            $this->tableGateway->update($pos, array('id' => $id));
         } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));

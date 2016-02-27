@@ -10,14 +10,16 @@ class Gallery extends Model
     protected $status_id;
     protected $name;
     protected $slug;
-    protected $url;
     protected $filename_main;
     protected $category_id;
+    protected $position;
 
     //virtual
     protected $files;
     protected $title;
     protected $category;
+    protected $url;
+
 
     public function exchangeArray($data)
     {
@@ -25,11 +27,12 @@ class Gallery extends Model
         $this->status_id = (!empty($data['status_id'])) ? $data['status_id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->slug = (!empty($data['slug'])) ? $data['slug'] : null;
-        $this->url = (!empty($data['url'])) ? $data['url'] : Inflector::slugify($data['name']);
+        $this->url = (!empty($data['url'])) ? $data['url'] : null;
         $this->filename_main = (!empty($data['filename_main'])) ? $data['filename_main'] : null;
         $this->category_id = (!empty($data['category_id'])) ? $data['category_id'] : null;
         $this->files = (!empty($data['files'])) ? $data['files'] : null;
         $this->category = (!empty($data['category'])) ? $data['category'] : null;
+        $this->position = (!empty($data['position'])) ? $data['position'] : null;
     }
 
     /**
@@ -190,5 +193,21 @@ class Gallery extends Model
     public function setCategory($category)
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }

@@ -29,7 +29,7 @@ class CategoryController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'id');
+            $columns = array('id', 'name', 'position', 'id');
 
             $listData = $this->getCategoryTable()->getCategoryDatatables($columns, $data, $type);
 
@@ -285,6 +285,20 @@ class CategoryController extends AbstractActionController
             } else {
                 unlink('./public'.$filePath);
             }
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
+    public function changePositionAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getCategoryTable()->changePosition($position);
         }
 
         $jsonObject = Json::encode($params['status'] = 'success', true);

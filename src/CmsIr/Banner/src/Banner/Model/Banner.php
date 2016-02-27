@@ -12,6 +12,7 @@ class Banner extends Model
     protected $url;
     protected $filename;
     protected $target;
+    protected $position;
 
     public function exchangeArray($data)
     {
@@ -22,6 +23,7 @@ class Banner extends Model
         $this->url = (!empty($data['url'])) ? $data['url'] : null;
         $this->filename = (!empty($data['filename'])) ? $data['filename'] : null;
         $this->target = (!empty($data['target'])) ? $data['target'] : null;
+        $this->position = (!empty($data['position'])) ? $data['position'] : null;
     }
 
     /**
@@ -134,5 +136,21 @@ class Banner extends Model
     public function setTarget($target)
     {
         $this->target = $target;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }

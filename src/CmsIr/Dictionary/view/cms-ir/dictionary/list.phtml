@@ -8,6 +8,7 @@
                 <tr>
                     <th class="dt-body-center"><input type="checkbox" name="check-all" class="check-all i-grey" data-toggle="tooltip" title="Podgląd" /></th>
                     <th>Nazwa</th>
+                    <th>position</th>
                     <th class="action-column">Akcje</th>
                 </tr>
                 </thead>
@@ -35,7 +36,9 @@
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/jquery.dataTables.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/bootstrap.datatable.min.css'); ?>
 <?php $this->headLink()->appendStylesheet($this->basePath().'/css/dictionary.css'); ?>
+<?php $this->headLink()->appendStylesheet($this->basePath().'/css/rowReorder.bootstrap.min.css'); ?>
 
 <?php $this->headScript()->appendFile($this->basePath().'/js/jquery.dataTables.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/bootstrap.datatable.js'); ?>
+<?php $this->headScript()->appendFile($this->basePath().'/js/dataTables.rowReorder.min.js'); ?>
 <?php $this->headScript()->appendFile($this->basePath().'/js/dictionary-list.js'); ?>

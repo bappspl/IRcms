@@ -2,6 +2,7 @@
 namespace CmsIr\File\Model;
 
 use CmsIr\System\Model\ModelTable;
+use CmsIr\System\Util\Inflector;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\TableGateway;
@@ -56,17 +57,21 @@ class GalleryTable extends ModelTable implements ServiceLocatorAwareInterface
     {
         $data = array(
             'name' => $gallery->getName(),
-            'slug' => $gallery->getSlug(),
-            'url' => $gallery->getUrl(),
+            'slug' => Inflector::slugify($gallery->getName()),
             'status_id' => $gallery->getStatusId(),
             'category_id' => $gallery->getCategoryId(),
             'filename_main' => $gallery->getFilenameMain(),
+            'position' => $gallery->getPosition(),
         );
 
         $id = (int) $gallery->getId();
         if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
+
+            $pos = array('position' => $id);
+
+            $this->tableGateway->update($pos, array('id' => $id));
         } else {
             if ($this->getOneBy(array('id' => $id))) {
                 $this->tableGateway->update($data, array('id' => $id));

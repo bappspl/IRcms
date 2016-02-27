@@ -22,3 +22,7 @@
 .deletePhoto i:hover {
     opacity: 1;
 }
+
+#datatable-dictionary tr:hover {
+    cursor: ns-resize;
+}

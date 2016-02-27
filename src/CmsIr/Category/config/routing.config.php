@@ -136,6 +136,19 @@ return array(
                     ),
                 ),
             ),
+            'change-position' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-position',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Category',
+                        'controller' => 'CmsIr\Category\Controller\Category',
+                        'action'     => 'changePosition',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );

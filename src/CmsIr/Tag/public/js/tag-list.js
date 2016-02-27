@@ -17,7 +17,11 @@ $(function () {
             "paginate":true,
             "sortable": true,
             "searchable": true,
-            "order": [[ 1, "desc" ]],
+            "order": [[ 2, "asc" ]],
+            "rowReorder": {
+                update: false,
+                selector: 'td:not(:last-child):not(:first-child)'
+            },
             "columnDefs": [
                 {
                     "targets": [ 0 ],
@@ -31,7 +35,7 @@ $(function () {
                     "sortable": false
                 },
                 {
-                    "targets": [ 2 ],
+                    "targets": [ 3 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
                         if ( type === 'display' ) {
                             return '<a href="tag/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
@@ -45,6 +49,11 @@ $(function () {
                 {
                     "sortable": false,
                     "targets": [ -1 ]
+                },
+                {
+                    "targets": [ 2 ],
+                    "visible": false,
+                    "className": "never"
                 }
             ],
             "drawCallback": function(  data ) {
@@ -196,6 +205,28 @@ $(function () {
                 });
 
             }).modal('show');
+        });
+
+        table.on( 'row-reorder', function ( e, diff, edit ) {
+            var result = [];
+
+            for ( var i=0, ien=diff.length ; i<ien ; i++ ) {
+                var rowData = table.row( diff[i].node ).data();
+                result[rowData[0]] = diff[i].newPosition + 1;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/cms-ir/tag/change-position",
+                dataType : 'json',
+                data: {
+                    position: result
+                },
+                success: function(json)
+                {
+                    table.ajax.reload();
+                }
+            });
         });
 
     }

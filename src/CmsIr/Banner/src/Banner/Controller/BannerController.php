@@ -20,7 +20,7 @@ class BannerController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'statusId', 'status', 'id');
+            $columns = array('id', 'name', 'statusId', 'status', 'position', 'id');
 
             $listData = $this->getBannerTable()->getDatatables($columns, $data);
 
@@ -225,6 +225,20 @@ class BannerController extends AbstractActionController
             } else {
                 unlink('./public'.$filePath);
             }
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
+    public function changePositionAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getBannerTable()->changePosition($position);
         }
 
         $jsonObject = Json::encode($params['status'] = 'success', true);

@@ -3,6 +3,7 @@
 namespace CmsIr\Authorize\Service;
 
 use CmsIr\Authorize\Acl\Acl;
+use Zend\EventManager\EventInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

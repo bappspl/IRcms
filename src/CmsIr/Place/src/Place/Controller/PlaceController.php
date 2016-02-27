@@ -18,7 +18,7 @@ class PlaceController extends AbstractActionController {
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'latitude', 'longitude', 'id');
+            $columns = array('id', 'name', 'latitude', 'longitude', 'position', 'id');
 
             $listData = $this->getPlaceTable()->getDatatables($columns, $data);
             $output = array(
@@ -165,6 +165,19 @@ class PlaceController extends AbstractActionController {
         return array();
     }
 
+    public function changePositionAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getPlaceTable()->changePosition($position);
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
 
     /**
      * @return \CmsIr\Place\Model\PlaceTable

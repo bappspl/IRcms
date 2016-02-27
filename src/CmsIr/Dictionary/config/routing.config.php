@@ -94,6 +94,19 @@ return array(
                     ),
                 ),
             ),
+            'change-position' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-position',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Dictionary',
+                        'controller' => 'CmsIr\Dictionary\Controller\Dictionary',
+                        'action'     => 'changePosition',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );

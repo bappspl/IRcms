@@ -24,7 +24,7 @@ class DictionaryController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'id');
+            $columns = array('id', 'name', 'position', 'id');
 
             $listData = $this->getDictionaryTable()->getDictionaryDatatables($columns, $data, $category);
 
@@ -245,6 +245,20 @@ class DictionaryController extends AbstractActionController
             $filePath = $request->getPost('filePath');
 
             unlink('./public'.$filePath);
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
+    public function changePositionAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getDictionaryTable()->changePosition($position);
         }
 
         $jsonObject = Json::encode($params['status'] = 'success', true);

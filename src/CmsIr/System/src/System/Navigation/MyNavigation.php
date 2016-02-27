@@ -12,7 +12,6 @@ class MyNavigation extends DefaultNavigationFactory
             //FETCH data from table menu :
             $fetchMenu = $serviceLocator->get('menu')->fetchAll();
 
-
             foreach($fetchMenu as $key => $row) {
                 $configuration['navigation'][$this->getName()][$row['name']] = array(
                     'label' => $row['label'],

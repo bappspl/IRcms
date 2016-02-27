@@ -68,6 +68,19 @@ return array(
                     ),
                 ),
             ),
+            'change-position' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/change-position',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Tag',
+                        'controller' => 'CmsIr\Tag\Controller\Tag',
+                        'action'     => 'changePosition',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );

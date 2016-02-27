@@ -37,6 +37,10 @@ tr.shown td.details-control {
     width: 15px;
 }
 
+#datatable-page tr:hover {
+     cursor: ns-resize;
+ }
+
 /**
  * Nestable
  */

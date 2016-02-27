@@ -7,6 +7,7 @@ class Tag extends Model
 {
     protected $id;
     protected $name;
+    protected $position;
 
     // virtual columns
     protected $blocks;
@@ -16,6 +17,7 @@ class Tag extends Model
         $this->id = (!empty($data['id'])) ? $data['id'] : null;
         $this->name = (!empty($data['name'])) ? $data['name'] : null;
         $this->blocks = (!empty($data['blocks'])) ? $data['blocks'] : null;
+        $this->position = (!empty($data['position'])) ? $data['position'] : null;
     }
 
     /**
@@ -64,5 +66,21 @@ class Tag extends Model
     public function setBlocks($blocks)
     {
         $this->blocks = $blocks;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }

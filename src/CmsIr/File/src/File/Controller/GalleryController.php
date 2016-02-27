@@ -24,7 +24,7 @@ class GalleryController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'statusId', 'status', 'id');
+            $columns = array('id', 'name', 'statusId', 'status', 'position', 'id');
 
             $listData = $this->getGalleryTable()->getDatatables($columns,$data);
 
@@ -62,7 +62,6 @@ class GalleryController extends AbstractActionController
             if ($form->isValid()) {
                 $gallery = new Gallery();
                 $gallery->exchangeArray($form->getData());
-                $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
                 $id = $this->getGalleryTable()->save($gallery);
 
@@ -124,11 +123,6 @@ class GalleryController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                if(strlen($gallery->getUrl()) == 0) {
-                    $gallery->setUrl(Inflector::slugify($gallery->getName()));
-                }
-
-                $gallery->setSlug(Inflector::slugify($gallery->getName()));
 
                 $id = $this->getGalleryTable()->save($gallery);
 
@@ -328,6 +322,20 @@ class GalleryController extends AbstractActionController
             } else {
                 unlink('./public'.$filePath);
             }
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
+    }
+
+    public function changePositionAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $position = $request->getPost('position');
+
+            $this->getGalleryTable()->changePosition($position);
         }
 
         $jsonObject = Json::encode($params['status'] = 'success', true);

@@ -1,3 +1,6 @@
 .spinner {
     display: none;
 }
+#datatable-place tr:hover {
+    cursor: ns-resize;
+}

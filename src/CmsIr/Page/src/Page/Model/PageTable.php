@@ -52,7 +52,9 @@ class PageTable extends ModelTable implements ServiceLocatorAwareInterface
         $filteredRows = $this->tableGateway->select(function(Select $select) use ($trueLimit, $trueOffset, $sorting, $where){
             $select
                 ->where($where)
-                ->order($sorting[0] . ' ' . $sorting[1]);
+                ->order($sorting[0] . ' ' . $sorting[1])
+                ->limit($trueLimit)
+                ->offset($trueOffset);
         });
 
         $dataArray = $this->getDataToDisplay($filteredRows, $columns);

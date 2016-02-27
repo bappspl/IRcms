@@ -2,7 +2,8 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'CmsIr\System\Controller\System' => 'CmsIr\System\Controller\SystemController'
+            'CmsIr\System\Controller\System' => 'CmsIr\System\Controller\SystemController',
+            'CmsIr\System\Console\FakeDataCommand' => 'CmsIr\System\Console\FakeDataCommand',
         ),
     ),
     'router' => array(
@@ -48,6 +49,22 @@ return array(
             'customFormHelper' => 'CmsIr\System\View\Helper\FormInput',
             'languageHelper' => 'CmsIr\System\View\Helper\Language',
         ),
+    ),
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+                'fake-data' => array(
+                    'options' => array(
+                        'route' => 'fake-data',
+                        'defaults' => array(
+                            'module' => 'CmsIr\System',
+                            'controller' => 'CmsIr\System\Console\FakeDataCommand',
+                            'action'     => 'createFakeData',
+                        ),
+                    ),
+                ),
+            )
+        )
     ),
 //    'change-access' => array(
 //        'path' => './config/autoload/acl.global.php',

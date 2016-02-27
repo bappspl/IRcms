@@ -17,7 +17,11 @@ $(function () {
             "paginate":true,
             "sortable": true,
             "searchable": true,
-            "order": [[ 1, "desc" ]],
+            "order": [[ 4, "asc" ]],
+            "rowReorder": {
+                update: false,
+                selector: 'td:not(:last-child):not(:first-child)'
+            },
             "columnDefs": [
                 {
                     "targets": [ 0 ],
@@ -32,7 +36,7 @@ $(function () {
                 },
                 { "orderData": 2, "targets": [ 3 ] },
                 {
-                    "targets": [ 4 ],
+                    "targets": [ 5 ],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
                         if ( type === 'display' ) {
                             return  '<a href="banner/edit/'+data+'" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ' +
@@ -48,7 +52,7 @@ $(function () {
                     "targets": [ -1 ]
                 },
                 {
-                    "targets": [ 2 ],
+                    "targets": [ 2, 4 ],
                     "visible": false,
                     "className": "never"
                 }
@@ -232,6 +236,28 @@ $(function () {
                 });
 
             }).modal('show');
+        });
+
+        table.on( 'row-reorder', function ( e, diff, edit ) {
+            var result = [];
+
+            for ( var i=0, ien=diff.length ; i<ien ; i++ ) {
+                var rowData = table.row( diff[i].node ).data();
+                result[rowData[0]] = diff[i].newPosition + 1;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/cms-ir/banner/change-position",
+                dataType : 'json',
+                data: {
+                    position: result
+                },
+                success: function(json)
+                {
+                    table.ajax.reload();
+                }
+            });
         });
 
     }

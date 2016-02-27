@@ -35,8 +35,7 @@ class BlockService implements ServiceLocatorAwareInterface
             }
         }
 
-        foreach($postArrayValues as $k =>$value)
-        {
+        foreach($postArrayValues as $k => $value) {
             if(strpos($k, '-') !== false && strlen($value) > 0) {
                 $split = explode('-', $k);
                 $lang = $split[0];

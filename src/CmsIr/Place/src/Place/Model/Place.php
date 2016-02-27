@@ -16,6 +16,7 @@ class Place extends Model
     protected $city;
     protected $street;
     protected $street_number;
+    protected $position;
 
     public function exchangeArray($data)
     {
@@ -28,6 +29,7 @@ class Place extends Model
         $this->city = (!empty($data['city'])) ? $data['city'] : null;
         $this->street = (!empty($data['street'])) ? $data['street'] : null;
         $this->street_number = (!empty($data['street_number'])) ? $data['street_number'] : null;
+        $this->position = (!empty($data['position'])) ? $data['position'] : null;
     }
 
     /**
@@ -174,4 +176,19 @@ class Place extends Model
         $this->street_number = $street_number;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
 }
