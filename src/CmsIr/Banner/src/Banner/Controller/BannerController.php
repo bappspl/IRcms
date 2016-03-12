@@ -2,38 +2,30 @@
 namespace CmsIr\Banner\Controller;
 
 use CmsIr\Banner\Form\BannerForm;
+
 use CmsIr\Banner\Form\BannerFormFilter;
-use CmsIr\Banner\Model\Banner;
-use CmsIr\System\Util\Inflector;
+use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Adapter\DbTable as AuthAdapter;
-use Zend\Json\Json;
 
 class BannerController extends AbstractActionController
 {
-    protected $uploadDir = 'public/files/banner/';
 
     public function listAction()
     {
+        /* @var $banner \CmsIr\Banner\Entity\Banner */
+        $banner = $this->getEm()->find(\CmsIr\Banner\Entity\Banner::ENTITY, 1);
+
         $request = $this->getRequest();
+
         if ($request->isPost()) {
-
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'statusId', 'status', 'position', 'id');
+            $output = $this->getBannerService()->getDataTables($data);
 
-            $listData = $this->getBannerTable()->getDatatables($columns, $data);
-
-            $output = array(
-                "sEcho" => $this->getRequest()->getPost('sEcho'),
-                "iTotalRecords" => $listData['iTotalRecords'],
-                "iTotalDisplayRecords" => $listData['iTotalDisplayRecords'],
-                "aaData" => $listData['aaData']
-            );
-
-            $jsonObject = Json::encode($output, true);
-            echo $jsonObject;
-            return $this->response;
+            $result = new JsonModel($output);
+            return $result;
         }
 
         $viewParams = array();
@@ -45,7 +37,6 @@ class BannerController extends AbstractActionController
     public function createAction()
     {
         $form = new BannerForm();
-
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -53,11 +44,7 @@ class BannerController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $banner = new Banner();
-                $banner->exchangeArray($form->getData());
-                $banner->setSlug(Inflector::slugify($banner->getName()));
-
-                $id = $this->getBannerTable()->save($banner);
+                $this->getBannerService()->createBanner($form->getData());
 
                 $this->flashMessenger()->addMessage('Baner została dodany poprawnie.');
                 return $this->redirect()->toRoute('banner');
@@ -76,7 +63,7 @@ class BannerController extends AbstractActionController
         $id = $this->params()->fromRoute('banner_id');
 
         /* @var $banner Banner */
-        $banner = $this->getBannerTable()->getOneBy(array('id' => $id));
+        $banner = $this->getBannerService()->getBanner($id);
 
         if(!$banner) {
             return $this->redirect()->toRoute('banner');
@@ -91,9 +78,7 @@ class BannerController extends AbstractActionController
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $banner->setSlug(Inflector::slugify($banner->getName()));
-
-                $id = $this->getBannerTable()->save($banner);
+                $this->getBannerService()->editBanner($form->getData());
 
                 $this->flashMessenger()->addMessage('Baner został edytowana poprawnie.');
                 return $this->redirect()->toRoute('banner');
@@ -120,40 +105,24 @@ class BannerController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Tak') {
-                $id = $request->getPost('id');
+                $ids = $request->getPost('id');
 
-                if(!is_array($id)) {
-                    $id = array($id);
+                if(!is_array($ids)) {
+                    $ids = array($ids);
                 }
 
-                foreach($id as $oneId) {
-                    $bannerFiles = $this->getFileTable()->getBy(array('entity_type' => 'page', 'entity_id' => $oneId));
+                $this->getBannerService()->deleteBanner($ids);
 
-                    if((!empty($bannerFiles))) {
-                        foreach($bannerFiles as $file) {
-                            unlink('./public/files/banner/'.$file->getFilename());
-                            $this->getFileTable()->deleteFile($file->getId());
-                        }
-                    }
-                }
-
-                $this->getBannerTable()->deleteBanner($id);
                 $this->flashMessenger()->addMessage('Baner został usunięty poprawnie.');
                 $modal = $request->getPost('modal', false);
+
                 if($modal == true) {
-                    $jsonObject = Json::encode($params['status'] = $id, true);
-                    echo $jsonObject;
-                    return $this->response;
+                    return new JsonModel(array('status' => $id));
                 }
             }
 
             return $this->redirect()->toRoute('banner');
         }
-
-        return array(
-            'id'    => $id,
-            'page' => $this->getBannerTable()->getOneBy(array('id' => $id))
-        );
     }
 
     public function changeStatusAction()
@@ -169,16 +138,12 @@ class BannerController extends AbstractActionController
             $del = $request->getPost('del', 'Anuluj');
 
             if ($del == 'Zapisz') {
-                $id = $request->getPost('id');
-                $statusId = $request->getPost('statusId');
-
-                $this->getBannerTable()->changeStatusBanner($id, $statusId);
+                $this->getBannerService()->changeStatus($request->getPost());
 
                 $modal = $request->getPost('modal', false);
+
                 if($modal == true) {
-                    $jsonObject = Json::encode($params['status'] = 'success', true);
-                    echo $jsonObject;
-                    return $this->response;
+                    return new JsonModel(array('status' => 'success'));
                 }
             }
 
@@ -191,45 +156,23 @@ class BannerController extends AbstractActionController
     public function uploadAction ()
     {
         if (!empty($_FILES)) {
-            $tempFile   = $_FILES['Filedata']['tmp_name'];
-            $targetFile = $_FILES['Filedata']['name'];
+            $filename = $this->getBannerService()->uploadFiles($_FILES);
 
-            $file = explode('.', $targetFile);
-            $fileName = $file[0];
-            $fileExt = $file[1];
+            echo $filename;
 
-            $uniqidFilename = $fileName.'-'.uniqid();
-            $targetFile = $uniqidFilename.'.'.$fileExt;
-
-            if(move_uploaded_file($tempFile,$this->uploadDir.$targetFile)) {
-                echo $targetFile;
-            } else {
-                echo 0;
-            }
-
+            return $this->response;
         }
-        return $this->response;
     }
 
     public function deletePhotoAction()
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $id = $request->getPost('id');
-            $name = $request->getPost('name');
             $filePath = $request->getPost('filePath');
+            unlink('./public' . $filePath);
 
-            if(!empty($id)) {
-                $this->getBannerTable()->deleteBanner($id);
-                unlink('./public'.$filePath);
-            } else {
-                unlink('./public'.$filePath);
-            }
+            return new JsonModel(array('status' => 'success'));
         }
-
-        $jsonObject = Json::encode($params['status'] = 'success', true);
-        echo $jsonObject;
-        return $this->response;
     }
 
     public function changePositionAction()
@@ -238,20 +181,10 @@ class BannerController extends AbstractActionController
         if ($request->isPost()) {
             $position = $request->getPost('position');
 
-            $this->getBannerTable()->changePosition($position);
+            $this->getBannerService()->changePosition($position);
         }
 
-        $jsonObject = Json::encode($params['status'] = 'success', true);
-        echo $jsonObject;
-        return $this->response;
-    }
-
-    /**
-     * @return \CmsIr\Banner\Model\BannerTable
-     */
-    public function getBannerTable()
-    {
-        return $this->getServiceLocator()->get('CmsIr\Banner\Model\BannerTable');
+        return new JsonModel(array('status' => 'success'));
     }
 
     /**
@@ -268,5 +201,13 @@ class BannerController extends AbstractActionController
     public function getFileTable()
     {
         return $this->getServiceLocator()->get('CmsIr\File\Model\FileTable');
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEm()
+    {
+        return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     }
 }

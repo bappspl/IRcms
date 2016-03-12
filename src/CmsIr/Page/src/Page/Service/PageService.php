@@ -39,6 +39,25 @@ class PageService implements ServiceLocatorAwareInterface
         foreach($pages as $page) {
             $blocks = $this->getBlockTable()->getBy(array('entity_id' => $page->getId(), 'entity_type' => 'Page', 'language_id' => $langId));
             $page->setBlocks($blocks);
+
+            foreach($blocks as $block) {
+                $fieldName = $block->getName();
+
+                switch ($fieldName) {
+                    case 'url':
+                        $page->setUrl($block->getValue());
+                        break;
+                    case 'title':
+                        $page->setTitle($block->getValue());
+                        break;
+                    case 'content':
+                        $page->setContent($block->getValue());
+                        break;
+                    case 'subtitle':
+                        $page->setSubtitle($block->getValue());
+                        break;
+                }
+            }
         }
 
         return $pages;

@@ -280,7 +280,6 @@ $(function () {
 
                             $.each(pos, function(k, v) {
                                 endedPos[v.id] = k + 1;
-
                             });
 
                             $.ajax({

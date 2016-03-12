@@ -30,7 +30,7 @@ $(function () {
                     "sortable": false
                 },
                 {
-                    "targets": [3],
+                    "targets": [2],
                     "render": function (data, type, row) {   // o, v contains the object and value for the column
                         if (type === 'display') {
                             return '<a href="menu/edit/' + data + '" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> ';

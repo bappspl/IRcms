@@ -14,7 +14,9 @@ class BannerService implements FactoryInterface {
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = new \CmsIr\File\Service\FileService();
+        $em = $serviceLocator->get('Doctrine\ORM\EntityManager');
+
+        $service = new \CmsIr\Banner\Service\BannerService($em);
         return $service;
     }
 

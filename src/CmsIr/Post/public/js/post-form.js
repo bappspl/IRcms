@@ -54,7 +54,6 @@ $(function () {
     });
 
     $('.deletePhoto i').on('click', function () {
-
         var id = 0;
         var fullPathToImage = $(this).next().attr('src');
 
@@ -92,11 +91,10 @@ $(function () {
             $('#filename_main').val(data);
             if($('#filename_main').val().length > 0) {
                 $('.files-main img').remove();
-                $('.files-main').append('<img src="/files/post/'+data+'" class="thumb" />')
+                $('.files-main').append('<div class="deletePhoto_main"><i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i>  <img src="/files/post/'+data+'" class="thumb" /></div>')
             }
 
-            $('.deletePhoto-main i').on('click', function () {
-
+            $('.deletePhoto_main i').on('click', function () {
                 var id = 0;
                 var fullPathToImage = $(this).next().attr('src');
 
@@ -104,6 +102,9 @@ $(function () {
                 {
                     id = $(this).parent().attr('id');
                 }
+
+                $('#filename_main').val('');
+
                 $cache = $(this);
                 $.ajax({
                     type: "POST",
@@ -122,6 +123,12 @@ $(function () {
             });
         }
     });
+
+    if($('#filename_main').val().length > 0) {
+
+        var filename = $('#filename_main').val();
+        $('.files-main').append('<div class="deletePhoto_main">  <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i><img src="/files/post/'+filename+'" class="thumb" /></div>')
+    }
 
     $('.deletePhoto_main i').on('click', function () {
         var id = 0;
@@ -147,12 +154,6 @@ $(function () {
         });
 
     });
-
-    if($('#filename_main').val().length > 0) {
-
-        var filename = $('#filename_main').val();
-        $('.files-main').append('<img src="/files/post/'+filename+'" class="thumb" />')
-    }
 
     $('#upload-background').uploadifive({
         'auto'             : false,

@@ -66,10 +66,18 @@ return array(
             )
         )
     ),
-//    'change-access' => array(
-//        'path' => './config/autoload/acl.global.php',
-//        'pass' => '882b5e09db9b4d7da178b64ed98ecfc3',
-//        'access' => 'c4ca4238a0b923820dcc509a6f75849b',
-//        'no-access' => 'cfcd208495d565ef66e7dff9f98764da'
-//    )
+    'doctrine' => array(
+        'driver' => array(
+            'system_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/System/Entity')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'CmsIr\System\Entity' => 'system_driver'
+                )
+            )
+        )
+    )
 );

@@ -32,4 +32,21 @@ return array(
             'CmsIr\Banner\Service\BannerService' => 'CmsIr\Banner\Service\Factory\BannerService',
         ),
     ),
+    'doctrine' => array(
+        'driver' => array(
+            'banner_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Banner/Entity')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'CmsIr\Banner\Entity' => 'banner_driver'
+                )
+            )
+        )
+    ),
+    'strategies' => array(
+        'ViewJsonStrategy',
+    ),
 );

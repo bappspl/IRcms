@@ -139,6 +139,19 @@ return array(
                     ),
                 ),
             ),
+            'delete-photo-main' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/delete-photo-main',
+                    'defaults' => array(
+                        'module' => 'CmsIr\Post',
+                        'controller' => 'CmsIr\Post\Controller\Post',
+                        'action'     => 'deletePhotoMain',
+                    ),
+                    'constraints' => array(
+                    ),
+                ),
+            ),
         ),
     ),
 );

@@ -9,6 +9,7 @@ use CmsIr\Post\Model\Post;
 use CmsIr\System\Model\Status;
 use CmsIr\Users\Model\Users;
 use Zend\Authentication\AuthenticationService;
+use Zend\Db\Sql\Expression;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -95,6 +96,10 @@ class PostController extends AbstractActionController
 //                    $post->setExtra($serializedExtraResult);
 //                }
 
+                if(is_null($post->getDate())) {
+                    $post->setDate(new Expression('NOW()'));
+                }
+
                 if($userRoleId < 1) $post->setStatusId(2);
                 $id = $this->getPostTable()->save($post);
                 $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
@@ -108,7 +113,7 @@ class PostController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Post');
+                        $postFile->setEntityType('post');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -248,7 +253,7 @@ class PostController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Post');
+                        $postFile->setEntityType('post');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -575,6 +580,28 @@ class PostController extends AbstractActionController
                 unlink($this->uploadDir.'/'.$file);
             }
         }
+    }
+
+    public function deletePhotoMainAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $id = $request->getPost('id');
+            $name = $request->getPost('name');
+            $filePath = $request->getPost('filePath');
+
+            if(!empty($id)) {
+                $this->getFileTable()->deleteFile($id);
+                unlink('./public'.$filePath);
+
+            } else {
+                unlink('./public'.$filePath);
+            }
+        }
+
+        $jsonObject = Json::encode($params['status'] = 'success', true);
+        echo $jsonObject;
+        return $this->response;
     }
 
     private function checkExtraFields($obj, $arr)

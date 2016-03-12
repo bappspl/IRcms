@@ -3,6 +3,7 @@ $(function () {
     $('#nestable3').nestable({ maxDepth: 2 });
     $('.dd').on('change', function() {
         var json = $('.dd').nestable('serialize');
+
         $.ajax({
             type: "POST",
             url: "/cms-ir/menu/order",
@@ -24,10 +25,12 @@ $(function () {
         $('.tooltip').hide();
         var $cache = $(this);
         nodeArray = [];
+
         if(node.length > 0) {
             for(i=0; i<node.length;i++) {
                 nodeArray.push(node[i].attributes[1].value);
             }
+
             nodeArray.push(nodeId);
         } else {
             nodeArray.push(nodeId);
@@ -63,12 +66,13 @@ $(function () {
 
         var pageType = $(this).attr('id');
         var modal;
-        if(pageType == 'page')
-        {
+        if(pageType == 'page') {
             modal = 'editPageModal';
         } else {
             modal = 'editModal';
         }
+
+        $('#'+modal+' #subtitle').val('');
 
         var label = $(this).parent().parent().find('.label').text();
         var url = $(this).parent().parent().find('.url').text();
@@ -76,14 +80,13 @@ $(function () {
 
         var $cache = $(this);
         $('#'+modal).on('show.bs.modal', function () {
-            if(modal == 'editModal')
-            {
+            if(modal == 'editModal') {
                 $('#'+modal+' #label').val(label);
                 $('#'+modal+' #url').val(url);
-            } else
-            {
+            } else {
                 $('#'+modal+' #page option[value="' + url +'"]').attr("selected","selected");
             }
+
             $('#'+modal+' #subtitle').val(subtitle);
 
             $('#'+modal+' form input[name=save]').click(function (ev) {
@@ -92,12 +95,10 @@ $(function () {
 
                 $('.spinner').show();
 
-                if(modal == 'editModal')
-                {
+                if(modal == 'editModal') {
                     newLabel = $('#'+modal+' #label').val();
                     newUrl = $('#'+modal+' #url').val();
-                } else
-                {
+                } else {
                     newLabel = $('#'+modal+' select[name="page"] option:selected').text();
                     newUrl = $('#'+modal+' select[name="page"] option:selected').val();
                 }
@@ -115,8 +116,7 @@ $(function () {
                     },
                     success: function(json)
                     {
-                        if(json == 'success')
-                        {
+                        if(json == 'success') {
                             $('.spinner').hide();
 
                             $cache.parent().parent().find('.label').text(newLabel);
@@ -144,13 +144,17 @@ $(function () {
     $('.the-box').on('click', '.btn-facebook', function (e) {
         var pageType = $('#page-type').val();
         var modal;
-        if(pageType == 'page')
-        {
+
+        if(pageType == 'page') {
             modal = 'createPageModal';
-        } else
-        {
+        } else if(pageType == 'page-part'){
+            modal = 'createPagePartModal';
+        } else  {
             modal = 'createModal';
         }
+
+        $('#'+modal+' #subtitle').val('');
+
 
         $('#'+modal).on('show.bs.modal', function () {
 
@@ -160,15 +164,17 @@ $(function () {
 
                 $('.spinner').show();
 
-                if(modal == 'createModal')
-                {
+                if(modal == 'createModal') {
                     newLabel = $('#'+modal+' #label').val();
                     newUrl = $('#'+modal+' #url').val();
-                } else
-                {
+                } else if (modal == 'createPagePartModal') {
+                    newLabel = $('#'+modal+' select[name="page-part"] option:selected').text();
+                    newUrl = $('#'+modal+' select[name="page-part"] option:selected').val();
+                } else {
                     newLabel = $('#'+modal+' select[name="page"] option:selected').text();
                     newUrl = $('#'+modal+' select[name="page"] option:selected').val();
                 }
+
                 newSubtitle = $('#'+modal+' #subtitle').val();
                 var treeId = $('#treeId').val();
 
@@ -185,20 +191,16 @@ $(function () {
                     },
                     success: function(json)
                     {
-                        if(json == 'error')
-                        {
+                        if(json == 'error') {
                             $('.spinner').hide();
                             $('#'+modal+' .modal-body .form-group .group').addClass('has-error');
                             $('#'+modal+' .modal-body .form-group .group .glyphicon-remove').show();
                             $('#'+modal+' .modal-body .form-group .help-block').show();
-
-
                         } else {
-
                             $('.spinner').hide();
 
-                            var template = '<li class="dd-item dd3-item" data-id="'+json+'"><div class="dd-handle dd3-handle">Drag</div><div class="dd3-content"><span class="label">'+newLabel+'</span> <span class="url">'+newUrl+'</span><div class="pull-right"><a href="#" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> <a href="#" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a></div></div></li>';
-                            $('#nestable3 .dd-list:first-child').prepend(template);
+                            var template = '<li class="dd-item dd3-item" data-id="' + json.nodeId + '"><div class="dd-handle dd3-handle">Drag</div><div class="dd3-content"><span class="label">'+newLabel+'</span> <span class="url">'+newUrl+'</span><div class="pull-right"><a href="#" class="btn btn-primary" data-toggle="tooltip" title="Edycja"><i class="fa fa-pencil"></i></a> <a href="#" class="btn btn-danger" data-toggle="tooltip" title="Usuwanie"><i class="fa fa-trash-o"></i></a></div></div></li>';
+                            $('#nestable3 .dd-list:first-child').append(template);
 
                             $('#'+modal+' .modal-body .form-group .group').removeClass('has-error');
                             $('#'+modal+' .modal-body .form-group .group .glyphicon-remove').hide();

@@ -81,6 +81,10 @@ class MenuNodeTable extends ModelTable
         if ($id == 0) {
             $this->tableGateway->insert($data);
             $id = $this->tableGateway->lastInsertValue;
+
+            $pos = array('position' => $id);
+
+            $this->tableGateway->update($pos, array('id' => $id));
         } else {
             if ($this->getMenuNode($id)) {
                 $this->tableGateway->update($data, array('id' => $id));

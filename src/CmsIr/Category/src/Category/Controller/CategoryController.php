@@ -81,7 +81,7 @@ class CategoryController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Category');
+                        $postFile->setEntityType('category');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -140,7 +140,7 @@ class CategoryController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Category');
+                        $postFile->setEntityType('category');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);

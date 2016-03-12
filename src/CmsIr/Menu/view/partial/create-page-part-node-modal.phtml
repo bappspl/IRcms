@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal fade" id="createPageModal" tabindex="-1" role="dialog" aria-hidden="false">
+<div class="modal fade" id="createPagePartModal" tabindex="-1" role="dialog" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -13,14 +13,12 @@
                         <div class="form group has-feedback">
                             <label for="page">Strona:</label>
                             <?php if(!empty($existingPages)): ?>
-                            <select name="page" id="page" class="form-control">
-                                <?php /* @var $page \CmsIr\Page\Model\Page */ ?>
+                            <select name="page-part" id="page-part" class="form-control">
+                                <?php /* @var $page \CmsIr\Page\Model\PagePart */ ?>
+                                <?php foreach($pageParts as $page): ?>
 
-                                <?php foreach($existingPages as $page): ?>
 
-                                    <?php $pageName = $page->getName(); ?>
-
-                                    <option value="/strona/<?php echo $page->getUrl() ?>"><?php echo $pageName; ?></option>
+                                    <option value="/strona-rozbudowana/<?php echo $page->getName() ?>"><?php echo $page->getName() ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <?php else: ?>
@@ -30,10 +28,6 @@
                         </div>
                         <small data-bv-validator="notEmpty" class="help-block" style="display:none; color: #E9573F">Taki url już istnieje!</small>
 
-                    </div>
-                    <div class="form-group">
-                        <label for="subtitle">Podtytuł:</label>
-                        <input class="form-control" type="text" id="subtitle"/>
                     </div>
 
                 </div>

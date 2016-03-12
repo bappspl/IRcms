@@ -10,6 +10,7 @@ class FileService implements ServiceLocatorAwareInterface
 {
     protected $serviceLocator;
 
+
     public function findAllByCategoryAndWebsiteId($category, $websiteId)
     {
         $files = $this->getFileTable()->getBy(array('category' => $category, 'website_id' => $websiteId));

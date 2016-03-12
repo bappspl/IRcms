@@ -18,6 +18,8 @@ return array(
             'partial/create-page-node-modal'  => __DIR__ . '/../view/partial/create-page-node-modal.phtml',
             'partial/slider/form/basic-data'  => __DIR__ . '/../view/partial/form/basic-data.phtml',
             'partial/slider/form/actions'  => __DIR__ . '/../view/partial/form/actions.phtml',
+            'partial/create-page-part-node-modal'  => __DIR__ . '/../view/partial/create-page-part-node-modal.phtml',
+
         ),
         'template_path_stack' => array(
             'menu' => __DIR__ . '/../view'

@@ -169,7 +169,7 @@ class PageController extends AbstractActionController
                 $id = $this->getPageTable()->save($page);
                 $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
-                if(isset($menuItem)) {
+                if(!empty($menuItem)) {
                     $newPage = $this->getPageTable()->getOneBy(array('id' => $id));
                     $menuItem->setUrl('/strona/' . $newPage->getSlug());
                     $this->getMenuItemTable()->saveMenuItem($menuItem);
@@ -184,7 +184,7 @@ class PageController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('Page');
+                        $postFile->setEntityType('page');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -451,7 +451,7 @@ class PageController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('PagePart');
+                        $postFile->setEntityType('page-part');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);
@@ -516,7 +516,7 @@ class PageController extends AbstractActionController
                         $postFile = new File();
                         $postFile->setFilename($file);
                         $postFile->setEntityId($id);
-                        $postFile->setEntityType('PagePart');
+                        $postFile->setEntityType('page-part');
                         $postFile->setMimeType($mimeType);
 
                         $this->getFileTable()->save($postFile);

@@ -18,7 +18,7 @@ class MenuController extends AbstractActionController
         if ($request->isPost()) {
 
             $data = $this->getRequest()->getPost();
-            $columns = array('id', 'name', 'machineName', 'id');
+            $columns = array('id', 'name', 'id');
 
             $listData = $this->getMenuService()->getMenuTable()->getDatatables($columns,$data);
 
@@ -45,14 +45,15 @@ class MenuController extends AbstractActionController
 
         /* @var $activeStatus Status */
 
-//        $existingPages = $this->getPageService()->findAllActiveWithBlocksByLanguageUrlShortcut('pl');
-        $existingPages = $this->getPageTable()->getBy(array('status_id' => 1));
+        $existingPages = $this->getPageService()->findAllActiveWithBlocksByLanguageUrlShortcut('pl');
+        $existingPageParts = $this->getPagePartTable()->getAll();
 
         $viewParams = array();
         $viewParams['menu'] = $menu;
         $viewParams['menuTree'] = $menuTree;
         $viewParams['treeId'] = $treeId;
         $viewParams['existingPages'] = $existingPages;
+        $viewParams['pageParts'] = $existingPageParts;
         $viewModel = new ViewModel();
         $viewModel->setVariables($viewParams);
         return $viewModel;
@@ -156,7 +157,10 @@ class MenuController extends AbstractActionController
                 $menuItem->setPosition(0);
                 $this->getMenuService()->getMenuItemTable()->saveMenuItem($menuItem);
 
-                $jsonObject = Json::encode($params['status'] = 'success', true);
+                $jsonObject = Json::encode(array(
+                    'status' => 'success',
+                    'nodeId' => $nodeId
+                ), true);
                 echo $jsonObject;
                 return $this->response;
             } else {
@@ -201,4 +205,11 @@ class MenuController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\Page\Service\PageService');
     }
 
+    /**
+     * @return \CmsIr\Page\Model\PagePartTable
+     */
+    public function getPagePartTable()
+    {
+        return $this->getServiceLocator()->get('CmsIr\Page\Model\PagePartTable');
+    }
 }

@@ -42,4 +42,18 @@ return array(
             ),
         ),
     ),
+    'doctrine' => array(
+        'driver' => array(
+            'page_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Page/Entity')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'CmsIr\Page\Entity' => 'page_driver'
+                )
+            )
+        )
+    ),
 );
