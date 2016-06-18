@@ -176,7 +176,7 @@ class PageForm extends Form
                 'label' => 'Typ strony',
                 'value_options' => array(
                     '0' => 'Standardowa',
-                    '1' => 'Rozbudowana'
+//                    '1' => 'Rozbudowana'
                 ),
             )
         ));

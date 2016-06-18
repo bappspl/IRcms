@@ -24,24 +24,24 @@ class SystemController extends AbstractActionController
 
         $config = $this->getMailConfigTable()->getOneBy(array('id' => $id));
 
-//        if(!$config) {
-//            return $this->redirect()->toRoute('settings');
-//        }
+        if(!$config) {
+            return $this->redirect()->toRoute('settings');
+        }
 
-        $galleries = $this->getGalleryTable()->getBy(array('status_id' => 1));
-        $videos = $this->getVideoTable()->getBy(array('status_id' => 1));
-
+//        $galleries = $this->getGalleryTable()->getBy(array('status_id' => 1));
+//        $videos = $this->getVideoTable()->getBy(array('status_id' => 1));
+//
         $allArray = array();
-
-        /* @var $gallery Gallery */
-        foreach($galleries as $gallery) {
-            $allArray['Gallery-' . $gallery->getId()] = 'Galeria - ' . $gallery->getName();
-        }
-
-        /* @var $video Video */
-        foreach($videos as $video) {
-            $allArray['Video-' . $video->getId()] = 'Video - ' . $video->getName();
-        }
+//
+//        /* @var $gallery Gallery */
+//        foreach($galleries as $gallery) {
+//            $allArray['Gallery-' . $gallery->getId()] = 'Galeria - ' . $gallery->getName();
+//        }
+//
+//        /* @var $video Video */
+//        foreach($videos as $video) {
+//            $allArray['Video-' . $video->getId()] = 'Video - ' . $video->getName();
+//        }
 
         $form = new MailConfigForm($allArray);
         $form->bind($config);
@@ -56,17 +56,17 @@ class SystemController extends AbstractActionController
             if ($form->isValid()) {
 
                 $this->getMailConfigTable()->save($config);
-
-                $settings = $request->getPost()->settings;
-                $values = explode('-', $settings);
-
-                $settingsObject = new Settings();
-                $settingsObject->setId(1);
-                $settingsObject->setEntityId($values[1]);
-                $settingsObject->setEntityType($values[0]);
-                $settingsObject->setName('opcja');
-
-                $this->getSettingsTable()->save($settingsObject);
+//
+//                $settings = $request->getPost()->settings;
+//                $values = explode('-', $settings);
+//
+//                $settingsObject = new Settings();
+//                $settingsObject->setId(1);
+//                $settingsObject->setEntityId($values[1]);
+//                $settingsObject->setEntityType($values[0]);
+//                $settingsObject->setName('opcja');
+//
+//                $this->getSettingsTable()->save($settingsObject);
 
                 $this->flashMessenger()->addMessage('Ustawienia zostały edytowane poprawnie.');
 

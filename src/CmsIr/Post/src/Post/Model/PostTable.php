@@ -2,6 +2,7 @@
 namespace CmsIr\Post\Model;
 
 use CmsIr\System\Model\ModelTable;
+use CmsIr\System\Util\Inflector;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Predicate;
@@ -67,7 +68,8 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
             'filename_main'  => $post->getFilenameMain(),
             'extra'  => $post->getExtra(),
             'filename_background'  => $post->getFilenameBackground(),
-        );
+            'slug' => Inflector::slugify($post->getName()),
+            );
 
         $id = (int) $post->getId();
         if ($id == 0) {
@@ -83,7 +85,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
         return $id;
     }
 
-    public function getDataToDisplay ($filteredRows, $columns, $category)
+    public function getDataToDisplayMod ($filteredRows, $columns, $category)
     {
         $dataArray = array();
         foreach($filteredRows as $row) {
@@ -142,7 +144,7 @@ class PostTable extends ModelTable implements ServiceLocatorAwareInterface
                 ->offset($trueOffset);
         });
 
-        $dataArray = $this->getDataToDisplay($filteredRows, $columns, $category);
+        $dataArray = $this->getDataToDisplayMod($filteredRows, $columns, $category);
 
         if($displayFlag == true) {
             $countFilteredRows = $filteredRows->count();

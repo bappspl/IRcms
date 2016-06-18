@@ -141,16 +141,11 @@ class UsersController extends AbstractActionController
         $config = $this->getServiceLocator()->get('Config');
         $aclRoles = $config['acl']['roles'];
 
-        $tmpArrayRoles = array();
-        $i = 1;
-        foreach ($aclRoles as $keyRole => $role) {
-            $tmp = array(
-                'value' => $i,
-                'label' => ucfirst($keyRole)
-            );
-            array_push($tmpArrayRoles, $tmp);
-            $i++;
-        }
+        $tmpArrayRoles = [
+            2 => 'Użytkownik',
+            3 => 'Administrator',
+        ];
+
         $form->get('role')->setValueOptions($tmpArrayRoles);
 
         $request = $this->getRequest();
@@ -215,22 +210,11 @@ class UsersController extends AbstractActionController
         $tmpArrayRoles = array();
         $i = 1;
 
-        foreach ($aclRoles as $keyRole => $role) {
-            if($user->getRole() == $i) {
-                $tmp = array(
-                    'value' => $i,
-                    'label' => ucfirst($keyRole),
-                    'selected' => true
-                );
-            } else {
-                $tmp = array(
-                    'value' => $i,
-                    'label' => ucfirst($keyRole),
-                );
-            }
-            array_push($tmpArrayRoles, $tmp);
-            $i++;
-        }
+        $tmpArrayRoles = [
+            2 => 'Użytkownik',
+            3 => 'Administrator',
+        ];
+        
         $form->get('role')->setValueOptions($tmpArrayRoles);
         $form->bind($user);
 

@@ -58,31 +58,31 @@ echo $this->form()->openTag($form);
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-12">
-
-                <div class="the-box">
-                    <h4 class="small-title">Pliki</h4>
-
-                    <div class="form-group">
-                        <?php echo $this->customFormHelper($form->get('upload')); ?>
-                        <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>
-                        <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->
-                        <div id="queue"></div>
-                        <div class="files">
-                            <?php if(!empty($postFiles)): ?>
-                                <?php foreach($postFiles as $file): ?>
-                                    <div id="<?php echo $file->getId(); ?>" class="deletePhoto">
-                                        <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i>
-                                        <img src="/files/post/<?php echo $file->getFilename(); ?>" alt="<?php echo $file->getFilename(); ?>" class="thumb" />
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
+<!--            <div class="row">-->
+<!--                <div class="col-sm-12">-->
+<!---->
+<!--                <div class="the-box">-->
+<!--                    <h4 class="small-title">Pliki</h4>-->
+<!---->
+<!--                    <div class="form-group">-->
+<!--                        --><?php //echo $this->customFormHelper($form->get('upload')); ?>
+<!--                        <a href="javascript:$('#upload').uploadifive('upload')" class="btn btn-facebook">Rozpocznij upload</a>-->
+<!--                        <!--    <a href="javascript:$('#upload').uploadifive('clearQueue')" class="btn btn-warning">Anuluj wszystkie</a>-->-->
+<!--                        <div id="queue"></div>-->
+<!--                        <div class="files">-->
+<!--                            --><?php //if(!empty($postFiles)): ?>
+<!--                                --><?php //foreach($postFiles as $file): ?>
+<!--                                    <div id="--><?php //echo $file->getId(); ?><!--" class="deletePhoto">-->
+<!--                                        <i class="fa fa-times" data-toggle="tooltip" title="Usuń zdjęcie"></i>-->
+<!--                                        <img src="/files/post/--><?php //echo $file->getFilename(); ?><!--" alt="--><?php //echo $file->getFilename(); ?><!--" class="thumb" />-->
+<!--                                    </div>-->
+<!--                                --><?php //endforeach; ?>
+<!--                            --><?php //endif; ?>
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
         </div>
 

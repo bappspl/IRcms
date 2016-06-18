@@ -59,9 +59,9 @@ class PostController extends AbstractActionController
 
     public function createPostAction ()
     {
-        $tags = $this->getTagService()->findAsAssocArray();
+//        $tags = $this->getTagService()->findAsAssocArray();
 
-        $form = new PostForm($tags);
+        $form = new PostForm();
         $category = $this->params()->fromRoute('category');
 
         $userRoleId = $this->identity()->role;
@@ -97,7 +97,7 @@ class PostController extends AbstractActionController
 
                 if($userRoleId < 1) $post->setStatusId(2);
                 $id = $this->getPostTable()->save($post);
-                $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
+//                $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
 
@@ -208,17 +208,18 @@ class PostController extends AbstractActionController
             $arrUsers[$user->getId()] = $user->getName() . ' ' . $user->getSurname();
         }
 
-        $tags = $this->getTagService()->findAsAssocArray();
+//        $tags = $this->getTagService()->findAsAssocArray();
+        
 
-        $form = new PostForm($tags);
+        $form = new PostForm();
         $form->get('author_id')->setValueOptions($arrUsers);
 
         if($userRoleId < 1) $form->get('status_id')->setAttribute('disabled', 'disabled');
 
         $form->bind($post);
 
-        $tagsForForm = $this->getTagService()->findAsAssocArrayForEntity( $id, 'Post');
-        $form->get('tag_id')->setValue($tagsForForm);
+//        $tagsForForm = $this->getTagService()->findAsAssocArrayForEntity( $id, 'Post');
+//        $form->get('tag_id')->setValue($tagsForForm);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -237,7 +238,7 @@ class PostController extends AbstractActionController
 //                }
 
                 $id = $this->getPostTable()->save($post);
-                $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
+//                $this->getMetaService()->saveMeta('Post', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
 
@@ -424,7 +425,7 @@ class PostController extends AbstractActionController
                 }
 
                 $this->getPostTable()->deletePost($id);
-                $this->getMetaService()->getMetaTable()->deleteMeta($id, 'Post');
+//                $this->getMetaService()->getMetaTable()->deleteMeta($id, 'Post');
 
                 //$this->flashMessenger()->addMessage('Post został usunięty poprawnie.');
                 $modal = $request->getPost('modal', false);
@@ -649,13 +650,13 @@ class PostController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\Newsletter\Model\SubscriberTable');
     }
 
-    /**
-     * @return \CmsIr\Meta\Service\MetaService
-     */
-    public function getMetaService()
-    {
-        return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
-    }
+//    /**
+//     * @return \CmsIr\Meta\Service\MetaService
+//     */
+//    public function getMetaService()
+//    {
+//        return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
+//    }
 
     /**
      * @return \CmsIr\System\Service\BlockService
@@ -665,11 +666,11 @@ class PostController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\System\Service\BlockService');
     }
 
-    /**
-     * @return \CmsIr\Tag\Service\TagService
-     */
-    public function getTagService()
-    {
-        return $this->getServiceLocator()->get('CmsIr\Tag\Service\TagService');
-    }
+//    /**
+//     * @return \CmsIr\Tag\Service\TagService
+//     */
+//    public function getTagService()
+//    {
+//        return $this->getServiceLocator()->get('CmsIr\Tag\Service\TagService');
+//    }
 }

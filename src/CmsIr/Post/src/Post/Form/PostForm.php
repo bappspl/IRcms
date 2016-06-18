@@ -6,7 +6,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 class PostForm extends Form
 {
-    public function __construct($tags)
+    public function __construct($tags = null)
     {
         parent::__construct('Post');
         $this->setAttribute('method', 'post');

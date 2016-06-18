@@ -66,7 +66,7 @@ class PageController extends AbstractActionController
                 $page->exchangeArray($form->getData());
 
                 $id = $this->getPageTable()->save($page);
-                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
+//                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDir), array('..', '.'));
                 if(!empty($scannedDirectory)) {
@@ -167,9 +167,9 @@ class PageController extends AbstractActionController
 
             if ($form->isValid()) {
                 $id = $this->getPageTable()->save($page);
-                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
+//                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
-                if(isset($menuItem)) {
+                if($menuItem) {
                     $newPage = $this->getPageTable()->getOneBy(array('id' => $id));
                     $menuItem->setUrl('/strona/' . $newPage->getSlug());
                     $this->getMenuItemTable()->saveMenuItem($menuItem);
@@ -506,7 +506,7 @@ class PageController extends AbstractActionController
 
             if ($form->isValid()) {
                 $id = $this->getPagePartTable()->save($pagePart);
-                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
+//                $this->getMetaService()->saveMeta('Page', $id, $request->getPost());
 
                 $scannedDirectory = array_diff(scandir($this->uploadDirPart), array('..', '.'));
                 if(!empty($scannedDirectory)) {
@@ -750,13 +750,13 @@ class PageController extends AbstractActionController
         return $this->getServiceLocator()->get('CmsIr\Menu\Service\MenuService');
     }
 
-    /**
-     * @return \CmsIr\Meta\Service\MetaService
-     */
-    public function getMetaService()
-    {
-        return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
-    }
+//    /**
+//     * @return \CmsIr\Meta\Service\MetaService
+//     */
+//    public function getMetaService()
+//    {
+//        return $this->getServiceLocator()->get('CmsIr\Meta\Service\MetaService');
+//    }
 
     /**
      * @return \CmsIr\System\Service\BlockService
